@@ -15,7 +15,7 @@
  */
 
 #include <stdio.h>
-
+#include "DrawChar.h"
 // #defined constants representing values we write to the graphics 'command' register to get
 // it to do something. You will add more values as you add hardware to the graphics chip
 // Note DrawHLine, DrawVLine and DrawLine at the moment do nothing - you will modify these
@@ -107,6 +107,28 @@ void drawHome(){
 	Rectangle(402, 797, 2, 237, CYAN);
 	Rectangle(2, 397, 242, 477, YELLOW);
 	Rectangle(402, 797, 242, 477, MAGENTA);
+
+	char* curSession = "CURRENT SESSION";
+	char* prevSession = "PREVIOUS SESSIONS";
+	char* achievementString = "ACHIEVEMENTS";
+	char* callString = "CALL";
+
+	int i;
+
+	for(i = 0; i < strlen(curSession); i++){
+		OutGraphicsCharFont2a( 80 + i * 15, 118, WHITE, BLACK, curSession[i], 0);
+	}
+	for(i = 0; i < strlen(prevSession); i++){
+		OutGraphicsCharFont2a( 470 + i * 15, 118, WHITE, BLACK, prevSession[i], 0);
+	}
+	for(i = 0; i < strlen(achievementString); i++){
+		OutGraphicsCharFont2a( 510 + i * 15, 358, WHITE, BLACK, achievementString[i], 0);
+	}
+	for(i = 0; i < strlen(callString); i++){
+		OutGraphicsCharFont2a( 170 + i * 15, 358, WHITE, BLACK, callString[i], 0);
+	}
+
+
 }
 
 void drawKeypad(){
@@ -134,6 +156,21 @@ void drawKeypad(){
 	Rectangle(403, 797, 429, 477, LIME);
 	// Home Button
 	Rectangle(2, 399,429, 477, CYAN);
+}
+
+void drawStartSession(){
+	Rectangle(0, 799, 0, 479, BLACK);
+	Rectangle(2, 797, 2, 80, WHITE);
+
+	// Map placeholder
+	Rectangle(2, 797, 82, 427, YELLOW);
+
+	// Home
+	Rectangle(2, 400, 429, 477, CYAN);
+
+	// Start/Stop
+	Rectangle(402, 797, 429, 477, LIME);
+
 }
 /*****************************************************************************************
 * This function read a single pixel from x,y coords specified and returns its colour
@@ -170,8 +207,8 @@ int main()
 {
 	int i ;
 	printf("Hello from Nios II!\n");
-	//drawHome();
-	drawKeypad();
+	drawHome();
+	//drawKeypad();
 	//	printf("Hello %d", i);
 	//}
 	// draw a line across the screen in RED at y coord 100 and from x = 0 to 799
