@@ -3,26 +3,20 @@
 #include "touchscreen.h"
 
 // Home Menu Bounds
+#define CURS_BOUND_1_Y		2
+#define CURS_BOUND_1_X		2
+#define CURS_BOUND_2_Y		397
+#define CURS_BOUND_2_X		237
+
 #define CALL_BOUND_1_Y		2
 #define CALL_BOUND_1_X		242
 #define CALL_BOUND_2_Y		397
 #define CALL_BOUND_2_X		477
 
-#define CURS_BOUND_1_Y		2
-#define CURS_BOUND_1_X		2
-#define CURS_BOUND_2_Y		397
-#define CURS_BOUND_2_X		242
-
-// Call Menu Bounds
-#define CALLMENU_HOME_BOUND_1_Y		2
-#define CALLMENU_HOME_BOUND_1_X		429
-#define CALLMENU_HOME_BOUND_2_Y		399
-#define CALLMENU_HOME_BOUND_2_X		477
-
-#define CALLMENU_CALL_BOUND_1_Y		403
-#define CALLMENU_CALL_BOUND_1_X		429
-#define CALLMENU_CALL_BOUND_2_Y		797
-#define CALLMENU_CALL_BOUND_2_X		477
+#define ACHIEVE_BOUND_1_Y		402
+#define ACHIEVE_BOUND_1_X		242
+#define ACHIEVE_BOUND_2_Y		797
+#define ACHIEVE_BOUND_2_X		477
 
 // Current Session Bounds
 #define CURRENT_HOME_BOUND_1_Y		2
@@ -35,6 +29,23 @@
 #define CURRENT_START_BOUND_2_Y		797
 #define CURRENT_START_BOUND_2_X		477
 
+// Call Bounds
+#define CALLMENU_HOME_BOUND_1_Y		2
+#define CALLMENU_HOME_BOUND_1_X		429
+#define CALLMENU_HOME_BOUND_2_Y		399
+#define CALLMENU_HOME_BOUND_2_X		477
+
+#define CALLMENU_CALL_BOUND_1_Y		403
+#define CALLMENU_CALL_BOUND_1_X		429
+#define CALLMENU_CALL_BOUND_2_Y		797
+#define CALLMENU_CALL_BOUND_2_X		477
+
+// Achievement Bounds
+#define ACHIEVE_HOME_BOUND_1_Y		202
+#define ACHIEVE_HOME_BOUND_1_X		429
+#define ACHIEVE_HOME_BOUND_2_Y		599
+#define ACHIEVE_HOME_BOUND_2_X		477
+
 // Home States
 #define STATE_CALL			1
 #define STATE_CURS			2
@@ -42,20 +53,23 @@
 #define STATE_PRES			4
 #define STATE_HOME			5
 
-// Call States
-#define STATE_CALLMENU_HOME			1
-#define STATE_CALLMENU_CALL			2
-#define STATE_CALLMENU				3
-
 // Current Session States
 #define STATE_CURRENT_INIT		1
 #define STATE_CURRENT_SESSION	2
 #define STATE_CURRENT_HOME		3
 
+// Call States
+#define STATE_CALLMENU_HOME			1
+#define STATE_CALLMENU_CALL			2
+#define STATE_CALLMENU				3
+
+// Achievement States
+#define STATE_ACHIEVE_HOME 1
+
 void init_all(void)
 {
 	Init_Touch();
-	Init_WiFi();
+	//Init_WiFi();
 	Init_GPS();
 }
 
@@ -68,7 +82,7 @@ int is_Within_Boundary(Point cursor, Point bound1, Point bound2)
 
 int pressed_Call(Point cursor)
 {
-	Point bound1,bound2;
+	Point bound1, bound2;
 	bound1.x = CALL_BOUND_1_X;
 	bound1.y = CALL_BOUND_1_Y;
 	bound2.x = CALL_BOUND_2_X;
@@ -79,11 +93,21 @@ int pressed_Call(Point cursor)
 
 int pressed_Current_Session(Point cursor)
 {
-	Point bound1,bound2;
+	Point bound1, bound2;
 	bound1.x = CURS_BOUND_1_X;
 	bound1.y = CURS_BOUND_1_Y;
 	bound2.x = CURS_BOUND_2_X;
 	bound2.y = CURS_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_Achievements(Point cursor) {
+	Point bound1, bound2;
+	bound1.x = ACHIEVE_BOUND_1_X;
+	bound1.y = ACHIEVE_BOUND_1_Y;
+	bound2.x = ACHIEVE_BOUND_2_X;
+	bound2.y = ACHIEVE_BOUND_2_Y;
 
 	return is_Within_Boundary(cursor, bound1, bound2);
 }
@@ -94,75 +118,13 @@ int Get_State_Home(Point cursor)
 		return STATE_CALL;
 	else if (pressed_Current_Session(cursor))
 		return STATE_CURS;
+	else if (pressed_Achievements(cursor))
+		return STATE_ACHIEVE;
 	else
 		return STATE_HOME;
 }
 
-// Call Menu State Functions
-
-int pressed_CallMenu_Home(Point cursor)
-{
-	Point bound1,bound2;
-	bound1.x = CALLMENU_HOME_BOUND_1_X;
-	bound1.y = CALLMENU_HOME_BOUND_1_Y;
-	bound2.x = CALLMENU_HOME_BOUND_2_X;
-	bound2.y = CALLMENU_HOME_BOUND_2_Y;
-
-	return is_Within_Boundary(cursor, bound1, bound2);
-}
-
-int pressed_CallMenu_Call(Point cursor)
-{
-	Point bound1,bound2;
-	bound1.x = CALLMENU_CALL_BOUND_1_X;
-	bound1.y = CALLMENU_CALL_BOUND_1_Y;
-	bound2.x = CALLMENU_CALL_BOUND_2_X;
-	bound2.y = CALLMENU_CALL_BOUND_2_Y;
-
-	return is_Within_Boundary(cursor, bound1, bound2);
-}
-
-int Get_State_Call(Point cursor)
-{
-	if (pressed_CallMenu_Home(cursor))
-		return STATE_CALLMENU_HOME;
-	else if (pressed_CallMenu_Call(cursor))
-		return STATE_CALLMENU_CALL;
-	else
-		return STATE_CALLMENU;
-}
-
-//
-
-void Call(void)
-{
-	drawKeypad();
-	// implement keypad polling...
-	Point Cursor;
-	while(1)
-	{
-		Cursor = Get_Touch_Point();
-		printf("x: %d, y: %d\n",Cursor.x,Cursor.y);
-		int state = Get_State_Call(Cursor);
-
-		CALL_STATES:
-			switch(state)
-			{
-				case(STATE_CALL) :
-					printf("YOU PRESSED HOME\n");
-					return;
-					break;
-				case(STATE_CURS) :
-					printf("YOU PRESSED CALL\n");
-					// invoke wifi function here
-					test_wifi();
-					break;
-				default :
-					printf("YOU PRESSED NOTHING\n");
-					break;
-			}
-	}
-}
+// Current Session State Functions
 
 int pressed_Current_Home(Point cursor)
 {
@@ -220,7 +182,7 @@ void Current_Session(void)
 
 	Point Cursor;
 	while (1) {
-		if ((TouchScreen_Status & 1) == 0 && session_started == 1){
+		if ((TouchScreen_Status & 1) == 0 && session_started == 1) {
 			Cursor.x = 0;
 			Cursor.y = 0;
 		} else {
@@ -229,23 +191,23 @@ void Current_Session(void)
 		}
 		int state = Get_State_Current(Cursor);
 
-	CURRENT_SESSION_STATES:
-			switch (state)
-			{
-			case (STATE_CURRENT_SESSION) :
-				printf("IN SESSION\n");
-				break;
-			case (STATE_CURRENT_INIT) :
-				printf("INIT/STOPPED\n");
-				break;
-			case (STATE_CURRENT_HOME) :
-				printf("YOU PRESSED HOME\n");
-				session_started = 0;
-				return;
-				break;
-			default :
-				printf("YOU PRESSED NOTHING\n");
-				break;
+CURRENT_SESSION_STATES:
+		switch (state)
+		{
+		case (STATE_CURRENT_SESSION) :
+			printf("IN SESSION\n");
+			break;
+		case (STATE_CURRENT_INIT) :
+			printf("INIT/STOPPED\n");
+			break;
+		case (STATE_CURRENT_HOME) :
+			printf("YOU PRESSED HOME\n");
+			session_started = 0;
+			return;
+			break;
+		default :
+			printf("YOU PRESSED NOTHING\n");
+			break;
 		}
 
 		if (session_started == 1) {
@@ -256,46 +218,150 @@ void Current_Session(void)
 	}
 }
 
+// Call Menu State Functions
+int pressed_CallMenu_Home(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_HOME_BOUND_1_X;
+	bound1.y = CALLMENU_HOME_BOUND_1_Y;
+	bound2.x = CALLMENU_HOME_BOUND_2_X;
+	bound2.y = CALLMENU_HOME_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_Call(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int Get_State_Call(Point cursor)
+{
+	if (pressed_CallMenu_Home(cursor))
+		return STATE_CALLMENU_HOME;
+	else if (pressed_CallMenu_Call(cursor))
+		return STATE_CALLMENU_CALL;
+	else
+		return STATE_CALLMENU;
+}
+
+void Call(void)
+{
+	drawKeypad();
+	// implement keypad polling...
+	Point Cursor;
+	while (1)
+	{
+		Cursor = Get_Touch_Point();
+		printf("x: %d, y: %d\n", Cursor.x, Cursor.y);
+		int state = Get_State_Call(Cursor);
+
+CALL_STATES:
+		switch (state)
+		{
+		case (STATE_CALL) :
+			printf("YOU PRESSED HOME\n");
+			return;
+			break;
+		case (STATE_CURS) :
+			printf("YOU PRESSED CALL\n");
+			// invoke wifi function here
+			break;
+		default :
+			printf("YOU PRESSED NOTHING\n");
+			break;
+		}
+	}
+}
+
+// Achievements State Functions
+int pressed_Achievements_Home(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = ACHIEVE_HOME_BOUND_1_X;
+	bound1.y = ACHIEVE_HOME_BOUND_1_Y;
+	bound2.x = ACHIEVE_HOME_BOUND_2_X;
+	bound2.y = ACHIEVE_HOME_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int Get_State_Achievements(Point cursor) {
+	if (pressed_Achievements_Home(cursor))
+		return STATE_ACHIEVE_HOME;
+	else
+		return STATE_ACHIEVE;
+}
+
+void Achievements(void) {
+	drawAchievementsScreen();
+	Point Cursor;
+	while (1)
+	{
+		Cursor = Get_Touch_Point();
+		printf("x: %d, y: %d\n", Cursor.x, Cursor.y);
+		int state = Get_State_Achievements(Cursor);
+
+ACHIEVEMENT_STATES:
+		switch (state)
+		{
+		case (STATE_ACHIEVE_HOME) :
+			printf("YOU PRESSED HOME\n");
+			return;
+			break;
+		default :
+			printf("YOU PRESSED NOTHING\n");
+			break;
+		}
+	}
+}
+
 int main()
 {
 	printf("Initializing serial ports...\n");
 	init_all();
 
 	printf("Drawing home screen...\n");
-	HOME:
-		printf("Drawing Home Screen...\n");
-		drawHome();
-	;
+HOME:
+	printf("Drawing Home Screen...\n");
+	drawHome();
 
 	printf("Awaiting touch command...\n");
 	Point Cursor;
-	while(1) {
+	while (1) {
 		Cursor = Get_Touch_Point();
-		printf("x: %d, y: %d\n",Cursor.x,Cursor.y);
+		printf("x: %d, y: %d\n", Cursor.x, Cursor.y);
 		int state = Get_State_Home(Cursor);
 
-		STATES:
-		switch(state)
+STATES:
+		switch (state)
 		{
-			case(STATE_CALL) :
-				printf("YOU PRESSED CALL\n");
-				Call();
-				break;
-			case(STATE_CURS) :
-				printf("YOU PRESSED CURRENT SESSION\n");
-				Current_Session();
-				break;
-			default :
-				printf("YOU PRESSED NOTHING\n");
-				break;
-		}
-		;
+		case (STATE_CALL) :
+			printf("YOU PRESSED CALL\n");
+			Call();
+			break;
+		case (STATE_CURS) :
+			printf("YOU PRESSED CURRENT SESSION\n");
+			Current_Session();
+			break;
+		case (STATE_ACHIEVE) :
+			printf("YOU PRESSED ACHIEVEMENTS\n");
+			Achievements();
+			break;
+		default :
+			printf("YOU PRESSED NOTHING\n");
+			break;
+		};
+
 		goto HOME;
 	}
-	//drawHome();
-	//drawKeypad();
-	//drawStartSession();
-	//test_wifi();
 	printf("Done");
+
 	return 0;
 }

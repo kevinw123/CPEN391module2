@@ -48,5 +48,6 @@ void eraseLogGUI();
 void drawStartButton();
 void drawStopButton();
 void drawStartSession();
+void drawAchievementsScreen();
 int ReadAPixel (int x, int y);
 void ProgramPalette(int PaletteNumber, int RGB);
