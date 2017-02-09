@@ -5,6 +5,7 @@
 #define DrawHLine		1
 #define DrawVLine		2
 #define DrawLine		3
+#define DrawCircle  4
 #define PutAPixel		0xA
 #define GetAPixel		0xB
 #define ProgramPaletteColour   	0x10
@@ -41,6 +42,7 @@ void WriteAPixel (int x, int y, int Colour);
 void WriteHLine (int x1, int x2, int y, int Colour);
 void ClearScreen();
 void Rectangle(int x1, int x2, int y1, int y2, int Colour);
+void Circle(int x, int y, int radius, int Colour);
 void drawHome();
 void drawKeypad();
 void drawLog();
