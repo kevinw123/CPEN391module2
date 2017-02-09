@@ -152,6 +152,10 @@ architecture bhvr of GraphicsController is
 	signal  line_i : std_logic_vector(15 downto 0);
 	signal  line_i_Data : std_logic_vector(15 downto 0);
 	signal  line_i_Load_H : std_logic;
+	
+	signal  x_Count : std_logic_vector(15 downto 0);
+	signal  x_Count_Data : std_logic_vector(15 downto 0);
+	signal  x_Count_Load_H : std_logic;
 	-------------------------------------------------------------------------------
 	
 	-- here are some state numbers associated with some functionality already present in the graphics controller, e.g.
@@ -175,13 +179,20 @@ architecture bhvr of GraphicsController is
 	-- add any extra states you need here for example to draw lines etc.
 	--Added
 	--------------------------------------------------------------------
-	constant DrawHline1 : Std_Logic_Vector(7 downto 0) := X"10";
-	constant DrawVline1 : Std_Logic_Vector(7 downto 0) := X"11";
-	constant DrawLine1  : Std_Logic_Vector(7 downto 0) := X"12";
-	constant DrawLine2  : std_logic_vector(7 downto 0) := X"13";
-	constant DrawLine3  : std_logic_vector(7 downto 0) := X"14";
-	constant DrawLine4  : std_logic_vector(7 downto 0) := X"15";
-	constant DrawLine5  : std_logic_vector(7 downto 0) := X"16";
+	constant DrawHline1 : Std_Logic_Vector(7 downto 0) := X"0B";
+	constant DrawVline1 : Std_Logic_Vector(7 downto 0) := X"0C";
+	constant DrawLine1  : Std_Logic_Vector(7 downto 0) := X"0D";
+	constant DrawLine2  : std_logic_vector(7 downto 0) := X"0E";
+	constant DrawLine3  : std_logic_vector(7 downto 0) := X"0F";
+	constant DrawLine4  : std_logic_vector(7 downto 0) := X"10";
+	constant DrawLine5  : std_logic_vector(7 downto 0) := X"11";
+	constant DrawCircle : std_logic_vector(7 downto 0) := X"12";
+	constant DrawCircle1 : std_logic_vector(7 downto 0) := X"13";
+	constant DrawCircle2 : std_logic_vector(7 downto 0) := X"14";
+	constant DrawCircle3 : std_logic_vector(7 downto 0) := X"15";
+	constant DrawCircle4 : std_logic_vector(7 downto 0) := X"16";
+	constant DrawCircle5 : std_logic_vector(7 downto 0) := X"17";
+	constant DrawCircle6 : std_logic_vector(7 downto 0) := X"18";
 	--------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------------
 -- Commands that can be written to command register by NIOS to get graphics controller to draw a shape
@@ -189,6 +200,7 @@ architecture bhvr of GraphicsController is
 	constant Hline								 		: Std_Logic_Vector(15 downto 0) := X"0001";	-- command to Graphics chip from NIOS is draw Horizontal line
 	constant Vline									 	: Std_Logic_Vector(15 downto 0) := X"0002";	-- command to Graphics chip from NIOS is draw Vertical line
 	constant ALine									 	: Std_Logic_Vector(15 downto 0) := X"0003";	-- command to Graphics chip from NIOS is draw any line
+	constant Circle                                     : Std_Logic_Vector(15 downto 0) := X"0004"; -- command to draw circle
 	constant	PutPixel									: Std_Logic_Vector(15 downto 0) := X"000a";	-- command to Graphics chip from NIOS to draw a pixel
 	constant	GetPixel									: Std_Logic_Vector(15 downto 0) := X"000b";	-- command to Graphics chip from NIOS to read a pixel
 	constant ProgramPallette						: Std_Logic_Vector(15 downto 0) := X"0010";	-- command to Graphics chip from NIOS is program one of the pallettes with a new RGB value
@@ -528,6 +540,16 @@ Begin
 		end if;
 	end process;
 --------------------------------------------------------------------
+-- x_Count Process
+--------------------------------------------------------------------
+	process(Clk)
+	Begin
+		if(rising_edge(Clk)) then
+			if (x_Count_Load_H = '1') then
+				x_Count <= x_Count_Data;
+			end if;
+		end if;
+	end process;
 ------------------------------------------------------------------------------------------------------------------------------
 -- Background Colour Reg Process
 --
@@ -637,7 +659,7 @@ Begin
 ----------------------------------------------------------------------------------------------------------------------	
 	
 	process(CurrentState, CommandWritten_H, Command, X1, X2, Y1, Y2, Colour, OKToDraw_L, VSync_L,
-				BackGroundColour, AS_L, Sram_DataIn, CLK, Colour_Latch, x, y, dx, dy, s1, s2, error, interchange, line_i)
+				BackGroundColour, AS_L, Sram_DataIn, CLK, Colour_Latch, x, y, dx, dy, s1, s2, error, interchange, line_i, x_Count)
 		variable x2Minusx1 : std_logic_vector(15 downto 0);
 		variable y2Minusy1 : std_logic_vector(15 downto 0);	
 	begin
@@ -700,6 +722,9 @@ Begin
 		line_i_Data <= X"0000";
 		line_i_Load_H <= '0';
 		
+		x_Count_Data <= X"0000";
+		x_Count_Load_H <= '0';
+		
 		x2Minusx1 := X"0000";
 		y2Minusy1 := X"0000";
 		--------------------------------------------------------------------
@@ -748,6 +773,8 @@ Begin
 				
 			-- add other code to process any new commands here e.g. draw a circle if you decide to implement that
 			-- or draw a rectangle etc
+			elsif(Command = Circle) then
+				NextState <= DrawCircle;
 			
 			end if;
 
@@ -1105,6 +1132,184 @@ Begin
 			line_i_Load_H <= '1';
 			
 			NextState <= DrawLine2;
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+			x_Data <= X2;
+			x_Load_H <= '1';
+			
+			y_Data <= X"0000";
+			y_Load_H <= '1';
+			
+			error_Data <= X"0000";
+			error_Load_H <= '1';
+			
+			x_Count_Data <= X"0000";
+			x_Count_Load_H <= '1';
+			NextState <= DrawCircle1;
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle1) then
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+			if (x >= y) then
+				if(OKToDraw_L = '0') then														-- if VGA is not displaying at this time, then we can draw, otherwise wait for video blanking during Hsync
+			
+					-- the address of the pixel is formed from the 9 bit y coord that indicates a "row" (1 out of a maximum of 512 rows)
+					-- coupled with a 9 bit x or column address within that row. Note a 9 bit X address is used for a maximum of 1024 columns or horizontal pixels
+					-- You might thing that 10 bits would be required for 1024 columns and you would be correct, except that the address we are issuing
+					-- holds two pixels (the memory us 16 bit wide remember so each location/address is that of 2 pixels)
+					
+					Sig_AddressOut 	<= (Y1(8 downto 0) + Y(8 downto 0)) & (X1(9 downto 1) - X(9 downto 1) + X_Count(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
+					Sig_RW_Out			<= '0';													-- we are intending to draw a pixel so set RW to '0' for a write to memory
+					
+					if((X(0) xor X1(0) xor x_Count(0)) = '0')	then														-- if the address/pixel is an even numbered one
+						Sig_UDS_Out_L 	<= '0';													-- enable write to upper half of Sram data bus to access 1 pixel at that location
+					else
+						Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
+					end if;
+					
+					if (X(9 downto 0) = X_Count(9 downto 0) + X_Count(9 downto 0)) then
+						x_Count_Data <= X"0000";
+						x_Count_Load_H <= '1';
+						NextState <= DrawCircle2;
+					else
+						x_Count_Data <= x_Count + 1;
+						x_Count_Load_H <= '1';
+						NextState <= DrawCircle1;
+					end if;
+					-- the data that we write comes from the default value assigned to Sig_DataOut previously
+					-- you will recall that this is the value of the Colour register
+					
+				else
+					NextState <= DrawCircle1;	-- otherwise stay here until we manage to write the pixel (during an HSync period)
+				end if ;
+			else
+				NextState <= Idle;
+			end if;
+-------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle2) then
+-------------------------------------------------------------------------
+			if(OKToDraw_L = '0') then														-- if VGA is not displaying at this time, then we can draw, otherwise wait for video blanking during Hsync
+			
+				-- the address of the pixel is formed from the 9 bit y coord that indicates a "row" (1 out of a maximum of 512 rows)
+				-- coupled with a 9 bit x or column address within that row. Note a 9 bit X address is used for a maximum of 1024 columns or horizontal pixels
+				-- You might thing that 10 bits would be required for 1024 columns and you would be correct, except that the address we are issuing
+				-- holds two pixels (the memory us 16 bit wide remember so each location/address is that of 2 pixels)
+				
+				Sig_AddressOut 	<= (Y1(8 downto 0) - Y(8 downto 0)) & (X1(9 downto 1) - X(9 downto 1) + X_Count(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
+				Sig_RW_Out			<= '0';													-- we are intending to draw a pixel so set RW to '0' for a write to memory
+				
+				if((X(0) xor X1(0) xor X_Count(0)) = '0')	then														-- if the address/pixel is an even numbered one
+					Sig_UDS_Out_L 	<= '0';													-- enable write to upper half of Sram data bus to access 1 pixel at that location
+				else
+					Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
+				end if;
+				
+				if (X(9 downto 0) = X_Count(9 downto 0) + X_Count(9 downto 0)) then
+					x_Count_Data <= X"0000";
+					x_Count_Load_H <= '1';
+					NextState <= DrawCircle3;
+				else
+					x_Count_Data <= x_Count + 1;
+					x_Count_Load_H <= '1';
+					NextState <= DrawCircle2;
+				end if;
+				-- the data that we write comes from the default value assigned to Sig_DataOut previously
+				-- you will recall that this is the value of the Colour register
+				
+			else
+				NextState <= DrawCircle2;	-- otherwise stay here until we manage to write the pixel (during an HSync period)
+			end if ;
+-------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle3) then
+-------------------------------------------------------------------------
+			if(OKToDraw_L = '0') then														-- if VGA is not displaying at this time, then we can draw, otherwise wait for video blanking during Hsync
+			
+				-- the address of the pixel is formed from the 9 bit y coord that indicates a "row" (1 out of a maximum of 512 rows)
+				-- coupled with a 9 bit x or column address within that row. Note a 9 bit X address is used for a maximum of 1024 columns or horizontal pixels
+				-- You might thing that 10 bits would be required for 1024 columns and you would be correct, except that the address we are issuing
+				-- holds two pixels (the memory us 16 bit wide remember so each location/address is that of 2 pixels)
+				
+				Sig_AddressOut 	<= (Y1(8 downto 0) + X(8 downto 0)) & (X1(9 downto 1) - Y(8 downto 1) + X_Count(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
+				Sig_RW_Out			<= '0';													-- we are intending to draw a pixel so set RW to '0' for a write to memory
+				
+				if((X(0) xor Y(0) xor X_Count(0)) = '0')	then														-- if the address/pixel is an even numbered one
+					Sig_UDS_Out_L 	<= '0';													-- enable write to upper half of Sram data bus to access 1 pixel at that location
+				else
+					Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
+				end if;
+				
+				if (Y(8 downto 0) = X_Count(9 downto 0) + X_Count(9 downto 0)) then
+					x_Count_Data <= X"0000";
+					x_Count_Load_H <= '1';
+					NextState <= DrawCircle4;
+				else
+					x_Count_Data <= x_Count + 1;
+					x_Count_Load_H <= '1';
+					NextState <= DrawCircle3;
+				end if;
+				-- the data that we write comes from the default value assigned to Sig_DataOut previously
+				-- you will recall that this is the value of the Colour register
+				
+			else
+				NextState <= DrawCircle3;	-- otherwise stay here until we manage to write the pixel (during an HSync period)
+			end if ;
+-------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle4) then
+-------------------------------------------------------------------------
+			if(OKToDraw_L = '0') then														-- if VGA is not displaying at this time, then we can draw, otherwise wait for video blanking during Hsync
+			
+				-- the address of the pixel is formed from the 9 bit y coord that indicates a "row" (1 out of a maximum of 512 rows)
+				-- coupled with a 9 bit x or column address within that row. Note a 9 bit X address is used for a maximum of 1024 columns or horizontal pixels
+				-- You might thing that 10 bits would be required for 1024 columns and you would be correct, except that the address we are issuing
+				-- holds two pixels (the memory us 16 bit wide remember so each location/address is that of 2 pixels)
+				
+				Sig_AddressOut 	<= (Y1(8 downto 0) - X(8 downto 0)) & (X1(9 downto 1) - Y(8 downto 1) + X_Count(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
+				Sig_RW_Out			<= '0';													-- we are intending to draw a pixel so set RW to '0' for a write to memory
+				
+				if((X(0) xor Y(0) xor X_Count(0)) = '0')	then														-- if the address/pixel is an even numbered one
+					Sig_UDS_Out_L 	<= '0';													-- enable write to upper half of Sram data bus to access 1 pixel at that location
+				else
+					Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
+				end if;
+				
+				if (Y(8 downto 0) = X_Count(9 downto 0) + X_Count(9 downto 0)) then
+					x_Count_Data <= X"0000";
+					x_Count_Load_H <= '1';
+					NextState <= DrawCircle5;
+				else
+					x_Count_Data <= x_Count + 1;
+					x_Count_Load_H <= '1';
+					NextState <= DrawCircle4;
+				end if;
+				-- the data that we write comes from the default value assigned to Sig_DataOut previously
+				-- you will recall that this is the value of the Colour register
+				
+			else
+				NextState <= DrawCircle4;	-- otherwise stay here until we manage to write the pixel (during an HSync period)
+			end if ;
+-------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle5) then
+-------------------------------------------------------------------------
+			if (error <= 0) then
+				y_Data <= y + 1;
+				y_Load_H <= '1';
+				
+				error_Data <= error + (y(14 downto 0) & '0') + 1;
+				error_Load_H <= '1';
+			end if;
+			NextState <= DrawCircle6;
+--------------------------------------------------------------------------
+		elsif(CurrentState = DrawCircle6) then
+------------------------------------------------------------------------
+			if (error > 0) then
+				x_Data <= x - 1;
+				x_Load_H <= '1';
+				
+				error_Data <= error - (x(14 downto 0) & '0') + 1;
+				error_Load_H <= '1';
+			end if;
+			NextState <= DrawCircle1;
+---------------------------------------------------------------------
 		end if;
 	end process;
 end;
