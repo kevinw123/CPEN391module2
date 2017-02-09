@@ -74,6 +74,18 @@ void Rectangle(int x1, int x2, int y1, int y2, int Colour)
 		WriteHLine(x1, x2, i, Colour);
 }
 
+void Circle(int x, int y, int radius, int Colour)
+{
+	WAIT_FOR_GRAPHICS;			// is graphics ready for new command
+
+	GraphicsX1Reg = x;			// write coords to x1, y1
+	GraphicsX2Reg = radius;
+	GraphicsY1Reg = y;
+
+	GraphicsColourReg = Colour;		// set pixel colour with a palette number
+	GraphicsCommandReg = DrawCircle;		// give graphics a "draw Horizontal Line" command
+}
+
 // Draw Home Functions
 void drawHome() {
 	ClearScreen();
