@@ -1173,7 +1173,7 @@ Begin
 						Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
 					end if;
 					
-					if ((X(9 downto 0) + X(9 downto 0))= X_Count(9 downto 0)) then
+					if ((X(9 downto 0) + X(9 downto 0)) <= X_Count(9 downto 0)) then
 						x_Count_Data <= X"0000";
 						x_Count_Load_H <= '1';
 						NextState <= DrawCircle2;
@@ -1211,7 +1211,7 @@ Begin
 					Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
 				end if;
 				
-				if ((X(9 downto 0) + X(9 downto 0)) < X_Count(9 downto 0)) then
+				if ((X(9 downto 0) + X(9 downto 0)) <= X_Count(9 downto 0)) then
 					x_Count_Data <= X"0000";
 					x_Count_Load_H <= '1';
 					NextState <= DrawCircle3;
@@ -1246,7 +1246,7 @@ Begin
 					Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
 				end if;
 				
-				if ((Y(8 downto 0) + Y(8 downto 0)) = X_Count(9 downto 0)) then
+				if ((Y(8 downto 0) + Y(8 downto 0)) <= X_Count(9 downto 0)) then
 					x_Count_Data <= X"0000";
 					x_Count_Load_H <= '1';
 					NextState <= DrawCircle4;
@@ -1281,7 +1281,7 @@ Begin
 					Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
 				end if;
 				
-				if ((Y(8 downto 0) + Y(8 downto 0)) = X_Count(9 downto 0)) then
+				if ((Y(8 downto 0) + Y(8 downto 0)) <= X_Count(9 downto 0)) then
 					x_Count_Data <= X"0000";
 					x_Count_Load_H <= '1';
 					NextState <= DrawCircle5;
