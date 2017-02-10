@@ -662,6 +662,8 @@ Begin
 				BackGroundColour, AS_L, Sram_DataIn, CLK, Colour_Latch, x, y, dx, dy, s1, s2, error, interchange, line_i, x_Count)
 		variable x2Minusx1 : std_logic_vector(15 downto 0);
 		variable y2Minusy1 : std_logic_vector(15 downto 0);	
+		variable xSum : std_logic_vector(15 downto 0);
+		variable ySum : std_logic_vector(15 downto 0);
 	begin
 	
 	----------------------------------------------------------------------------------------------------------------------------------
@@ -727,6 +729,9 @@ Begin
 		
 		x2Minusx1 := X"0000";
 		y2Minusy1 := X"0000";
+		
+		xSum := X"0000";
+		ySum := X"0000";
 		--------------------------------------------------------------------
 		-------------------------------------------------------------------------------------
 		-- IMPORTANT we have to define what the default NEXT state will be. In this case we the state machine
@@ -1157,17 +1162,18 @@ Begin
 					-- coupled with a 9 bit x or column address within that row. Note a 9 bit X address is used for a maximum of 1024 columns or horizontal pixels
 					-- You might thing that 10 bits would be required for 1024 columns and you would be correct, except that the address we are issuing
 					-- holds two pixels (the memory us 16 bit wide remember so each location/address is that of 2 pixels)
-					
-					Sig_AddressOut 	<= (Y1(8 downto 0) + Y(8 downto 0)) & (X1(9 downto 1) - X(9 downto 1) + X_Count(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
+					ySum := Y1 + Y;
+					xSum := X1 - X + x_Count;
+					Sig_AddressOut 	<= (ySum(8 downto 0) & xSum(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
 					Sig_RW_Out			<= '0';													-- we are intending to draw a pixel so set RW to '0' for a write to memory
 					
-					if((X(0) xor X1(0) xor x_Count(0)) = '0')	then														-- if the address/pixel is an even numbered one
+					if(xSum(0) = '0')	then														-- if the address/pixel is an even numbered one
 						Sig_UDS_Out_L 	<= '0';													-- enable write to upper half of Sram data bus to access 1 pixel at that location
 					else
 						Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
 					end if;
 					
-					if (X(9 downto 0) = X_Count(9 downto 0) + X_Count(9 downto 0)) then
+					if ((X(9 downto 0) + X(9 downto 0))= X_Count(9 downto 0)) then
 						x_Count_Data <= X"0000";
 						x_Count_Load_H <= '1';
 						NextState <= DrawCircle2;
@@ -1194,17 +1200,18 @@ Begin
 				-- coupled with a 9 bit x or column address within that row. Note a 9 bit X address is used for a maximum of 1024 columns or horizontal pixels
 				-- You might thing that 10 bits would be required for 1024 columns and you would be correct, except that the address we are issuing
 				-- holds two pixels (the memory us 16 bit wide remember so each location/address is that of 2 pixels)
-				
-				Sig_AddressOut 	<= (Y1(8 downto 0) - Y(8 downto 0)) & (X1(9 downto 1) - X(9 downto 1) + X_Count(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
+				ySum := Y1 - Y;
+				xSum := X1 - X + X_Count;
+				Sig_AddressOut 	<= (ySum(8 downto 0) & xSum(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
 				Sig_RW_Out			<= '0';													-- we are intending to draw a pixel so set RW to '0' for a write to memory
 				
-				if((X(0) xor X1(0) xor X_Count(0)) = '0')	then														-- if the address/pixel is an even numbered one
+				if(xSum(0) = '0')	then														-- if the address/pixel is an even numbered one
 					Sig_UDS_Out_L 	<= '0';													-- enable write to upper half of Sram data bus to access 1 pixel at that location
 				else
 					Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
 				end if;
 				
-				if (X(9 downto 0) = X_Count(9 downto 0) + X_Count(9 downto 0)) then
+				if ((X(9 downto 0) + X(9 downto 0)) < X_Count(9 downto 0)) then
 					x_Count_Data <= X"0000";
 					x_Count_Load_H <= '1';
 					NextState <= DrawCircle3;
@@ -1228,17 +1235,18 @@ Begin
 				-- coupled with a 9 bit x or column address within that row. Note a 9 bit X address is used for a maximum of 1024 columns or horizontal pixels
 				-- You might thing that 10 bits would be required for 1024 columns and you would be correct, except that the address we are issuing
 				-- holds two pixels (the memory us 16 bit wide remember so each location/address is that of 2 pixels)
-				
-				Sig_AddressOut 	<= (Y1(8 downto 0) + X(8 downto 0)) & (X1(9 downto 1) - Y(8 downto 1) + X_Count(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
+				ySum := Y1 + X;
+				xSum := X1 - Y + X_Count;
+				Sig_AddressOut 	<= (ySum(8 downto 0) & xSum(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
 				Sig_RW_Out			<= '0';													-- we are intending to draw a pixel so set RW to '0' for a write to memory
 				
-				if((X(0) xor Y(0) xor X_Count(0)) = '0')	then														-- if the address/pixel is an even numbered one
+				if(xSum(0) = '0')	then														-- if the address/pixel is an even numbered one
 					Sig_UDS_Out_L 	<= '0';													-- enable write to upper half of Sram data bus to access 1 pixel at that location
 				else
 					Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
 				end if;
 				
-				if (Y(8 downto 0) = X_Count(9 downto 0) + X_Count(9 downto 0)) then
+				if ((Y(8 downto 0) + Y(8 downto 0)) = X_Count(9 downto 0)) then
 					x_Count_Data <= X"0000";
 					x_Count_Load_H <= '1';
 					NextState <= DrawCircle4;
@@ -1262,17 +1270,18 @@ Begin
 				-- coupled with a 9 bit x or column address within that row. Note a 9 bit X address is used for a maximum of 1024 columns or horizontal pixels
 				-- You might thing that 10 bits would be required for 1024 columns and you would be correct, except that the address we are issuing
 				-- holds two pixels (the memory us 16 bit wide remember so each location/address is that of 2 pixels)
-				
-				Sig_AddressOut 	<= (Y1(8 downto 0) - X(8 downto 0)) & (X1(9 downto 1) - Y(8 downto 1) + X_Count(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
+				ySum := Y1 - X;
+				xSum := X1 - Y + X_Count;
+				Sig_AddressOut 	<= (ySum(8 downto 0) & xSum(9 downto 1));				-- 9 bit x address even though it goes up to 1024 which would mean 10 bits, because each address = 2 pixels/bytes
 				Sig_RW_Out			<= '0';													-- we are intending to draw a pixel so set RW to '0' for a write to memory
 				
-				if((X(0) xor Y(0) xor X_Count(0)) = '0')	then														-- if the address/pixel is an even numbered one
+				if(xSum(0) = '0')	then														-- if the address/pixel is an even numbered one
 					Sig_UDS_Out_L 	<= '0';													-- enable write to upper half of Sram data bus to access 1 pixel at that location
 				else
 					Sig_LDS_Out_L 	<= '0';													-- else write to lower half of Sram data bus to get the other pixel at that address
 				end if;
 				
-				if (Y(8 downto 0) = X_Count(9 downto 0) + X_Count(9 downto 0)) then
+				if ((Y(8 downto 0) + Y(8 downto 0)) = X_Count(9 downto 0)) then
 					x_Count_Data <= X"0000";
 					x_Count_Load_H <= '1';
 					NextState <= DrawCircle5;
