@@ -290,13 +290,18 @@ void drawPreviouSession(){
 	Rectangle(2, 797, 106, 206, WHITE);
 	Rectangle(2, 797, 210, 310, WHITE);
 	Rectangle(2, 797, 314, 414, WHITE);
-	// Home
-	Rectangle(202, 599, 429, 477, MIDNIGHT_BLUE);
-
+	// Next Page Button
+	Rectangle(403, 797, 429, 477, FOREST_GREEN);
+	// Home Button
+	Rectangle(2, 399, 429, 477, MIDNIGHT_BLUE);
 	char* homeString = "HOME";
+	char* nextString = "NEXT";
 	int i;
 	for (i = 0; i < strlen(homeString); i++) {
-		OutGraphicsCharFont2a( 370 + i * 15, 450, WHITE, BLACK, homeString[i], 0);
+		OutGraphicsCharFont2a( 170 + i * 15, 450, WHITE, BLACK, homeString[i], 0);
+	}
+	for (i = 0; i < strlen(nextString); i++) {
+		OutGraphicsCharFont2a( 570 + i * 15, 450, WHITE, BLACK, nextString[i], 0);
 	}
 }
 

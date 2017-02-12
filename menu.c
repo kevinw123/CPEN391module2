@@ -1,6 +1,7 @@
 #include "Gps.h"
 #include "graphics.h"
 #include "touchscreen.h"
+#include "Colours.h"
 
 // Home Menu Bounds
 #define CURS_BOUND_1_Y		2
@@ -17,6 +18,11 @@
 #define ACHIEVE_BOUND_1_X		242
 #define ACHIEVE_BOUND_2_Y		797
 #define ACHIEVE_BOUND_2_X		477
+
+#define PREV_BOUND_1_Y		407
+#define PREV_BOUND_1_X		2
+#define PREV_BOUND_2_Y		797
+#define PREV_BOUND_2_X		237
 
 // Current Session Bounds
 #define CURRENT_HOME_BOUND_1_Y		2
@@ -46,12 +52,23 @@
 #define ACHIEVE_HOME_BOUND_2_Y		599
 #define ACHIEVE_HOME_BOUND_2_X		477
 
+// Previous Session Bounds
+#define PREV_HOME_BOUND_1_Y		2
+#define PREV_HOME_BOUND_1_X		429
+#define PREV_HOME_BOUND_2_Y		399
+#define PREV_HOME_BOUND_2_X		477
+
+#define PREV_NEXT_PAGE_BOUND_1_Y		403
+#define PREV_NEXT_PAGE_BOUND_1_X		429
+#define PREV_NEXT_PAGE_BOUND_2_Y		797
+#define PREV_NEXT_PAGE_BOUND_2_X		477
 // Home States
 #define STATE_CALL			1
 #define STATE_CURS			2
 #define STATE_ACHIEVE		3
 #define STATE_PRES			4
 #define STATE_HOME			5
+
 
 // Current Session States
 #define STATE_CURRENT_INIT		1
@@ -65,6 +82,10 @@
 
 // Achievement States
 #define STATE_ACHIEVE_HOME 1
+
+// Previos Session States
+#define STATE_PREV_HOME 1
+#define STATE_PREV_NEXT_PAGE 2
 
 void init_all(void)
 {
@@ -112,6 +133,17 @@ int pressed_Achievements(Point cursor) {
 	return is_Within_Boundary(cursor, bound1, bound2);
 }
 
+int pressed_Previous_Session(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = PREV_BOUND_1_X;
+	bound1.y = PREV_BOUND_1_Y;
+	bound2.x = PREV_BOUND_2_X;
+	bound2.y = PREV_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
 int Get_State_Home(Point cursor)
 {
 	if (pressed_Call(cursor))
@@ -120,6 +152,8 @@ int Get_State_Home(Point cursor)
 		return STATE_CURS;
 	else if (pressed_Achievements(cursor))
 		return STATE_ACHIEVE;
+	else if(pressed_Previous_Session(cursor))
+		return STATE_PRES;
 	else
 		return STATE_HOME;
 }
@@ -214,6 +248,67 @@ CURRENT_SESSION_STATES:
 			PrintLog();
 			eraseLogGUI();
 			drawLog();
+		}
+	}
+}
+
+
+// Previous Sessions Functions
+int pressed_Previous_Home(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = PREV_HOME_BOUND_1_X;
+	bound1.y = PREV_HOME_BOUND_1_Y;
+	bound2.x = PREV_HOME_BOUND_2_X;
+	bound2.y = PREV_HOME_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_Previous_Next_Page(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = PREV_NEXT_PAGE_BOUND_1_X;
+	bound1.y = PREV_NEXT_PAGE_BOUND_1_Y;
+	bound2.x = PREV_NEXT_PAGE_BOUND_2_X;
+	bound2.y = PREV_NEXT_PAGE_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int Get_State_Previous(Point cursor) {
+	if (pressed_Previous_Home(cursor))
+		return STATE_PREV_HOME;
+	else if(pressed_Previous_Next_Page(cursor))
+		return STATE_PREV_NEXT_PAGE;
+	else
+		return STATE_PRES;
+}
+
+
+void Previous_Session(void)
+{
+	drawPreviouSession();
+	Point Cursor;
+	while (1)
+	{
+		Cursor = Get_Touch_Point();
+		printf("x: %d, y: %d\n", Cursor.x, Cursor.y);
+		int state = Get_State_Previous(Cursor);
+
+PREVIOUS_SESSION_STATES:
+		switch (state)
+		{
+		case (STATE_PREV_HOME) :
+			printf("YOU PRESSED HOME\n");
+			return;
+			break;
+		case (STATE_PREV_NEXT_PAGE) :
+			printf("PRESSED NEXT PAGE\n");
+			break;
+		default :
+			printf("YOU PRESSED NOTHING\n");
+			break;
 		}
 	}
 }
@@ -353,6 +448,10 @@ STATES:
 		case (STATE_ACHIEVE) :
 			printf("YOU PRESSED ACHIEVEMENTS\n");
 			Achievements();
+			break;
+		case (STATE_PRES) :
+			printf("YOU PRESSED PREVIOUS SESSION\n");
+			Previous_Session();
 			break;
 		default :
 			printf("YOU PRESSED NOTHING\n");

@@ -51,5 +51,6 @@ void drawStartButton();
 void drawStopButton();
 void drawStartSession();
 void drawAchievementsScreen();
+void drawPreviouSession();
 int ReadAPixel (int x, int y);
 void ProgramPalette(int PaletteNumber, int RGB);
