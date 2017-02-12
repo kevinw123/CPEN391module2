@@ -282,5 +282,23 @@ void drawAchievementsScreen() {
 
 }
 
+// Draw Previous Session Screen
+void drawPreviouSession(){
+	ClearScreen();
+	// Entries
+	Rectangle(2, 797, 2, 102, WHITE);
+	Rectangle(2, 797, 106, 206, WHITE);
+	Rectangle(2, 797, 210, 310, WHITE);
+	Rectangle(2, 797, 314, 414, WHITE);
+	// Home
+	Rectangle(202, 599, 429, 477, MIDNIGHT_BLUE);
+
+	char* homeString = "HOME";
+	int i;
+	for (i = 0; i < strlen(homeString); i++) {
+		OutGraphicsCharFont2a( 370 + i * 15, 450, WHITE, BLACK, homeString[i], 0);
+	}
+}
+
 
 
