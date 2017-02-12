@@ -46,6 +46,61 @@
 #define CALLMENU_CALL_BOUND_2_Y		797
 #define CALLMENU_CALL_BOUND_2_X		477
 
+#define CALLMENU_CALL_CLEAR_BOUND_1_Y   530
+#define CALLMENU_CALL_CLEAR_BOUND_1_X	349
+#define CALLMENU_CALL_CLEAR_BOUND_2_Y   791
+#define CALLMENU_CALL_CLEAR_BOUND_2_X   425
+
+#define CALLMENU_CALL_0_BOUND_1_Y   265
+#define CALLMENU_CALL_0_BOUND_1_X	349
+#define CALLMENU_CALL_0_BOUND_2_Y   526
+#define CALLMENU_CALL_0_BOUND_2_X   425
+
+#define CALLMENU_CALL_1_BOUND_1_Y   2
+#define CALLMENU_CALL_1_BOUND_1_X	263
+#define CALLMENU_CALL_1_BOUND_2_Y   261
+#define CALLMENU_CALL_1_BOUND_2_X   345
+
+#define CALLMENU_CALL_2_BOUND_1_Y   265
+#define CALLMENU_CALL_2_BOUND_1_X	263
+#define CALLMENU_CALL_2_BOUND_2_Y   526
+#define CALLMENU_CALL_2_BOUND_2_X   345
+
+#define CALLMENU_CALL_3_BOUND_1_Y   530
+#define CALLMENU_CALL_3_BOUND_1_X	263
+#define CALLMENU_CALL_3_BOUND_2_Y   791
+#define CALLMENU_CALL_3_BOUND_2_X   345
+
+#define CALLMENU_CALL_4_BOUND_1_Y   2
+#define CALLMENU_CALL_4_BOUND_1_X	177
+#define CALLMENU_CALL_4_BOUND_2_Y   261
+#define CALLMENU_CALL_4_BOUND_2_X   259
+
+#define CALLMENU_CALL_5_BOUND_1_Y   265
+#define CALLMENU_CALL_5_BOUND_1_X	177
+#define CALLMENU_CALL_5_BOUND_2_Y   526
+#define CALLMENU_CALL_5_BOUND_2_X   259
+
+#define CALLMENU_CALL_6_BOUND_1_Y   530
+#define CALLMENU_CALL_6_BOUND_1_X	177
+#define CALLMENU_CALL_6_BOUND_2_Y   791
+#define CALLMENU_CALL_6_BOUND_2_X   259
+
+#define CALLMENU_CALL_7_BOUND_1_Y   2
+#define CALLMENU_CALL_7_BOUND_1_X	85
+#define CALLMENU_CALL_7_BOUND_2_Y   261
+#define CALLMENU_CALL_7_BOUND_2_X   173
+
+#define CALLMENU_CALL_8_BOUND_1_Y   265
+#define CALLMENU_CALL_8_BOUND_1_X	85
+#define CALLMENU_CALL_8_BOUND_2_Y   526
+#define CALLMENU_CALL_8_BOUND_2_X   173
+
+#define CALLMENU_CALL_9_BOUND_1_Y   530
+#define CALLMENU_CALL_9_BOUND_1_X	85
+#define CALLMENU_CALL_9_BOUND_2_Y   791
+#define CALLMENU_CALL_9_BOUND_2_X   173
+
 // Achievement Bounds
 #define ACHIEVE_HOME_BOUND_1_Y		202
 #define ACHIEVE_HOME_BOUND_1_X		429
@@ -79,7 +134,17 @@
 #define STATE_CALLMENU_HOME			1
 #define STATE_CALLMENU_CALL			2
 #define STATE_CALLMENU				3
-
+#define STATE_CALLMENU_0			4
+#define STATE_CALLMENU_1			5
+#define STATE_CALLMENU_2			6
+#define STATE_CALLMENU_3			7
+#define STATE_CALLMENU_4			8
+#define STATE_CALLMENU_5			9
+#define STATE_CALLMENU_6			10
+#define STATE_CALLMENU_7			11
+#define STATE_CALLMENU_8			12
+#define STATE_CALLMENU_9			13
+#define STATE_CALLMENU_CLEAR		14
 // Achievement States
 #define STATE_ACHIEVE_HOME 1
 
@@ -336,12 +401,155 @@ int pressed_CallMenu_Call(Point cursor)
 	return is_Within_Boundary(cursor, bound1, bound2);
 }
 
+int pressed_CallMenu_0(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_0_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_0_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_0_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_0_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_1(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_1_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_1_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_1_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_1_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_2(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_2_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_2_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_2_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_2_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_3(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_3_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_3_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_3_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_3_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_4(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_4_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_4_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_4_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_4_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_5(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_5_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_5_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_5_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_5_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_6(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_6_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_6_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_6_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_6_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_7(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_7_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_7_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_7_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_7_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_8(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_8_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_8_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_8_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_8_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_9(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_9_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_9_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_9_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_9_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
+int pressed_CallMenu_Clear(Point cursor)
+{
+	Point bound1, bound2;
+	bound1.x = CALLMENU_CALL_CLEAR_BOUND_1_X;
+	bound1.y = CALLMENU_CALL_CLEAR_BOUND_1_Y;
+	bound2.x = CALLMENU_CALL_CLEAR_BOUND_2_X;
+	bound2.y = CALLMENU_CALL_CLEAR_BOUND_2_Y;
+
+	return is_Within_Boundary(cursor, bound1, bound2);
+}
+
 int Get_State_Call(Point cursor)
 {
 	if (pressed_CallMenu_Home(cursor))
 		return STATE_CALLMENU_HOME;
 	else if (pressed_CallMenu_Call(cursor))
 		return STATE_CALLMENU_CALL;
+	else if (pressed_CallMenu_0(cursor))
+		return STATE_CALLMENU_0;
+	else if (pressed_CallMenu_1(cursor))
+		return STATE_CALLMENU_1;
+	else if (pressed_CallMenu_2(cursor))
+		return STATE_CALLMENU_2;
+	else if (pressed_CallMenu_3(cursor))
+		return STATE_CALLMENU_3;
+	else if (pressed_CallMenu_4(cursor))
+		return STATE_CALLMENU_4;
+	else if (pressed_CallMenu_5(cursor))
+		return STATE_CALLMENU_5;
+	else if (pressed_CallMenu_6(cursor))
+		return STATE_CALLMENU_6;
+	else if (pressed_CallMenu_7(cursor))
+		return STATE_CALLMENU_7;
+	else if (pressed_CallMenu_8(cursor))
+		return STATE_CALLMENU_8;
+	else if (pressed_CallMenu_9(cursor))
+		return STATE_CALLMENU_9;
+	else if (pressed_CallMenu_Clear(cursor))
+		return STATE_CALLMENU_CLEAR;
 	else
 		return STATE_CALLMENU;
 }
@@ -367,6 +575,39 @@ CALL_STATES:
 		case (STATE_CURS) :
 			printf("YOU PRESSED CALL\n");
 			// invoke wifi function here
+			break;
+		case (STATE_CALLMENU_0) :
+			printf("0\n");
+			break;
+		case (STATE_CALLMENU_1) :
+			printf("1\n");
+			break;
+		case (STATE_CALLMENU_2) :
+			printf("2\n");
+			break;
+		case (STATE_CALLMENU_3) :
+			printf("3\n");
+			break;
+		case (STATE_CALLMENU_4) :
+			printf("4\n");
+			break;
+		case (STATE_CALLMENU_5) :
+			printf("5\n");
+			break;
+		case (STATE_CALLMENU_6) :
+			printf("6\n");
+			break;
+		case (STATE_CALLMENU_7) :
+			printf("7\n");
+			break;
+		case (STATE_CALLMENU_8) :
+			printf("8\n");
+			break;
+		case (STATE_CALLMENU_9) :
+			printf("9\n");
+			break;
+		case (STATE_CALLMENU_CLEAR) :
+			printf("CLEAR\n");
 			break;
 		default :
 			printf("YOU PRESSED NOTHING\n");
