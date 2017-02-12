@@ -265,6 +265,14 @@ void drawAchievementsScreen() {
 	Rectangle(2, 797, 2, 427, WHITE);
 	// Home
 	Rectangle(202, 599, 429, 477, MIDNIGHT_BLUE);
+	// First row of achievements
+	Circle(120, 100 , 80, BLACK);
+	Circle(399, 100 , 80, BLACK);
+	Circle(678, 100 , 80, BLACK);
+	// Second row of achievements
+	Circle(120, 300 , 80, BLACK);
+	Circle(399, 300 , 80, BLACK);
+	Circle(678, 300 , 80, BLACK);
 
 	char* homeString = "HOME";
 	int i;
