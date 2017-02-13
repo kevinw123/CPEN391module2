@@ -122,21 +122,21 @@ void drawLog() {
 	int i;
 
 	char time_string[DATASIZE];
-	sprintf(time_string, "Time: %s", current_time);
+	sprintf(time_string, "Time: %s, Time Elapsed: %s", current_time, time_elapsed);
 	for (i = 0; time_string[i] != '\0'; i++) {
 		OutGraphicsCharFont2a( 10 + i * 15, 10, BLACK, WHITE, time_string[i], 0);
 	}
 
 	char position_string[4 * DATASIZE];
-	sprintf(position_string, "Latitude: %s, Longitude: %s", latitude, longitude);
+	sprintf(position_string, "Lat: %s, Long: %s, Alt: %s", latitude, longitude, altitude);
 	for (i = 0; position_string[i] != '\0'; i++) {
 		OutGraphicsCharFont2a( 10 + i * 15, 30, BLACK, WHITE, position_string[i], 0);
 	}
 
-	char altitude_string[2 * DATASIZE];
-	sprintf(altitude_string, "Altitude: %s", altitude);
-	for (i = 0; altitude_string[i] != '\0'; i++) {
-		OutGraphicsCharFont2a( 10 + i * 15, 50, BLACK, WHITE, altitude_string[i], 0);
+	char distance_speed_string[DATASIZE];
+	sprintf(distance_speed_string, "Distance: %s, Speed: %s", distance, speed);
+	for (i = 0; distance_speed_string[i] != '\0'; i++) {
+		OutGraphicsCharFont2a( 10 + i * 15, 50, BLACK, WHITE, distance_speed_string[i], 0);
 	}
 }
 
@@ -283,7 +283,7 @@ void drawAchievementsScreen() {
 }
 
 // Draw Previous Session Screen
-void drawPreviouSession(){
+void drawPreviouSession() {
 	ClearScreen();
 	// Entries
 	Rectangle(2, 797, 2, 102, WHITE);

@@ -127,8 +127,10 @@
 
 // Current Session States
 #define STATE_CURRENT_INIT		1
-#define STATE_CURRENT_SESSION	2
-#define STATE_CURRENT_HOME		3
+#define STATE_CURRENT_STARTED	2
+#define STATE_CURRENT_SESSION	3
+#define STATE_CURRENT_STOPPED	4
+#define STATE_CURRENT_HOME		5
 
 // Call States
 #define STATE_CALLMENU_HOME			1
@@ -217,7 +219,7 @@ int Get_State_Home(Point cursor)
 		return STATE_CURS;
 	else if (pressed_Achievements(cursor))
 		return STATE_ACHIEVE;
-	else if(pressed_Previous_Session(cursor))
+	else if (pressed_Previous_Session(cursor))
 		return STATE_PRES;
 	else
 		return STATE_HOME;
@@ -249,17 +251,14 @@ int pressed_Current_Start(Point cursor)
 
 int Get_State_Current(Point cursor)
 {
-	if (pressed_Current_Home(cursor))
+	if (pressed_Current_Home(cursor)) {
 		return STATE_CURRENT_HOME;
+	}
 	else if (pressed_Current_Start(cursor)) {
 		if (session_started == 0) {
-			session_started = 1;
-			drawStopButton();
-			return STATE_CURRENT_SESSION;
+			return STATE_CURRENT_STARTED;
 		} else {
-			session_started = 0;
-			drawStartButton();
-			return STATE_CURRENT_INIT;
+			return STATE_CURRENT_STOPPED;
 		}
 	}
 	else {
@@ -274,6 +273,8 @@ int Get_State_Current(Point cursor)
 void Current_Session(void)
 {
 	session_started = 0;
+	extracted_first_log = 0;
+
 	drawStartSession();
 	Init_GPS();
 	PrintLog();
@@ -281,7 +282,8 @@ void Current_Session(void)
 
 	Point Cursor;
 	while (1) {
-		if ((TouchScreen_Status & 1) == 0 && session_started == 1) {
+
+		if ((TouchScreen_Status & 1) == 0) {
 			Cursor.x = 0;
 			Cursor.y = 0;
 		} else {
@@ -294,14 +296,28 @@ CURRENT_SESSION_STATES:
 		switch (state)
 		{
 		case (STATE_CURRENT_SESSION) :
-			printf("IN SESSION\n");
+			//printf("IN SESSION\n");
 			break;
 		case (STATE_CURRENT_INIT) :
-			printf("INIT/STOPPED\n");
+			//printf("INIT\n");
+			break;
+		case (STATE_CURRENT_STARTED) :
+			printf("STARTED");
+			session_started = 1;
+			extracted_first_log = 0;
+			drawStopButton();
+			break;
+		case (STATE_CURRENT_STOPPED) :
+			printf("STOPPED\n");
+			session_started = 0;
+			getSessionData();
+			drawStartButton();
 			break;
 		case (STATE_CURRENT_HOME) :
 			printf("YOU PRESSED HOME\n");
 			session_started = 0;
+			extracted_first_log = 0;
+			getSessionData();
 			return;
 			break;
 		default :
@@ -344,7 +360,7 @@ int pressed_Previous_Next_Page(Point cursor)
 int Get_State_Previous(Point cursor) {
 	if (pressed_Previous_Home(cursor))
 		return STATE_PREV_HOME;
-	else if(pressed_Previous_Next_Page(cursor))
+	else if (pressed_Previous_Next_Page(cursor))
 		return STATE_PREV_NEXT_PAGE;
 	else
 		return STATE_PRES;
