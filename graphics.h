@@ -54,3 +54,7 @@ void drawAchievementsScreen();
 void drawPreviouSession();
 int ReadAPixel (int x, int y);
 void ProgramPalette(int PaletteNumber, int RGB);
+char* dialNumber;
+int dialIndex;
+void printDialNumber(char number, int dialIndex);
+void clearNumberScreen();

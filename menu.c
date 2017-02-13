@@ -574,6 +574,8 @@ void Call(void)
 {
 	drawKeypad();
 	// implement keypad polling...
+	dialIndex = 10;
+	dialNumber = "";
 	Point Cursor;
 	while (1)
 	{
@@ -593,37 +595,79 @@ CALL_STATES:
 			// invoke wifi function here
 			break;
 		case (STATE_CALLMENU_0) :
-			printf("0\n");
+			if(dialIndex < 700){
+				printDialNumber('0', dialIndex);
+				dialIndex += 15;
+				dialNumber = strcat(dialNumber, "0");
+			}
 			break;
 		case (STATE_CALLMENU_1) :
-			printf("1\n");
+			if(dialIndex < 700){
+				printDialNumber('1', dialIndex);
+				dialIndex += 15;
+				dialNumber = strcat(dialNumber, "1");
+			}
 			break;
 		case (STATE_CALLMENU_2) :
-			printf("2\n");
+			if(dialIndex < 700){
+				printDialNumber('2', dialIndex);
+				dialIndex += 15;
+				dialNumber = strcat(dialNumber, "2");
+			}
 			break;
 		case (STATE_CALLMENU_3) :
-			printf("3\n");
+			if(dialIndex < 700){
+				printDialNumber('3', dialIndex);
+				dialIndex += 15;
+				dialNumber = strcat(dialNumber, "3");
+			}
 			break;
 		case (STATE_CALLMENU_4) :
-			printf("4\n");
+			if(dialIndex < 700){
+				printDialNumber('4', dialIndex);
+				dialIndex += 15;
+				dialNumber = strcat(dialNumber, "4");
+			}
 			break;
 		case (STATE_CALLMENU_5) :
-			printf("5\n");
+			if(dialIndex < 700){
+				printDialNumber('5', dialIndex);
+				dialIndex += 15;
+				dialNumber = strcat(dialNumber, "5");
+			}
 			break;
 		case (STATE_CALLMENU_6) :
-			printf("6\n");
+			if(dialIndex < 700){
+				printDialNumber('6', dialIndex);
+				dialIndex += 15;
+				dialNumber = strcat(dialNumber, "6");
+			}
 			break;
 		case (STATE_CALLMENU_7) :
-			printf("7\n");
+			if(dialIndex < 700){
+				printDialNumber('7', dialIndex);
+				dialIndex += 15;
+				dialNumber = strcat(dialNumber, "7");
+			}
 			break;
 		case (STATE_CALLMENU_8) :
-			printf("8\n");
+			if(dialIndex < 700){
+				printDialNumber('8', dialIndex);
+				dialIndex += 15;
+				dialNumber = strcat(dialNumber, "8");
+			}
 			break;
 		case (STATE_CALLMENU_9) :
-			printf("9\n");
+			if(dialIndex < 700){
+				printDialNumber('9', dialIndex);
+				dialIndex += 15;
+				dialNumber = strcat(dialNumber, "9");
+			}
 			break;
 		case (STATE_CALLMENU_CLEAR) :
-			printf("CLEAR\n");
+			clearNumberScreen();
+			dialIndex = 10;
+			dialNumber = strcpy(dialNumber, "");
 			break;
 		default :
 			printf("YOU PRESSED NOTHING\n");

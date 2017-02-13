@@ -216,7 +216,6 @@ void drawKeypad() {
 	Rectangle(2, 399, 429, 477, MIDNIGHT_BLUE);
 
 	int i;
-	char* dialNumber = "123456789";
 	char* zero = "0";
 	char* one = "1";
 	char* two = "2";
@@ -253,9 +252,16 @@ void drawKeypad() {
 		OutGraphicsCharFont2a( 570 + i * 15, 450, WHITE, BLACK, callString[i], 0);
 	}
 
-	for (i = 0; i < strlen(dialNumber); i++) {
-		OutGraphicsCharFont2a( 10 + i * 15, 40, BLACK, BLACK, dialNumber[i], 0);
-	}
+}
+
+// Clear the keypad number screen
+void clearNumberScreen(){
+	Rectangle(2, 797, 2, 80, WHITE);
+}
+
+// Prints the number pressed on keypad
+void printDialNumber(char number, int dialIndex){
+	OutGraphicsCharFont2a(dialIndex, 40, BLACK, BLACK, number, 0);
 }
 
 // Draw Achievement Screen Functions
