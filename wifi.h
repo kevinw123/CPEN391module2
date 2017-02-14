@@ -21,4 +21,5 @@ int putcharWiFi(int c);
 void Init_WiFi(void);
 void writeReturnNewLine(void);
 void sendCommand(char *string);
-void createInsertCommand(char *command, char *start_lat, char *start_long, char *end_lat, char *end_long, char *start_time, char *end_time, char *calories_burned, char *speed);
+char* createInsertCommand(char *start_lat, char *start_long, char *end_lat, char *end_long, char *start_time, char *end_time, char *total_distance, char *speed);
+char* createCallCommand(char *numberToCall);

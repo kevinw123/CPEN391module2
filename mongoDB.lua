@@ -41,6 +41,8 @@ end
 
 if (count <= 5) then
   print("Connected Successfully")
+  gpio.mode(3, gpio.OUTPUT)
+  gpio.write(3, gpio.LOW)
 else
   print("Could not find connection")
 end
@@ -76,9 +78,9 @@ function testPost()
   end)
 end
 
-function insertDB(start_time, time_elapsed, state_latitude, start_longitude, end_latitude, end_longitude, calories_burned, speed)
+function insertDB(start_time, time_elapsed, state_latitude, start_longitude, end_latitude, end_longitude, total_distance, speed)
   print("Attempting to POST to: "..relay_ip..relay_insert)
-  sampleTable = genTable(start_time, time_elapsed, state_latitude, start_longitude, end_latitude, end_longitude, calories_burned, speed)
+  sampleTable = genTable(start_time, time_elapsed, state_latitude, start_longitude, end_latitude, end_longitude, total_distance, speed)
   encodedTable = cjson.encode(sampleTable)
   http.post(relay_ip..relay_insert, 'Content-Type: application/json\r\n', encodedTable, function(code,data)
     if (code < 0) then
@@ -91,7 +93,7 @@ function insertDB(start_time, time_elapsed, state_latitude, start_longitude, end
 end
 -- functions
 
-function genTable(start_time, time_elapsed, start_latitude, start_longitude, end_latitude, end_longitude, calories_burned, speed)
+function genTable(start_time, time_elapsed, start_latitude, start_longitude, end_latitude, end_longitude, total_distance, speed)
   table = {}
   table["start_time"] = start_time
   table["end_time"] = time_elapsed
@@ -99,7 +101,7 @@ function genTable(start_time, time_elapsed, start_latitude, start_longitude, end
   table["start_long"] = start_longitude
   table["end_lat"] = end_latitude
   table["end_long"] = end_longitude
-  table["cals_burned"] = calories_burned
+  table["total_distance"] = total_distance
   table["speed"] = speed
   print(table)
   return table

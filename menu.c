@@ -158,7 +158,7 @@
 void init_all(void)
 {
 	Init_Touch();
-	//Init_WiFi();
+	Init_WiFi();
 	Init_GPS();
 }
 
@@ -595,6 +595,9 @@ CALL_STATES:
 		case (STATE_CURS) :
 			printf("YOU PRESSED CALL\n");
 			// invoke wifi function here
+			char *command;
+			command = createCallCommand(dialNumber);
+			sendCommand(command);
 			dialNumber = strcpy(dialNumber, "");
 			break;
 		case (STATE_CALLMENU_0) :

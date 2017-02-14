@@ -32,7 +32,7 @@ void Init_WiFi(void)
 	printf("%c", getcharWiFi());
 	usleep(5000);
 
-
+	sendCommand(SETUP_LUA);
 	printf("Wi-Fi Initiated.\n");
 }
 
@@ -98,11 +98,12 @@ void sendCommand(char *string)
 	writeReturnNewLine();
 }
 
-void createInsertCommand(char *command, char *start_lat, char *start_long, char *end_lat, char *end_long, char *start_time, char *end_time, char *calories_burned, char *speed)
+char* createInsertCommand(char *start_lat, char *start_long, char *end_lat, char *end_long, char *start_time, char *end_time, char *total_distance, char *speed)
 {
+	char *command;
 	char *literal_start = "insertDB(";
 	char *literal_end = ")";
-	int cmd_size = strlen(literal_start) + strlen(start_lat) + strlen(start_long) + strlen(end_lat) + strlen(end_long) + strlen(start_time) + strlen(end_time) + strlen(calories_burned) + strlen(speed) + strlen(literal_end);
+	int cmd_size = strlen(literal_start) + strlen(start_lat) + strlen(start_long) + strlen(end_lat) + strlen(end_long) + strlen(start_time) + strlen(end_time) + strlen(total_distance) + strlen(speed) + strlen(literal_end);
 	char cmd[cmd_size + 50];
 	strcpy(cmd, literal_start);
 	strcat(cmd, "\"");
@@ -118,27 +119,30 @@ void createInsertCommand(char *command, char *start_lat, char *start_long, char 
 	strcat(cmd, "\",\"");
 	strcat(cmd, end_time);
 	strcat(cmd, "\",\"");
-	strcat(cmd, calories_burned);
+	strcat(cmd, total_distance);
 	strcat(cmd, "\",\"");
 	strcat(cmd, speed);
 	strcat(cmd, "\"");
 	strcat(cmd, literal_end);
 	strcpy(command, cmd);
+	return command;
 }
 
-void createCallCommand(char *command, char *numberToCall)
+char* createCallCommand(char *numberToCall)
 {
 	// twilioCall(numberToCall)
+	char *command;
 	char *literal_start = "twilioCall(";
 	char *literal_end = ")";
 	int cmd_size = strlen(literal_start) + strlen(numberToCall) + strlen(literal_end);
 	char cmd[cmd_size + 50];
 	strcpy(cmd, literal_start);
-	strcat(cmd, "\"");
+	strcat(cmd, "\"+1");
 	strcat(cmd, numberToCall);
 	strcat(cmd, "\"");
 	strcat(cmd, literal_end);
 	strcpy(command, cmd);
+	return command;
 }
 
 
