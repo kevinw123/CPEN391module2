@@ -86,6 +86,13 @@ void Circle(int x, int y, int radius, int Colour)
 	GraphicsCommandReg = DrawCircle;		// give graphics a "draw Horizontal Line" command
 }
 
+void drawString(char *string, int x, int y, int fontcolour, int backgroundcolour) {
+	int i;
+	for (i = 0; i < strlen(string); i++) {
+		OutGraphicsCharFont2a( x + i * 15, y, fontcolour, backgroundcolour, string[i], 0);
+	}
+}
+
 // Draw Home Functions
 void drawHome() {
 	ClearScreen();
@@ -99,45 +106,26 @@ void drawHome() {
 	char* achievementString = "ACHIEVEMENTS";
 	char* callString = "CALL";
 
-	int i;
-
-	for (i = 0; i < strlen(curSession); i++) {
-		OutGraphicsCharFont2a( 80 + i * 15, 118, WHITE, BLACK, curSession[i], 0);
-	}
-	for (i = 0; i < strlen(prevSession); i++) {
-		OutGraphicsCharFont2a( 470 + i * 15, 118, WHITE, BLACK, prevSession[i], 0);
-	}
-	for (i = 0; i < strlen(achievementString); i++) {
-		OutGraphicsCharFont2a( 510 + i * 15, 358, WHITE, BLACK, achievementString[i], 0);
-	}
-	for (i = 0; i < strlen(callString); i++) {
-		OutGraphicsCharFont2a( 170 + i * 15, 358, WHITE, BLACK, callString[i], 0);
-	}
-
-
+	drawString(curSession, 80, 118, WHITE, BLACK);
+	drawString(prevSession, 470, 118, WHITE, BLACK);
+	drawString(achievementString, 510, 358, WHITE, BLACK);
+	drawString(callString, 170, 358, WHITE, BLACK);
 }
 
 // Draw Current Session Functions
 void drawLog() {
-	int i;
 
 	char time_string[DATASIZE];
 	sprintf(time_string, "Time: %s, Time Elapsed: %s", current_time, time_elapsed);
-	for (i = 0; time_string[i] != '\0'; i++) {
-		OutGraphicsCharFont2a( 10 + i * 15, 10, BLACK, WHITE, time_string[i], 0);
-	}
+	drawString(time_string, 10, 10, BLACK, WHITE);
 
 	char position_string[4 * DATASIZE];
 	sprintf(position_string, "Lat: %s, Long: %s, Alt: %s", latitude, longitude, altitude);
-	for (i = 0; position_string[i] != '\0'; i++) {
-		OutGraphicsCharFont2a( 10 + i * 15, 30, BLACK, WHITE, position_string[i], 0);
-	}
+	drawString(position_string, 10, 30, BLACK, WHITE);
 
 	char distance_speed_string[DATASIZE];
 	sprintf(distance_speed_string, "Distance: %s, Speed: %s", distance, speed);
-	for (i = 0; distance_speed_string[i] != '\0'; i++) {
-		OutGraphicsCharFont2a( 10 + i * 15, 50, BLACK, WHITE, distance_speed_string[i], 0);
-	}
+	drawString(distance_speed_string, 10, 50, BLACK, WHITE);
 }
 
 void eraseLogGUI() {
@@ -145,30 +133,22 @@ void eraseLogGUI() {
 }
 
 void drawStartButton() {
-	// Start
+
 	Rectangle(402, 797, 429, 477, FOREST_GREEN);
 
 	char* startString = "START";
-	int i;
-	for (i = 0; i < strlen(startString); i++) {
-		OutGraphicsCharFont2a( 570 + i * 15, 450, WHITE, BLACK, startString[i], 0);
-	}
-
+	drawString(startString, 570, 450, WHITE, BLACK);
 }
 
 void drawStopButton() {
-	// Stop
+
 	Rectangle(402, 797, 429, 477, MAROON);
 
 	char *stopString = "STOP";
-	int i;
-	for (i = 0; i < strlen(stopString); i++) {
-		OutGraphicsCharFont2a( 570 + i * 15, 450, WHITE, BLACK, stopString[i], 0);
-	}
-
+	drawString(stopString, 570, 450, WHITE, BLACK);
 }
 
-void drawMap(){
+void drawMap() {
 	Rectangle(2, 797, 82, 427, LIGHT_GREEN);
 	// Main Mall
 	Rectangle(2, 797, 88, 114, SILVER);
@@ -178,7 +158,7 @@ void drawMap(){
 
 	// Engineering Road
 	Rectangle(2, 500, 241, 267, SILVER);
-	Rectangle(474, 500 ,267, 395, SILVER);
+	Rectangle(474, 500 , 267, 395, SILVER);
 
 	// East Mall
 	Rectangle(2, 797, 395, 421, SILVER);
@@ -215,47 +195,24 @@ void drawMap(){
 	char* mainMallString = "Main Mall";
 	char* eastMallString = "East Mall";
 	char* agronomyString = "Agronomy Road";
+	char *engineeringString = "Engineering Road";
 
+	drawString(macleodString, 520, 177, BLACK, WHITE);
+	drawString(cemeString, 690, 320, BLACK, WHITE);
+	drawString(edcString, 560, 320, BLACK, WHITE);
+	drawString(icicsString, 150, 177, BLACK, WHITE);
+	drawString(dmpString, 80, 328, BLACK, WHITE);
+	drawString(engCoopString, 205, 328, BLACK, WHITE);
+	drawString(ampelString, 350, 328, BLACK, WHITE);
+	drawString(mainMallString, 520, 93, BLACK, WHITE);
+	drawString(eastMallString, 520, 399, BLACK, WHITE);
+	drawString(engineeringString, 80, 245, BLACK, WHITE);
 
-	for (i = 0; i < strlen(macleodString); i++) {
-		OutGraphicsCharFont2a( 520 + i * 15, 177, BLACK, BLACK, macleodString[i], 0);
-	}
-
-	for (i = 0; i < strlen(cemeString); i++) {
-		OutGraphicsCharFont2a( 690 + i * 15, 320, BLACK, BLACK, cemeString[i], 0);
-	}
-
-	for (i = 0; i < strlen(edcString); i++) {
-		OutGraphicsCharFont2a( 560 + i * 15, 320, BLACK, BLACK, edcString[i], 0);
-	}
-
-	for (i = 0; i < strlen(icicsString); i++) {
-		OutGraphicsCharFont2a( 150 + i * 15, 177, BLACK, BLACK, icicsString[i], 0);
-	}
-
-	for (i = 0; i < strlen(dmpString); i++) {
-		OutGraphicsCharFont2a( 80 + i * 15, 328, BLACK, BLACK, dmpString[i], 0);
-	}
-
-
-	for (i = 0; i < strlen(engCoopString); i++) {
-		OutGraphicsCharFont2a( 205 + i * 15, 328, BLACK, BLACK, engCoopString[i], 0);
-	}
-
-	for (i = 0; i < strlen(ampelString); i++) {
-		OutGraphicsCharFont2a( 350 + i * 15, 328, BLACK, BLACK, ampelString[i], 0);
-	}
-
-	for (i = 0; i < strlen(mainMallString); i++) {
-		OutGraphicsCharFont2a( 520 + i * 15, 93, BLACK, BLACK, mainMallString[i], 0);
-	}
-	for (i = 0; i < strlen(eastMallString); i++) {
-		OutGraphicsCharFont2a( 520 + i * 15, 399, BLACK, BLACK, eastMallString[i], 0);
-	}
 	for (i = 0; i < strlen(agronomyString); i++) {
-		OutGraphicsCharFont2a( 14, 100 + i * 15, BLACK, BLACK, agronomyString[i], 0);
+		OutGraphicsCharFont2a( 14, 100 + i * 15, BLACK, WHITE, agronomyString[i], 0);
 	}
 }
+
 void drawStartSession() {
 	int session_started = 1;
 	Rectangle(0, 799, 0, 479, BLACK);
@@ -267,12 +224,29 @@ void drawStartSession() {
 	Rectangle(2, 400, 429, 477, MIDNIGHT_BLUE);
 
 	char* homeString = "HOME";
-	int i;
-	for (i = 0; i < strlen(homeString); i++) {
-		OutGraphicsCharFont2a( 170 + i * 15, 450, WHITE, BLACK, homeString[i], 0);
-	}
+	drawString(homeString, 170, 450, WHITE, BLACK);
 
 	drawStartButton();
+}
+
+// Draw Previous Session Screen
+void drawPreviouSession() {
+	ClearScreen();
+	// Entries
+	Rectangle(2, 797, 2, 102, WHITE);
+	Rectangle(2, 797, 106, 206, WHITE);
+	Rectangle(2, 797, 210, 310, WHITE);
+	Rectangle(2, 797, 314, 414, WHITE);
+	// Next Page Button
+	Rectangle(403, 797, 429, 477, FOREST_GREEN);
+	// Home Button
+	Rectangle(2, 399, 429, 477, MIDNIGHT_BLUE);
+
+	char* homeString = "HOME";
+	char* nextString = "NEXT";
+	drawString(homeString, 170, 450, WHITE, BLACK);
+	drawString(nextString, 570, 450, WHITE, BLACK);
+
 }
 
 // Draw Call Screen Functions
@@ -302,7 +276,6 @@ void drawKeypad() {
 	// Home Button
 	Rectangle(2, 399, 429, 477, MIDNIGHT_BLUE);
 
-	int i;
 	char* zero = "0";
 	char* one = "1";
 	char* two = "2";
@@ -332,23 +305,118 @@ void drawKeypad() {
 	OutGraphicsCharFont2a( 400, 116, WHITE, BLACK, eight[0], 0);
 	OutGraphicsCharFont2a( 646, 116, WHITE, BLACK, nine[0], 0);
 
-	for (i = 0; i < strlen(homeString); i++) {
-		OutGraphicsCharFont2a( 170 + i * 15, 450, WHITE, BLACK, homeString[i], 0);
-	}
-	for (i = 0; i < strlen(callString); i++) {
-		OutGraphicsCharFont2a( 570 + i * 15, 450, WHITE, BLACK, callString[i], 0);
-	}
-
+	drawString(homeString, 170, 450, WHITE, BLACK);
+	drawString(callString, 570, 450, WHITE, BLACK);
 }
 
 // Clear the keypad number screen
-void clearNumberScreen(){
+void clearNumberScreen() {
 	Rectangle(2, 797, 2, 80, WHITE);
 }
 
 // Prints the number pressed on keypad
-void printDialNumber(char number, int dialIndex){
+void printDialNumber(char number, int dialIndex) {
 	OutGraphicsCharFont2a(dialIndex, 40, BLACK, BLACK, number, 0);
+}
+
+int distance1_achieved = 1;
+int distance2_achieved = 1;
+int session1_achieved = 1;
+int session2_achieved = 1;
+int speed1_achieved = 1;
+int speed2_achieved = 1;
+int achievementsRadius = 80;
+char *lockedAchievementString = "LOCKED";
+
+void drawLockedAchievement(int x, int y) {
+	Circle(x, y , achievementsRadius, BLACK);
+	drawString(lockedAchievementString, x - 40, y - 5, WHITE, BLACK);
+}
+
+void drawAchievementDistance1() {
+	int x = 120;
+	int y = 100;
+	if (distance1_achieved) {
+		Circle(x, y, achievementsRadius, DARK_MAGENTA);
+		char *achievementString1 = "100 M IN";
+		drawString(achievementString1, x - 55, y - 15, WHITE, BLACK);
+		char *achievementString2 = "A SESSION";
+		drawString(achievementString2, x - 60, y + 5, WHITE, BLACK);
+
+	} else {
+		drawLockedAchievement(x, y);
+	}
+}
+
+void drawAchievementDistance2() {
+	int x = 120;
+	int y = 300;
+	if (distance2_achieved) {
+		Circle(x, y, achievementsRadius, DARK_MAGENTA);
+		char *achievementString1 = "500 M IN";
+		drawString(achievementString1, x - 55, y - 15, WHITE, BLACK);
+		char *achievementString2 = "A SESSION";
+		drawString(achievementString2, x - 60, y + 5, WHITE, BLACK);
+	} else {
+		drawLockedAchievement(x, y);
+	}
+}
+
+void drawAchievementSession1() {
+	int x = 399;
+	int y = 100;
+	if (session1_achieved) {
+		Circle(x, y, achievementsRadius, TEAL);
+		char *achievementString1 = "3 SESSIONS";
+		drawString(achievementString1, x - 70, y - 15, WHITE, BLACK);
+		char *achievementString2 = "COMPLETED";
+		drawString(achievementString2, x - 60, y + 5, WHITE, BLACK);
+	} else {
+		drawLockedAchievement(x, y);
+	}
+}
+
+void drawAchievementSession2() {
+	int x = 399;
+	int y = 300;
+	if (session2_achieved) {
+		Circle(x, y, achievementsRadius, TEAL);
+		char *achievementString1 = "5 SESSIONS";
+		drawString(achievementString1, x - 70, y - 15, WHITE, BLACK);
+		char *achievementString2 = "COMPLETED";
+		drawString(achievementString2, x - 60, y + 5, WHITE, BLACK);
+	} else {
+		drawLockedAchievement(x, y);
+	}
+}
+
+void drawAchievementSpeed1() {
+	int x = 678;
+	int y = 100;
+	if (speed1_achieved) {
+		Circle(x, y, achievementsRadius, MEDIUM_VIOLET_RED);
+		char *achievementString1 = "REACHED";
+		drawString(achievementString1, x - 45, y - 15, WHITE, BLACK);
+		char *achievementString2 = "3 M/S";
+		drawString(achievementString2, x - 30, y + 5, WHITE, BLACK);
+	} else {
+		drawLockedAchievement(x, y);
+	}
+}
+
+void drawAchievementSpeed2() {
+	int x = 678;
+	int y = 300;
+	if (speed2_achieved) {
+		Circle(x, y, achievementsRadius, MEDIUM_VIOLET_RED);
+		char *achievementString1 = "REACHED";
+		drawString(achievementString1, x - 45, y - 15, WHITE, BLACK);
+		char *achievementString2 = "5 M/S";
+		drawString(achievementString2, x - 30, y + 5, WHITE, BLACK);
+	} else {
+		drawLockedAchievement(x, y);
+	}
+
 }
 
 // Draw Achievement Screen Functions
@@ -358,44 +426,15 @@ void drawAchievementsScreen() {
 	Rectangle(2, 797, 2, 427, WHITE);
 	// Home
 	Rectangle(202, 599, 429, 477, MIDNIGHT_BLUE);
-	// First row of achievements
-	Circle(120, 100 , 80, BLACK);
-	Circle(399, 100 , 80, BLACK);
-	Circle(678, 100 , 80, BLACK);
-	// Second row of achievements
-	Circle(120, 300 , 80, BLACK);
-	Circle(399, 300 , 80, BLACK);
-	Circle(678, 300 , 80, BLACK);
+	drawAchievementDistance1();
+	drawAchievementDistance2();
+	drawAchievementSession1();
+	drawAchievementSession2();
+	drawAchievementSpeed1();
+	drawAchievementSpeed2();
 
 	char* homeString = "HOME";
-	int i;
-	for (i = 0; i < strlen(homeString); i++) {
-		OutGraphicsCharFont2a( 370 + i * 15, 450, WHITE, BLACK, homeString[i], 0);
-	}
-
-}
-
-// Draw Previous Session Screen
-void drawPreviouSession() {
-	ClearScreen();
-	// Entries
-	Rectangle(2, 797, 2, 102, WHITE);
-	Rectangle(2, 797, 106, 206, WHITE);
-	Rectangle(2, 797, 210, 310, WHITE);
-	Rectangle(2, 797, 314, 414, WHITE);
-	// Next Page Button
-	Rectangle(403, 797, 429, 477, FOREST_GREEN);
-	// Home Button
-	Rectangle(2, 399, 429, 477, MIDNIGHT_BLUE);
-	char* homeString = "HOME";
-	char* nextString = "NEXT";
-	int i;
-	for (i = 0; i < strlen(homeString); i++) {
-		OutGraphicsCharFont2a( 170 + i * 15, 450, WHITE, BLACK, homeString[i], 0);
-	}
-	for (i = 0; i < strlen(nextString); i++) {
-		OutGraphicsCharFont2a( 570 + i * 15, 450, WHITE, BLACK, nextString[i], 0);
-	}
+	drawString(homeString, 370, 450, WHITE, BLACK);
 }
 
 

@@ -43,6 +43,7 @@ void WriteHLine (int x1, int x2, int y, int Colour);
 void ClearScreen();
 void Rectangle(int x1, int x2, int y1, int y2, int Colour);
 void Circle(int x, int y, int radius, int Colour);
+void drawString(char *string, int x, int y, int fontcolour, int backgroundcolour);
 void drawHome();
 void drawKeypad();
 void drawLog();
