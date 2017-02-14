@@ -30,6 +30,30 @@ void WriteHLine (int x1, int x2, int y, int Colour)
 	GraphicsCommandReg = DrawHLine;		// give graphics a "draw Horizontal Line" command
 }
 
+void WriteVLine (int x, int y1, int y2, int Colour)
+{
+	WAIT_FOR_GRAPHICS;			// is graphics ready for new command
+
+	GraphicsX1Reg = x;			// write coords to x1, y1
+	GraphicsY1Reg = x1;
+	GraphicsY2Reg = y2;
+
+	GraphicsColourReg = Colour;		// set pixel colour with a palette number
+	GraphicsCommandReg = DrawVLine;		// give graphics a "draw Horizontal Line" command
+}
+
+void WriteLine (int x1, int x2, int y1, int y2, int Colour)
+{
+	WAIT_FOR_GRAPHICS;			// is graphics ready for new command
+
+	GraphicsX1Reg = x1;			// write coords to x1, y1
+	GraphicsX2Reg = x2;
+	GraphicsY1Reg = x1;
+	GraphicsY2Reg = y2;
+
+	GraphicsColourReg = Colour;		// set pixel colour with a palette number
+	GraphicsCommandReg = DrawLine;		// give graphics a "draw Horizontal Line" command
+}
 /*****************************************************************************************
 * This function read a single pixel from x,y coords specified and returns its colour
 * Note returned colour is a palette number (0-255) not a 24 bit RGB value
