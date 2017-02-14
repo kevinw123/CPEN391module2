@@ -2,6 +2,7 @@
 #include "graphics.h"
 #include "touchscreen.h"
 #include "Colours.h"
+#include "wifi.h"
 
 // Home Menu Bounds
 #define CURS_BOUND_1_Y		2

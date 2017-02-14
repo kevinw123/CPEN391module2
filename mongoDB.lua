@@ -13,6 +13,7 @@ relay_ip = "http://52.38.18.190"
 relay_test = "/test"
 relay_insert = "/api/db/insert"
 relay_retrieve = "/api/db/get"
+relay_call = "/api/call"
 
 
 -- configure ESP as a station
@@ -23,7 +24,26 @@ wifi.sta.autoconnect(1)
 -- pause for connection to take place - adjust time delay if necessary or repeat until connection made
 print("Waiting to establish wifi...")
 tmr.delay(5000000) -- wait 1,000,000 us = 1 second
-print(wifi.sta.status())
+status = wifi.sta.status()
+print(status)
+
+count = 0
+while (status ~= 5 and count <= 5)
+do
+  tmr.delay(3000000)
+  print("Attempting to reconnect... "..count)
+  wifi.setmode(wifi.STATION)
+  wifi.sta.config(SSID,SSID_PASSWORD)
+  wifi.sta.autoconnect(1)
+  status = wifi.sta.status()
+  count = count + 1
+end
+
+if (count <= 5) then
+  print("Connected Successfully")
+else
+  print("Could not find connection")
+end
 
 -- This function registers a function to echo back any response from the server, to our DE1/NIOS system
 -- or hyper-terminal (depending on what the dongle is connected to)
@@ -83,4 +103,19 @@ function genTable(start_time, time_elapsed, start_latitude, start_longitude, end
   table["speed"] = speed
   print(table)
   return table
+end
+
+function twilioCall(numberToCall)
+  print("Attempting to POST to: "..relay_ip..relay_call)
+  table = {}
+  table["to"] = numberToCall
+  encodedTable = cjson.encode(table);
+  http.post(relay_ip..relay_call, 'Content-Type: application/json\r\n', encodedTable, function(code,data)
+    if (code < 0) then
+      print("HTTP request failed.")
+    else
+      print("HTTP Request Succeeded.")
+      print(code, data)
+    end
+  end)
 end

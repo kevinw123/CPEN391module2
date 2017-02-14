@@ -35,7 +35,7 @@ void WriteVLine (int x, int y1, int y2, int Colour)
 	WAIT_FOR_GRAPHICS;			// is graphics ready for new command
 
 	GraphicsX1Reg = x;			// write coords to x1, y1
-	GraphicsY1Reg = x1;
+	GraphicsY1Reg = y1;
 	GraphicsY2Reg = y2;
 
 	GraphicsColourReg = Colour;		// set pixel colour with a palette number
