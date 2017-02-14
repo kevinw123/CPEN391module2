@@ -168,13 +168,100 @@ void drawStopButton() {
 
 }
 
+void drawMap(){
+	Rectangle(2, 797, 82, 427, LIGHT_GREEN);
+	// Main Mall
+	Rectangle(2, 797, 88, 114, SILVER);
+
+	// Agronomy Road
+	Rectangle(8, 34, 82, 427, SILVER);
+
+	// Engineering Road
+	Rectangle(2, 500, 241, 267, SILVER);
+	Rectangle(474, 500 ,267, 395, SILVER);
+
+	// East Mall
+	Rectangle(2, 797, 395, 421, SILVER);
+
+	// Macleod
+	Rectangle(400, 780, 116, 238, PEACH_PUFF);
+
+	// CEME
+	Rectangle(660, 780, 250, 390, PEACH_PUFF);
+	// EDC
+	Rectangle(510, 650, 250, 390, PEACH_PUFF);
+
+	// ICICS
+	Rectangle(40, 350, 116, 238, PEACH_PUFF);
+
+	// DMP
+	Rectangle(36, 165, 269, 393, PEACH_PUFF);
+	// Engineering Co-op Office
+	Rectangle(170, 295, 269, 393, PEACH_PUFF);
+	// Advanced Materials Process Engineering Labatory
+	Rectangle(300, 472, 269, 393, PEACH_PUFF);
+
+	// Draw Text
+	int i;
+	char* macleodString = "MacLeod";
+	char* cemeString = "CEME";
+	char* edcString = "EDC";
+
+	char* icicsString = "ICICS";
+	char* dmpString = "DMP";
+	char* engCoopString = "Co-op";
+	char* ampelString = "AMPEL";
+
+	char* mainMallString = "Main Mall";
+	char* eastMallString = "East Mall";
+	char* agronomyString = "Agronomy Road";
+
+
+	for (i = 0; i < strlen(macleodString); i++) {
+		OutGraphicsCharFont2a( 520 + i * 15, 177, BLACK, BLACK, macleodString[i], 0);
+	}
+
+	for (i = 0; i < strlen(cemeString); i++) {
+		OutGraphicsCharFont2a( 690 + i * 15, 320, BLACK, BLACK, cemeString[i], 0);
+	}
+
+	for (i = 0; i < strlen(edcString); i++) {
+		OutGraphicsCharFont2a( 560 + i * 15, 320, BLACK, BLACK, edcString[i], 0);
+	}
+
+	for (i = 0; i < strlen(icicsString); i++) {
+		OutGraphicsCharFont2a( 150 + i * 15, 177, BLACK, BLACK, icicsString[i], 0);
+	}
+
+	for (i = 0; i < strlen(dmpString); i++) {
+		OutGraphicsCharFont2a( 80 + i * 15, 328, BLACK, BLACK, dmpString[i], 0);
+	}
+
+
+	for (i = 0; i < strlen(engCoopString); i++) {
+		OutGraphicsCharFont2a( 205 + i * 15, 328, BLACK, BLACK, engCoopString[i], 0);
+	}
+
+	for (i = 0; i < strlen(ampelString); i++) {
+		OutGraphicsCharFont2a( 350 + i * 15, 328, BLACK, BLACK, ampelString[i], 0);
+	}
+
+	for (i = 0; i < strlen(mainMallString); i++) {
+		OutGraphicsCharFont2a( 520 + i * 15, 93, BLACK, BLACK, mainMallString[i], 0);
+	}
+	for (i = 0; i < strlen(eastMallString); i++) {
+		OutGraphicsCharFont2a( 520 + i * 15, 399, BLACK, BLACK, eastMallString[i], 0);
+	}
+	for (i = 0; i < strlen(agronomyString); i++) {
+		OutGraphicsCharFont2a( 14, 100 + i * 15, BLACK, BLACK, agronomyString[i], 0);
+	}
+}
 void drawStartSession() {
 	int session_started = 1;
 	Rectangle(0, 799, 0, 479, BLACK);
 	Rectangle(2, 797, 2, 80, WHITE);
 
-	// Map placeholder
-	Rectangle(2, 797, 82, 427, YELLOW);
+	drawMap();
 
 	// Home
 	Rectangle(2, 400, 429, 477, MIDNIGHT_BLUE);

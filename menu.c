@@ -588,11 +588,13 @@ CALL_STATES:
 		{
 		case (STATE_CALL) :
 			printf("YOU PRESSED HOME\n");
+			dialNumber = strcpy(dialNumber, "");
 			return;
 			break;
 		case (STATE_CURS) :
 			printf("YOU PRESSED CALL\n");
 			// invoke wifi function here
+			dialNumber = strcpy(dialNumber, "");
 			break;
 		case (STATE_CALLMENU_0) :
 			if(dialIndex < 700){

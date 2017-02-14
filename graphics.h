@@ -58,3 +58,4 @@ char* dialNumber;
 int dialIndex;
 void printDialNumber(char number, int dialIndex);
 void clearNumberScreen();
+void drawMap();
