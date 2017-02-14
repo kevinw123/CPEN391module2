@@ -54,6 +54,7 @@ void WriteLine (int x1, int x2, int y1, int y2, int Colour)
 	GraphicsColourReg = Colour;		// set pixel colour with a palette number
 	GraphicsCommandReg = DrawLine;		// give graphics a "draw Horizontal Line" command
 }
+
 /*****************************************************************************************
 * This function read a single pixel from x,y coords specified and returns its colour
 * Note returned colour is a palette number (0-255) not a 24 bit RGB value

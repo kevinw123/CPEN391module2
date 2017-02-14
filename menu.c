@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "Gps.h"
 #include "graphics.h"
 #include "touchscreen.h"
@@ -587,84 +588,83 @@ void Call(void)
 CALL_STATES:
 		switch (state)
 		{
-		case (STATE_CALL) :
+		case (STATE_CALLMENU_HOME) :
 			printf("YOU PRESSED HOME\n");
 			dialNumber = strcpy(dialNumber, "");
 			return;
 			break;
-		case (STATE_CURS) :
-			printf("YOU PRESSED CALL\n");
-			// invoke wifi function here
+		case (STATE_CALLMENU_CALL) :
+			printf("CALL NUMBER\n");
 			char *command;
 			command = createCallCommand(dialNumber);
 			sendCommand(command);
 			dialNumber = strcpy(dialNumber, "");
 			break;
 		case (STATE_CALLMENU_0) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('0', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "0");
 			}
 			break;
 		case (STATE_CALLMENU_1) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('1', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "1");
 			}
 			break;
 		case (STATE_CALLMENU_2) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('2', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "2");
 			}
 			break;
 		case (STATE_CALLMENU_3) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('3', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "3");
 			}
 			break;
 		case (STATE_CALLMENU_4) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('4', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "4");
 			}
 			break;
 		case (STATE_CALLMENU_5) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('5', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "5");
 			}
 			break;
 		case (STATE_CALLMENU_6) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('6', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "6");
 			}
 			break;
 		case (STATE_CALLMENU_7) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('7', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "7");
 			}
 			break;
 		case (STATE_CALLMENU_8) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('8', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "8");
 			}
 			break;
 		case (STATE_CALLMENU_9) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('9', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "9");
@@ -729,7 +729,6 @@ int main()
 	printf("Initializing serial ports...\n");
 	init_all();
 
-	printf("Drawing home screen...\n");
 HOME:
 	printf("Drawing Home Screen...\n");
 	drawHome();

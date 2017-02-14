@@ -37,7 +37,6 @@
 
 
 // Function prototypes
-
 void WriteAPixel (int x, int y, int Colour);
 void WriteHLine (int x1, int x2, int y, int Colour);
 void WriteVLine (int x, int y1, int y2, int Colour);
