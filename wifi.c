@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "wifi.h"
+#include <string.h>
 
 
 
@@ -85,3 +86,44 @@ void test_wifi(void)
 	printf("\n");
 	usleep(20000);
 }
+
+void sendCommand(char *string)
+{
+	int i;
+	for (i = 0; i < strlen(string); i++)
+	{
+		putcharWiFi(string[i]);
+		//printf("%c", getcharWiFi());
+	}
+	writeReturnNewLine();
+}
+
+void createInsertCommand(char *command, char *start_lat, char *start_long, char *end_lat, char *end_long, char *start_time, char *end_time, char *calories_burned, char *speed)
+{
+	char *literal_start = "insertDB(";
+	char *literal_end = ")";
+	int cmd_size = strlen(literal_start) + strlen(start_lat) + strlen(start_long) + strlen(end_lat) + strlen(end_long) + strlen(start_time) + strlen(end_time) + strlen(calories_burned) + strlen(speed) + strlen(literal_end);
+	char cmd[cmd_size + 50];
+	strcpy(cmd, literal_start);
+	strcat(cmd, "\"");
+	strcat(cmd, start_lat);
+	strcat(cmd, "\",\"");
+	strcat(cmd, start_long);
+	strcat(cmd, "\",\"");
+	strcat(cmd, end_lat);
+	strcat(cmd, "\",\"");
+	strcat(cmd, end_long);
+	strcat(cmd, "\",\"");
+	strcat(cmd, start_time);
+	strcat(cmd, "\",\"");
+	strcat(cmd, end_time);
+	strcat(cmd, "\",\"");
+	strcat(cmd, calories_burned);
+	strcat(cmd, "\",\"");
+	strcat(cmd, speed);
+	strcat(cmd, "\"");
+	strcat(cmd, literal_end);
+	strcpy(command, cmd);
+}
+
+

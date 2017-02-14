@@ -1,6 +1,7 @@
 #include "Gps.h"
 #include "graphics.h"
 #include "touchscreen.h"
+#include "wifi.h"
 
 // Home Menu Bounds
 #define CURS_BOUND_1_Y		2
@@ -322,7 +323,7 @@ ACHIEVEMENT_STATES:
 	}
 }
 
-int main()
+int main2()
 {
 	printf("Initializing serial ports...\n");
 	init_all();
@@ -365,3 +366,25 @@ STATES:
 
 	return 0;
 }
+
+
+int main()
+{
+	//Init_WiFi();
+	printf("Sending dofile command...\n");
+	char *command;
+	createInsertCommand(command, "0", "0", "58", "39", "beginning of time", "end of time", "over 9000", "5.21 gigawatts");
+	sendCommand(SETUP_LUA);
+	sendCommand(command);
+
+	while (1)
+	{
+		if ( (WiFi_Status & 1) == 1)
+		{
+			printf("%c", getcharWiFi());
+		}
+	}
+
+	return 0;
+}
+
