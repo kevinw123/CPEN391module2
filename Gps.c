@@ -3,9 +3,73 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include "graphics.h"
+#include "Colours.h"
 #include "Gps.h"
 
 #define pi 3.14159265358979323846
+
+float latitude_test[11];
+float longitude_test[11];
+float x_map[11];
+float y_map[11];
+
+void initPointsTest(void) {
+	latitude_test[0] = 49.262477;
+	longitude_test[0] = -123.250759;
+	x_map[0] = 797;
+	y_map[0] = 105;
+
+	latitude_test[1] = 49.261933;
+	longitude_test[1] = -123.250289;
+	x_map[1] = 600;
+	y_map[1] = 105;
+
+	latitude_test[2] = 49.261556;
+	longitude_test[2] = -123.249967;
+	x_map[2] = 400;
+	y_map[2] = 105;
+
+	latitude_test[3] = 49.261061;
+	longitude_test[3] = -123.249583;
+	x_map[3] = 200;
+	y_map[3] = 105;
+
+	latitude_test[4] = 49.260568;
+	longitude_test[4] = -123.249158;
+	x_map[4] = 21;
+	y_map[4] = 105;
+
+	latitude_test[5] = 49.260988;
+	longitude_test[5] = -123.248062;
+	x_map[5] = 21;
+	y_map[5] = 243;
+
+	latitude_test[6] = 49.261360;
+	longitude_test[6] = -123.246977;
+	x_map[6] = 21;
+	y_map[6] = 400;
+
+	latitude_test[7] = 49.261885;
+	longitude_test[7] = -123.247312;
+	x_map[7] = 200;
+	y_map[7] = 400;
+
+	latitude_test[8] = 49.262316;
+	longitude_test[8] = -123.247709;
+	x_map[8] = 400;
+	y_map[8] = 400;
+
+	latitude_test[9] = 49.262838;
+	longitude_test[9] = -123.248073;
+	x_map[9] = 600;
+	y_map[9] = 397;
+
+	latitude_test[10] = 49.262477;
+	longitude_test[10] = -123.250759;
+	x_map[10] = 797;
+	y_map[10] = 105;
+}
 
 void Init_GPS(void) {
 	// Set up 6850 Control Register to utilize a divide by 16 clock,
@@ -244,6 +308,22 @@ void getSessionData(void) {
 	printf("Average Speed: %s, \n\n", average_speed);
 }
 
+void drawPath(void) {
+	int x1, y1, x2, y2;
+	if (test_index > 0) {
+		x1 = x_map[test_index - 1];
+		y1 = y_map[test_index - 1];
+		x2 = x_map[test_index];
+		y2 = y_map[test_index];
+		WriteLine(x1, x2, y1, y2, RED);
+	}
+
+	test_index++;
+	if (test_index == 11) {
+		test_index = 1;
+	}
+}
+
 void PrintLog(void) {
 	char startArray[7] = "$GPGGA,";
 	int startArray_idx = 0;
@@ -290,6 +370,8 @@ void PrintLog(void) {
 				getDistanceAndSpeed();
 				printf("Distance: %s, ", distance);
 				printf("Speed: %s ", speed);
+
+				drawPath();
 
 				if (extracted_first_log == 0) {
 					extracted_first_log = 1;

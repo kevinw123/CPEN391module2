@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "Gps.h"
 #include "graphics.h"
 #include "touchscreen.h"
@@ -159,8 +161,8 @@
 void init_all(void)
 {
 	Init_Touch();
-	Init_WiFi();
-	Init_GPS();
+	//Init_WiFi();
+	//Init_GPS();
 }
 
 int is_Within_Boundary(Point cursor, Point bound1, Point bound2)
@@ -307,6 +309,8 @@ CURRENT_SESSION_STATES:
 			printf("STARTED");
 			session_started = 1;
 			extracted_first_log = 0;
+			test_index = 0;
+			initPointsTest();
 			drawStopButton();
 			break;
 		case (STATE_CURRENT_STOPPED) :
@@ -769,4 +773,5 @@ STATES:
 	printf("Done");
 
 	return 0;
+
 }

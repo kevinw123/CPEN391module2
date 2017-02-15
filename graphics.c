@@ -346,6 +346,7 @@ void printDialNumber(char number, int dialIndex) {
 
 int distance1_achieved = 1;
 int distance2_achieved = 1;
+int num_sessions = 0;
 int session1_achieved = 1;
 int session2_achieved = 1;
 int speed1_achieved = 1;

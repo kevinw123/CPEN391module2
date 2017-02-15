@@ -23,6 +23,10 @@ float start_latitude_float;
 float start_longitude_float;
 char start_latitude[DATASIZE];
 char start_longitude[DATASIZE];
+
+int test_index;
+float previous_latitude_float;
+float previous_longitude_float;
 float latitude_float;
 float longitude_float;
 char latitude[DATASIZE];
@@ -47,6 +51,7 @@ char getDataGPS(void);
 void getTime(char *current_time);
 void getTimeElapsed(void);
 void getField(char *field);
+void initPointsTest(void);
 void getLatitude(char *latitude);
 void getLongitude(char *longitude);
 float deg2rad(float degree);
