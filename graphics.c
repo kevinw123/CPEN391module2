@@ -48,7 +48,7 @@ void WriteLine (int x1, int x2, int y1, int y2, int Colour)
 
 	GraphicsX1Reg = x1;			// write coords to x1, y1
 	GraphicsX2Reg = x2;
-	GraphicsY1Reg = x1;
+	GraphicsY1Reg = y1;
 	GraphicsY2Reg = y2;
 
 	GraphicsColourReg = Colour;		// set pixel colour with a palette number
