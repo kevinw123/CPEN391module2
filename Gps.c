@@ -7,7 +7,7 @@
 #include "Colours.h"
 #include "Gps.h"
 
-#define pi 3.14159265358979323846
+#define pi 3.141592653589793238462643383279502884197169399375105820974944592307816406286
 
 float latitude_test[11];
 float longitude_test[11];
@@ -171,6 +171,10 @@ void getField(char *field) {
 	}
 }
 
+float getTestLatitude() {
+	return latitude_test[test_index];
+}
+
 void getLatitude(char *latitude) {
 
 	char c = getDataGPS();
@@ -206,10 +210,16 @@ void getLatitude(char *latitude) {
 		sprintf(latitude, "Invalid/Empty");
 	}
 
+	latitude_float = getTestLatitude();
 	if (extracted_first_log == 0) {
 		start_latitude_float = latitude_float;
+		previous_latitude_float = latitude_float;
 		sprintf(start_latitude, "%s", latitude);
 	}
+}
+
+float getTestLongitude(void) {
+	return longitude_test[test_index];
 }
 
 void getLongitude(char *longitude) {
@@ -248,29 +258,34 @@ void getLongitude(char *longitude) {
 		sprintf(longitude, "Invalid/Empty");
 	}
 
+	longitude_float = getTestLongitude();
 	if (extracted_first_log == 0) {
 		start_longitude_float = longitude_float;
+		previous_longitude_float = longitude_float;
 		sprintf(start_longitude, "%s", longitude);
 	}
 }
 
-float deg2rad(float degree) {
+double deg2rad(double degree) {
 	return degree * pi / 180;
 }
 
-float rad2deg(float rad) {
+double rad2deg(double rad) {
 	return rad * 180 / pi;
 }
 
 void getDistanceAndSpeed(void) {
-	float theta = longitude_float - start_longitude_float;
-	float distance_float = sin(deg2rad(start_latitude_float)) * sin(deg2rad(latitude_float)) + cos(deg2rad(start_latitude_float)) * cos(deg2rad(latitude_float)) * cos(deg2rad(theta));
+	printf("\nPrevious longitude: %f, Longitude: %f, Previous Latitude: %f, Latitude: %f\n", previous_longitude_float, longitude_float, previous_latitude_float, latitude_float);
+	double theta = previous_longitude_float - longitude_float;
+
+	double distance_float = sin(deg2rad(((double)previous_latitude_float)));
+	distance_float *= sin(deg2rad((double)latitude_float));
+	distance_float += cos(deg2rad((double)previous_latitude_float)) * cos(deg2rad((double)latitude_float)) * cos(deg2rad(theta));
 	distance_float = acos(distance_float);
 	distance_float = rad2deg(distance_float);
 	distance_float = distance_float * 60 * 1.1515;
 	distance_float = distance_float * 1.609344 * 1000;
-
-	sprintf(speed, "%d M/S", (int) distance_float);
+	sprintf(speed, "%d M/S", (int)distance_float);
 
 	if (extracted_first_log == 0) {
 		distance_int = (int)distance_float;
@@ -278,7 +293,6 @@ void getDistanceAndSpeed(void) {
 	distance_int += (int)distance_float;
 
 	sprintf(distance, "%d M", distance_int);
-
 }
 
 void getAverageSpeed(void) {
@@ -302,19 +316,35 @@ void getSessionData(void) {
 	printf("Start Longitude: %s ", start_longitude);
 	printf("End Latitude: %s ", latitude);
 	printf("End Longitude: %s ", longitude);
-	printf("Total Distance: %s", distance);
+	printf("Total Distance: %s ", distance);
 
 	getAverageSpeed();
 	printf("Average Speed: %s, \n\n", average_speed);
 }
 
+int previousLatitudeToX(float lat_point){
+	return x_map[test_index - 1];
+}
+
+int previousLongitudeToY(float long_point) {
+	return y_map[test_index - 1];
+}
+
+int latitudeToX(float lat_point) {
+	return x_map[test_index];
+}
+
+int longitudeToY(float long_point) {
+	return y_map[test_index];
+}
+
 void drawPath(void) {
 	int x1, y1, x2, y2;
 	if (test_index > 0) {
-		x1 = x_map[test_index - 1];
-		y1 = y_map[test_index - 1];
-		x2 = x_map[test_index];
-		y2 = y_map[test_index];
+		x1 = previousLatitudeToX(previous_latitude_float);
+		y1 = previousLongitudeToY(previous_longitude_float);
+		x2 = latitudeToX(latitude_float);
+		y2 = longitudeToY(longitude_float);
 		WriteLine(x1, x2, y1, y2, RED);
 	}
 
@@ -369,12 +399,15 @@ void PrintLog(void) {
 
 				getDistanceAndSpeed();
 				printf("Distance: %s, ", distance);
-				printf("Speed: %s ", speed);
+				printf("Speed: %s \n\n", speed);
 
-				drawPath();
-
-				if (extracted_first_log == 0) {
-					extracted_first_log = 1;
+				if (session_started == 1) {
+					drawPath();
+					previous_latitude_float = latitude_float;
+					previous_longitude_float = longitude_float;
+					if (extracted_first_log == 0) {
+						extracted_first_log = 1;
+					}
 				}
 
 				extracted_log = 1;
