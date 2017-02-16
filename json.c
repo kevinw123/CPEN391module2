@@ -150,11 +150,11 @@ void parseSession(char * JSON_STRING, int index){
 	        k++;
 	    }
 
-	    printf("%c\n", JSON_STRING[size-1]);
-	    printf("count: %d, k: %d, input size: %d\n", count, k, strlen(JSON_STRING));
+	    printf("JSON STRING: %s \n :end\n", JSON_STRING);
+	    printf("JSON STRING - count: %d, k: %d, input size: %d\n", count, k, strlen(JSON_STRING));
 	    strncpy(result, JSON_STRING + 10, k);
 	    result[count] = '\0';
-	    printf("%s\n", result);
+	    printf("JSON STRING PARSED : %s\n :end \n", result);
 	    JSON_STRING = result;
 	    printf("\n\n CURRENT SESSION INDEX : %d \n\n", index);
 

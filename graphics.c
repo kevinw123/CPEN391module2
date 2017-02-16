@@ -345,6 +345,7 @@ void drawPreviouSession() {
 	int prevSessionCount;
 	int i;
 	prevSessionCount = atoi(cur_session);
+	printf("\n\nFOUND SESSION NUMBER = %d\n\n", prevSessionCount);
 
 
 	char curCommand[500];

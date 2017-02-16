@@ -230,7 +230,7 @@ void createUpdatePrevSessionCountCommand(char *count, char *ret)
 	int cmd_size = strlen(literal_start) + strlen(count) + strlen(literal_end);
 	char cmd[cmd_size + 50];
 	strcpy(cmd, literal_start);
-	strcat(cmd, "\"+1");
+	strcat(cmd, "\"");
 	strcat(cmd, count);
 	strcat(cmd, "\"");
 	strcat(cmd, literal_end);

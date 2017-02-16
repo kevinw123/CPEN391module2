@@ -439,6 +439,7 @@ void getSessionData(void) {
 	int prevSessionCount;
 	int i;
 	prevSessionCount = atoi(cur_session);
+	printf("\n\nCurrent index found : %d", prevSessionCount);
 	prevSessionCount++;
 
 	// invoke wifi function here
@@ -454,6 +455,20 @@ void getSessionData(void) {
 	sendCommand(insertCommand);
 	usleep(5000);
 	waitForAPIResponse(64, insertResponse);
+
+	char updateCommand[500];
+	char updateResponse[500];
+	char newCount[500];
+	sprintf(newCount, "%d", prevSessionCount);
+
+	createUpdatePrevSessionCountCommand(newCount, updateCommand);
+	printf("command built: %s\n", updateCommand);
+	sendCommand(updateCommand);
+	usleep(5000);
+	waitForAPIResponse(64, updateResponse);
+
+
+
 }
 
 /*
