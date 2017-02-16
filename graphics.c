@@ -6,6 +6,7 @@
 #include "Colours.h"
 #include "graphics.h"
 #include "map.h"
+#include "previoussessions.h"
 
 /**********************************************************************
 * This function writes a single pixel to the x,y coords specified in the specified colour
@@ -123,7 +124,7 @@ void Circle(int x, int y, int radius, int Colour)
 	GraphicsCommandReg = DrawCircle;		// give graphics a "draw Horizontal Line" command
 }
 
-void initializeColours(){
+void initializeColours() {
 	int i, j, k;
 	for (i = 0 ; i < 4; i++) {
 		ProgramPalette(i, 0x55 * i);
@@ -231,7 +232,7 @@ void drawStopButton() {
  */
 void drawMap() {
 	// For loops to program 256 Colour Palettes
-	int i, j, k;
+	int i, j;
 
 	// Draw the map using 8 hex arrays
 	for (j = 0; j < IMAGE_HEIGHT; j++) {
@@ -286,30 +287,19 @@ void drawEntry(char* stime, char* time_elapsed, char* start_latitude, char *star
 }
 
 void drawListofSessions() {
-	// Fetch previous sessions
-	// There's a variable that holds number of sessions in the database, store that variable in num_sessions
-	int num_sessions = 4;
-	char stime[num_sessions][DATASIZE]; // num_sessions or DATASIZE
-	char time_elapsed[num_sessions][DATASIZE];
-	char start_latitude[num_sessions][DATASIZE];
-	char start_longitude[num_sessions][DATASIZE];
-	char end_latitude[num_sessions][DATASIZE];
-	char end_longitude[num_sessions][DATASIZE];
-	char distance[num_sessions][DATASIZE];
-	char average_speed[num_sessions][DATASIZE];
-	//char *maximum_speed[num_sessions];
+	getPreviousSessions();
 
 	int i;
 	/* Test */
 	for (i = 0; i < 4; i++) {
-		strcpy(stime[i], "12:00:00 PST");
-		strcpy(time_elapsed[i], "0:0:1");
-		strcpy(start_latitude[i], "49.021456");
-		strcpy(start_longitude[i], "-123.123456");
-		strcpy(end_latitude[i], "43.098765");
-		strcpy(end_longitude[i], "-123.099876");
-		strcpy(distance[i], "10 M");
-		strcpy(average_speed[i], "10 M/S");
+		strcpy(stime_prev[i], "12:00:00 PST");
+		strcpy(time_elapsed_prev[i], "0:0:1");
+		strcpy(start_latitude_prev[i], "49.021456");
+		strcpy(start_longitude_prev[i], "-123.123456");
+		strcpy(end_latitude_prev[i], "43.098765");
+		strcpy(end_longitude_prev[i], "-123.099876");
+		strcpy(distance_prev[i], "10 M");
+		strcpy(average_speed_prev[i], "10 M/S");
 	}
 
 	int x = 20;
@@ -317,7 +307,7 @@ void drawListofSessions() {
 
 	for (i = 0; i < 4; i++) {
 		if (i < num_sessions) {
-			drawEntry(stime[i], time_elapsed[i], start_latitude[i], start_longitude[i], end_latitude[i], end_longitude[i], distance[i], average_speed[i], x, y + (i * 100));
+			drawEntry(stime_prev[i], time_elapsed_prev[i], start_latitude_prev[i], start_longitude_prev[i], end_latitude_prev[i], end_longitude_prev[i], distance_prev[i], average_speed_prev[i], x, y + (i * 100));
 		}
 	}
 }
@@ -425,7 +415,6 @@ void printDialNumber(char number, int dialIndex) {
 
 int distance1_achieved = 1;
 int distance2_achieved = 1;
-int num_sessions = 0;
 int session1_achieved = 1;
 int session2_achieved = 1;
 int speed1_achieved = 1;
@@ -599,6 +588,3 @@ int validPointOnScreen(int x, int y) {
 
 	return 1;
 }
-
-
-
