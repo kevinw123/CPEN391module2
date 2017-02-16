@@ -5,6 +5,9 @@
 #define GPS_Baud (*(volatile unsigned char *)(0x84000214))
 
 #define DATASIZE 50
+
+#define pi 3.141592653589793238462643383279502884197169399375105820974944592307816406286
+
 int session_started;
 
 // start time, time elapsed, average speed, calories burned, start coordinates, end coordinates
@@ -38,7 +41,8 @@ char distance[DATASIZE];
 int speed_int;
 char speed[DATASIZE];
 char average_speed[DATASIZE];
-
+int max_speed_int;
+char max_speed[DATASIZE];
 // Remaining GPS data
 char fix[DATASIZE];
 char satellites[DATASIZE];
@@ -49,15 +53,14 @@ char geoidalSeparation[DATASIZE];
 void Init_GPS(void);
 char getDataGPS(void);
 void getTime(char *current_time);
-void getTimeElapsed(void);
+void getTimeElapsed(char *time_elapsed);
 void getField(char *field);
 void initPointsTest(void);
 void getLatitude(char *latitude);
 void getLongitude(char *longitude);
 double deg2rad(double degree);
 double rad2deg(double rad);
-void getDistanceIntAndSpeed(void);
-void getDistanceAndSpeed();
-void getAverageSpeed(void);
+void getDistanceAndSpeed(char *speed, char *distance);
+void getAverageSpeed(char *average_speed);
 void getFieldWithUnit(char *field_with_unit);
 void PrintLog(void);

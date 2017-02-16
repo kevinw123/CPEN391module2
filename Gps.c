@@ -7,13 +7,15 @@
 #include "Colours.h"
 #include "Gps.h"
 
-#define pi 3.141592653589793238462643383279502884197169399375105820974944592307816406286
-
+// Hard-coded mapping of latitude-longitude points to the screen's x, y coordinates
 float latitude_test[11];
 float longitude_test[11];
 float x_map[11];
 float y_map[11];
 
+/*
+ * Initialize the mapping of latitude-longitude points to the screen's x, y coordinates
+ */
 void initPointsTest(void) {
 	latitude_test[0] = 49.262477;
 	longitude_test[0] = -123.250759;
@@ -71,16 +73,21 @@ void initPointsTest(void) {
 	y_map[10] = 105;
 }
 
+/*
+ * Initialize the GPS
+ */
 void Init_GPS(void) {
 	// Set up 6850 Control Register to utilize a divide by 16 clock,
 	// use 8 bits of data, no parity, 1 stop bit,
 	// Program baud rate generator to use 9600 baud
-	GPS_Control = 0x15;  // 0 00 101 01
-	GPS_Baud = 0x05; // 0b101
-	printf("Initialized GPS\n");
+	GPS_Control = 0x15;
+	GPS_Baud = 0x05;
+	//printf("Initialized GPS\n");
 }
 
-
+/*
+ * Poll and return the received character from the GPS
+ */
 char getDataGPS(void) {
 	// Poll Rx bit in 6850 status register. Wait for it to become '1'.
 	while ((GPS_Status & 1) == 0) {
@@ -91,35 +98,22 @@ char getDataGPS(void) {
 	return GPS_RxData;
 }
 
+/*
+ * Store the time extracted from the GPS into current_time
+ */
 void getTime(char *current_time) {
-
 	char c = getDataGPS();
-	if (c != ',') {
-		char hours_utc[3];
-		char minutes[3];
-		char seconds[7];
 
-		// Extract hh
+	// If c is a comma, then the time field of the $GPGGA log is empty
+	if (c != ',') {
+		char hours_utc[3]; // Store hh with null character
+		char minutes[3]; // Store mm with null character
+		char seconds[7]; // Store ss.sss with null character
+
+		// Extract hh into hours_utc and convert hours from UTC to PST
 		hours_utc[0] = c;
 		hours_utc[1] = getDataGPS();
 		hours_utc[2] = '\0';
-
-		// Extract mm
-		int i;
-		for (i = 0; i < 2; i++) {
-			minutes[i] = getDataGPS();
-		}
-		minutes[i] = '\0';
-		int minutes_int = atoi(minutes);
-
-		// Extract ss.sss
-		for (i = 0; i < 6; i++) {
-			seconds[i] = getDataGPS();
-		}
-		seconds[i] = '\0';
-		int seconds_int = (int)(atof(seconds));
-
-		// Convert hours from UTC to PST
 		int hours_pst = atoi(hours_utc);
 		if (hours_pst - 8 < 0) {
 			hours_pst += 16;
@@ -127,23 +121,44 @@ void getTime(char *current_time) {
 			hours_pst -= 8;
 		}
 
+		// Extract mm into minutes
+		int i;
+		for (i = 0; i < 2; i++) {
+			minutes[i] = getDataGPS();
+		}
+		minutes[i] = '\0';
+		int minutes_int = atoi(minutes);
+
+		// Extract ss.sss into seconds
+		for (i = 0; i < 6; i++) {
+			seconds[i] = getDataGPS();
+		}
+		seconds[i] = '\0';
+		int seconds_int = (int)(atof(seconds));
+
+		// Calculate the current time in seconds
 		time_seconds = hours_pst * 3600 + minutes_int * 60 + seconds_int;
 
 		sprintf(current_time, "%d:%d:%d PST", hours_pst, minutes_int, seconds_int);
 
-		// Extract comma and return
+		// Extract comma
 		getDataGPS();
 	} else {
 		sprintf(current_time, "Invalid/Empty");
 	}
 
+	// If first log of the session (or before session starts):
+	// Set starting time as the current time
 	if (extracted_first_log == 0) {
 		start_time_seconds = time_seconds;
 		sprintf(start_time, "%s", current_time);
 	}
 }
 
-void getTimeElapsed(void) {
+/*
+ * Store the total time elapsed since the start of the session into time_elapsed
+ */
+void getTimeElapsed(char *time_elapsed) {
 	time_elapsed_seconds = time_seconds - start_time_seconds;
 	int hours_elapsed = time_elapsed_seconds / 3600;
 	int seconds_elapsed = time_elapsed_seconds % 3600;
@@ -152,18 +167,24 @@ void getTimeElapsed(void) {
 	sprintf(time_elapsed, "%d:%d:%d ", hours_elapsed, minutes_elapsed, seconds_elapsed);
 }
 
+/*
+ * Store the current field of the $GPGGA log into field
+ */
 void getField(char *field) {
 	char c = getDataGPS();
+
+	// If c is a comma, then the current field of the $GPGGA log is empty
 	if (c != ',') {
-		char temp[DATASIZE];
+		char temp[DATASIZE]; // Store contents of the field into temp
 
 		int i = 0;
+
+		// Store each character of the field into temp (until the next comma)
 		while ((c != ',')) {
 			temp[i] = c;
 			c = getDataGPS();
 			i++;
 		}
-
 		temp[i] = '\0';
 		sprintf(field, &temp[0]);
 	} else {
@@ -171,46 +192,57 @@ void getField(char *field) {
 	}
 }
 
+/*
+ * Get hard-coded latitude for testing and demo purposes
+ */
 float getTestLatitude() {
 	return latitude_test[test_index];
 }
 
+/*
+ * Store the latitude extracted from the GPS in latitude (in signed degree format)
+ */
 void getLatitude(char *latitude) {
 
 	char c = getDataGPS();
-	if (c != ',') {
-		char degrees[3];
-		char minutes[8];
 
-		// Extract dd
+	// If c is a comma, then the latitude field of the $GPGGA log is empty
+	if (c != ',') {
+		char degrees[3]; // Store dd with null character
+		char minutes[8]; // Store mm.mmmm with null character
+
+		// Extract dd into degrees
 		degrees[0] = c;
 		degrees[1] = getDataGPS();
 		degrees[2] = '\0';
 
-		// Extract mm.mmmm
+		// Extract mm.mmmm into minutes
 		int i;
 		for (i = 0; i < 7; i++) {
 			minutes[i] = getDataGPS();
 		}
 		minutes[i] = '\0';
 
-		// latitude = dd + mm.mmmm / 60
+		// Calculate latitude = dd + mm.mmmm / 60
 		float degrees_float = atof(degrees);
 		float minutes_float = atof(minutes);
 		latitude_float = degrees_float + minutes_float / 60;
 
-		// Comma
+		// Extract comma
 		getDataGPS();
 
+		// Extract the direction unit (N/S) of the latitude
 		char *direction;
 		getField(direction);
 		sprintf(latitude, "%f %s", latitude_float, direction);
-
 	} else {
 		sprintf(latitude, "Invalid/Empty");
 	}
 
-	latitude_float = getTestLatitude();
+	latitude_float = getTestLatitude(); // Get hard-coded latitude for testing and demo purposes, uncomment when using in real-time
+
+	// If first log of the session (or before session starts):
+	// Set starting latitude as the current latitude
 	if (extracted_first_log == 0) {
 		start_latitude_float = latitude_float;
 		previous_latitude_float = latitude_float;
@@ -218,13 +250,20 @@ void getLatitude(char *latitude) {
 	}
 }
 
+/*
+ * Get hard-coded longitude for testing and demo purposes
+ */
 float getTestLongitude(void) {
 	return longitude_test[test_index];
 }
 
+/*
+ * Store the longitude extracted from the GPS in longitude (in signed degree format)
+ */
 void getLongitude(char *longitude) {
 
 	char c = getDataGPS();
+	// If c is a comma, then the longitude field of the $GPGGA log is empty
 	if (c != ',') {
 		char degrees[4];
 		char minutes[8];
@@ -243,14 +282,15 @@ void getLongitude(char *longitude) {
 		}
 		minutes[i] = '\0';
 
-		// longitude = dd + mmm.mmmm / 60
+		// Calculate longitude = dd + mmm.mmmm / 60
 		float degrees_float = atof(degrees);
 		float minutes_float = atof(minutes);
 		longitude_float = degrees_float + minutes_float / 60;
 
-		// Comma
+		// Extract omma
 		getDataGPS();
 
+		// Extract the direction unit (N/S) of the latitude
 		char *direction;
 		getField(direction);
 		sprintf(longitude, "%f %s", longitude_float, direction);
@@ -258,7 +298,10 @@ void getLongitude(char *longitude) {
 		sprintf(longitude, "Invalid/Empty");
 	}
 
-	longitude_float = getTestLongitude();
+	longitude_float = getTestLongitude(); // Get hard-coded longitude for testing and demo purposes, uncomment when using in real-time
+
+	// If first log of the session (or before session starts):
+	// Set starting longitude as the current longitude
 	if (extracted_first_log == 0) {
 		start_longitude_float = longitude_float;
 		previous_longitude_float = longitude_float;
@@ -266,18 +309,36 @@ void getLongitude(char *longitude) {
 	}
 }
 
+/*
+ * Return the degree in radians
+ */
 double deg2rad(double degree) {
 	return degree * pi / 180;
 }
 
+/*
+ * Return the radians in degrees
+ */
 double rad2deg(double rad) {
 	return rad * 180 / pi;
 }
 
-void getDistanceAndSpeed(void) {
-	printf("\nPrevious longitude: %f, Longitude: %f, Previous Latitude: %f, Latitude: %f\n", previous_longitude_float, longitude_float, previous_latitude_float, latitude_float);
-	double theta = previous_longitude_float - longitude_float;
+/*
+ * Store the distance in meters between the last two logged points into distance
+ * Store the speed in m/s between these two points into speed
+ */
+void getDistanceAndSpeed(char *distance, char *speed) {
 
+	// If session has not started, distance and speed are both 0
+	if (session_started == 0) {
+		strcpy(distance, "0 M");
+		strcpy(speed, "0 M/S");
+		return;
+	}
+
+	// Calculate the distance
+	// Adapted from http://www.geodatasource.com/developers/c
+	double theta = previous_longitude_float - longitude_float;
 	double distance_float = sin(deg2rad(((double)previous_latitude_float)));
 	distance_float *= sin(deg2rad((double)latitude_float));
 	distance_float += cos(deg2rad((double)previous_latitude_float)) * cos(deg2rad((double)latitude_float)) * cos(deg2rad(theta));
@@ -285,20 +346,41 @@ void getDistanceAndSpeed(void) {
 	distance_float = rad2deg(distance_float);
 	distance_float = distance_float * 60 * 1.1515;
 	distance_float = distance_float * 1.609344 * 1000;
+
+	// Since distance is in meters and speed is in m/s, and since logs are extracted at 1 second intervals,
+	// speed (m/s) = distance (m)
 	sprintf(speed, "%d M/S", (int)distance_float);
 
+	// If first log of the session (or before session starts):
+	// Set total distance to distance between last two points
+	// Set maximum speed to speed between last two points (speed in m/s = distance in m)
 	if (extracted_first_log == 0) {
 		distance_int = (int)distance_float;
-	}
-	distance_int += (int)distance_float;
+		max_speed_int = distance_int;
 
+		// Else, add distance between last two points to total distance and
+		// Check if maximum speed is less than speed between last two points
+	} else {
+		distance_int += (int)distance_float;
+		if (max_speed_int < (int)distance_float) {
+			max_speed_int = (int)distance_float;
+		}
+	}
+
+	sprintf(max_speed, "%d M/S", max_speed_int);
 	sprintf(distance, "%d M", distance_int);
 }
 
-void getAverageSpeed(void) {
+/*
+ * Store the average speed of the session into average_speed
+ */
+void getAverageSpeed(char *average_speed) {
 	sprintf(average_speed, "%d M/S", (distance_int / time_elapsed_seconds));
 }
 
+/*
+ * Store the current field from the GPS, and its unit (the next field) in field_with_unit
+ */
 void getFieldWithUnit(char *field_with_unit) {
 	char field[DATASIZE];
 	getField(field);
@@ -309,6 +391,10 @@ void getFieldWithUnit(char *field_with_unit) {
 	sprintf(field_with_unit, "%s %s", field, unit);
 }
 
+/*
+ * Get the session's start time, time elapsed, starting points, ending points, total distance, and average speed
+ * Push this data into the database
+ */
 void getSessionData(void) {
 	printf("Start time: %s ", start_time);
 	printf("Time Elapsed: %s ", time_elapsed);
@@ -319,27 +405,47 @@ void getSessionData(void) {
 	printf("Total Distance: %s ", distance);
 
 	getAverageSpeed();
-	printf("Average Speed: %s, \n\n", average_speed);
+	printf("Average Speed: %s ", average_speed);
+	printf("Maximum Speed: %s, \n\n");
+
+	// Push above to database
 }
 
-int previousLatitudeToX(float lat_point){
+/*
+ * Return the screen's x coordinate mapped to the previous hard-coded latitude
+ */
+int previousLatitudeToX(float lat_point) {
 	return x_map[test_index - 1];
 }
 
+/*
+ * Return the screen's x coordinate mapped to the previous hard-coded longitude
+ */
 int previousLongitudeToY(float long_point) {
 	return y_map[test_index - 1];
 }
 
+/*
+ * Return the screen's x coordinate mapped to the hard-coded latitude
+ */
 int latitudeToX(float lat_point) {
 	return x_map[test_index];
 }
 
+/*
+ * Return the screen's x coordinate mapped to the previous hard-coded longitude
+ */
 int longitudeToY(float long_point) {
 	return y_map[test_index];
 }
 
+/*
+ * Draw a path between the last two logged points
+ */
 void drawPath(void) {
 	int x1, y1, x2, y2;
+
+	// Draw the path between the last two hard-coded points
 	if (test_index > 0) {
 		x1 = previousLatitudeToX(previous_latitude_float);
 		y1 = previousLongitudeToY(previous_longitude_float);
@@ -348,12 +454,18 @@ void drawPath(void) {
 		WriteLine(x1, x2, y1, y2, RED);
 	}
 
+	// Increment the index of the hard-coded points, for testing and demo purposes
 	test_index++;
+
+	// There are 10 hard-coded points, reset index
 	if (test_index == 11) {
 		test_index = 1;
 	}
 }
 
+/*
+ * Store and calculate data from one $GPGGA log, and draw the path between its logged point and the previous point
+ */
 void PrintLog(void) {
 	char startArray[7] = "$GPGGA,";
 	int startArray_idx = 0;
@@ -361,6 +473,7 @@ void PrintLog(void) {
 	char c;
 	int extracted_log = 0;
 
+	// Extract characters until the log has been extracted
 	while (extracted_log == 0) {
 		c = getDataGPS();
 
@@ -383,24 +496,25 @@ void PrintLog(void) {
 				printf("Longitude: %s, ", longitude);
 
 				getField(fix);
-				printf("Fix: %s, ", fix);
+				//printf("Fix: %s, ", fix);
 
 				getField(satellites);
-				printf("Satellites: %s, ", satellites);
+				//printf("Satellites: %s, ", satellites);
 
 				getField(HDOP);
-				printf("HDOP: %s, ", HDOP);
+				//printf("HDOP: %s, ", HDOP);
 
 				getFieldWithUnit(altitude);
 				printf("Altitude: %s, ", altitude);
 
 				getFieldWithUnit(geoidalSeparation);
-				printf("Geoidal Separation: %s, ", geoidalSeparation);
+				//printf("Geoidal Separation: %s, ", geoidalSeparation);
 
 				getDistanceAndSpeed();
 				printf("Distance: %s, ", distance);
 				printf("Speed: %s \n\n", speed);
 
+				// Session has started: draw path, set previous point as the current point
 				if (session_started == 1) {
 					drawPath();
 					previous_latitude_float = latitude_float;
