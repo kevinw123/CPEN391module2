@@ -131,17 +131,13 @@ void Circle(int x, int y, int radius, int Colour)
 	GraphicsCommandReg = DrawCircle;		// give graphics a "draw Horizontal Line" command
 }
 
+/*
+ * Function to initialize the 256 colour palettes
+ */
 void initializeColours() {
 	int i, j, k;
-	for (i = 0 ; i < 4; i++) {
-		ProgramPalette(i, 0x55 * i);
-	}
-	for (i = 1; i < 8; i++) {
-		for (j = 0; j < 4; j++)
-			ProgramPalette(4 * i + j, (0x24 * i << 8) + 0x55 * j);
-	}
-	for (i = 1; i < 8; i++) {
-		for (j = 1; j < 8; j++) {
+	for (i = 0; i < 8; i++) {
+		for (j = 0; j < 8; j++) {
 			for (k = 0; k < 4; k++)
 				ProgramPalette(32 * i + 4 * j + k, (0x24 * i << 16) + (0x24 * j << 8) + 0x55 * k);
 		}
