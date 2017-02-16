@@ -85,6 +85,9 @@ void ProgramPalette(int PaletteNumber, int RGB)
 	GraphicsCommandReg = ProgramPaletteColour;	// issue command
 }
 
+/*
+ * Function to clear the screen by drawing a black rectangle for the whole screen
+ */
 void ClearScreen()
 {
 	int i;
@@ -92,6 +95,9 @@ void ClearScreen()
 		WriteHLine(0, 799, i, BLACK);
 }
 
+/*
+ * Function that draws rectangle by drawing a line from x1 to x2 froom y1 to y2
+ */
 void Rectangle(int x1, int x2, int y1, int y2, int Colour)
 {
 	int i;
@@ -99,6 +105,9 @@ void Rectangle(int x1, int x2, int y1, int y2, int Colour)
 		WriteHLine(x1, x2, i, Colour);
 }
 
+/*
+ * Function that draws circle at given coordinate x and y with given radious
+ */
 void Circle(int x, int y, int radius, int Colour)
 {
 	WAIT_FOR_GRAPHICS;			// is graphics ready for new command
@@ -111,6 +120,9 @@ void Circle(int x, int y, int radius, int Colour)
 	GraphicsCommandReg = DrawCircle;		// give graphics a "draw Horizontal Line" command
 }
 
+/*
+ * Function that displays text on the screen by given x and y values and text color
+ */
 void drawString(char *string, int x, int y, int fontcolour, int backgroundcolour) {
 	int i;
 	for (i = 0; i < strlen(string); i++) {
@@ -118,7 +130,9 @@ void drawString(char *string, int x, int y, int fontcolour, int backgroundcolour
 	}
 }
 
-// Draw Home Functions
+/*
+ * Draw Home Functions
+ */
 void drawHome() {
 	ClearScreen();
 	Rectangle(2, 397, 2, 237, MIDNIGHT_BLUE);
@@ -137,7 +151,9 @@ void drawHome() {
 	drawString(callString, 170, 358, WHITE, BLACK);
 }
 
-// Draw Current Session Functions
+/* 
+ * Draw Current Session Functions
+ */
 void drawLog() {
 
 	char time_string[DATASIZE];
@@ -153,10 +169,16 @@ void drawLog() {
 	drawString(distance_speed_string, 10, 50, BLACK, WHITE);
 }
 
+/*
+ * Function that ereases the log printed out by GPS
+ */
 void eraseLogGUI() {
 	Rectangle(2, 797, 2, 80, WHITE);
 }
 
+/*
+ * Function that draws start button for current session
+ */
 void drawStartButton() {
 
 	Rectangle(402, 797, 429, 477, FOREST_GREEN);
@@ -165,6 +187,9 @@ void drawStartButton() {
 	drawString(startString, 570, 450, WHITE, BLACK);
 }
 
+/*
+ * Function that draws stop button for current session
+ */
 void drawStopButton() {
 
 	Rectangle(402, 797, 429, 477, MAROON);
@@ -173,6 +198,9 @@ void drawStopButton() {
 	drawString(stopString, 570, 450, WHITE, BLACK);
 }
 
+/*
+ * Draw map of UBC in Current Session module
+ */
 void drawMap() {
 	Rectangle(2, 797, 82, 427, LIGHT_GREEN);
 	// Main Mall
@@ -354,11 +382,13 @@ int speed2_achieved = 1;
 int achievementsRadius = 80;
 char *lockedAchievementString = "LOCKED";
 
+// Write text that the achievements are initially locked
 void drawLockedAchievement(int x, int y) {
 	Circle(x, y , achievementsRadius, BLACK);
 	drawString(lockedAchievementString, x - 40, y - 5, WHITE, BLACK);
 }
 
+// Drawing the medal for unlocking first distance achievement
 void drawAchievementDistance1() {
 	int x = 120;
 	int y = 100;
@@ -374,6 +404,7 @@ void drawAchievementDistance1() {
 	}
 }
 
+// Drawing the medal for unlocking second distance achievement
 void drawAchievementDistance2() {
 	int x = 120;
 	int y = 300;
@@ -388,6 +419,7 @@ void drawAchievementDistance2() {
 	}
 }
 
+// Drawing the medal for unlocking first session achievement
 void drawAchievementSession1() {
 	int x = 399;
 	int y = 100;
@@ -402,6 +434,7 @@ void drawAchievementSession1() {
 	}
 }
 
+// Drawing the medal for unlocking second session achievement
 void drawAchievementSession2() {
 	int x = 399;
 	int y = 300;
@@ -416,6 +449,7 @@ void drawAchievementSession2() {
 	}
 }
 
+// Drawing the medal for unlocking first speed achievement
 void drawAchievementSpeed1() {
 	int x = 678;
 	int y = 100;
@@ -430,6 +464,7 @@ void drawAchievementSpeed1() {
 	}
 }
 
+// Drawing the medal for unlocking second speed achievement
 void drawAchievementSpeed2() {
 	int x = 678;
 	int y = 300;
