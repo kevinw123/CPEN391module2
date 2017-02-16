@@ -63,7 +63,7 @@ void parseAchievements(char * JSON_STRING){
 	            char *speed2;
 	            sprintf(speed2, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",speed2);
-	            speed2_achieved = atoi(speed2) / 10;
+	            speed2_achieved = atoi(speed2);
 	            i++;
 	        } else if (jsoneq(JSON_STRING, &t[i], "session1") == 0) {
 	            /* We may want to do strtol() here to get numeric value */
@@ -72,7 +72,7 @@ void parseAchievements(char * JSON_STRING){
 	            char *session1;
 	            sprintf(session1, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",session1);
-	            session1_achieved = atoi(session1) / 10;
+	            session1_achieved = atoi(session1);
 	            i++;
 	        } else if (jsoneq(JSON_STRING, &t[i], "distance1") == 0) {
 	            /* We may want to do strtol() here to get numeric value */
@@ -81,7 +81,7 @@ void parseAchievements(char * JSON_STRING){
 	            char *distance1;
 	            sprintf(distance1, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",distance1);
-	            distance1_achieved = atoi(distance1) / 10;
+	            distance1_achieved = atoi(distance1);
 	            i++;
 	        } else if (jsoneq(JSON_STRING, &t[i], "session2") == 0) {
 	            /* We may want to do strtol() here to get numeric value */
@@ -125,6 +125,7 @@ void parseAchievements(char * JSON_STRING){
 	            char *radius;
 	            sprintf(radius, "*.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",radius);
+	            achievementsRadius = 80;
 	            i++;
 	        }
 

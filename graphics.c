@@ -466,8 +466,6 @@ void printDialNumber(char number, int dialIndex) {
 	OutGraphicsCharFont2a(dialIndex, 40, BLACK, BLACK, number, 0);
 }
 
-
-
 /*
  * Write text that the achievements are initially locked
  */
@@ -483,7 +481,7 @@ void drawAchievementDistance1() {
 	int x = 120;
 	int y = 100;
 	// Check the distance1_achieved flag to determine if achievement is locked or not
-	if (distance1_achieved) {
+	if (distance1_achieved == 1) {
 		Circle(x, y, achievementsRadius, PINK);
 		char *achievementString1 = "100 M IN";
 		drawString(achievementString1, x - 55, y - 15, WHITE, BLACK);
@@ -610,34 +608,12 @@ void drawAchievementsScreen() {
 		printf("Parsing achievement response into json decoder...\n");
 		parseAchievements(response);
 	}
-	// parse response
-	// speed1_achieved == blah
-	// speed2_achieved == blah
 
-	// Calculate new Achievements
+	// Calculate new Achievement
+
 
 	// Re-upload new Achievement states
-//	char *command2;
-//	char *response2;
-//
-//	char dist1[5];
-//	sprintf(dist1, "%d", distance1_achieved);
-//	char dist2[5];
-//	sprintf(dist2, "%d", distance2_achieved);
-//	char sess1[5];
-//	sprintf(sess1, "%d", session1_achieved);
-//	char sess2[5];
-//	sprintf(sess2, "%d", session2_achieved);
-//	char speed1[5];
-//	sprintf(speed1, "%d", speed1_achieved);
-//	char speed2[5];
-//	sprintf(speed2, "%d", speed2_achieved);
-//	char achieveRadius[10];
-//	sprintf(achieveRadius, "%d", achievementsRadius);
-//
-//	command2 = createInsertAchieveCommand("achievement_states", dist1, dist2, sess1, sess2, speed1, speed2, "1", achieveRadius);
-//	printf("command built: %s\n", command2);
-//	sendCommand(command2);
+
 	// Parse response?
 
 
