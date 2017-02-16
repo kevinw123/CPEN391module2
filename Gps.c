@@ -6,71 +6,75 @@
 #include "graphics.h"
 #include "Colours.h"
 #include "Gps.h"
+#include "map.h"
 
 // Hard-coded mapping of latitude-longitude points to the screen's x, y coordinates
-float latitude_test[11];
-float longitude_test[11];
-float x_map[11];
-float y_map[11];
+float latitude_test[20];
+float longitude_test[20];
 
 /*
  * Initialize the mapping of latitude-longitude points to the screen's x, y coordinates
  */
 void initPointsTest(void) {
-	latitude_test[0] = 49.262477;
-	longitude_test[0] = -123.250759;
-	x_map[0] = 797;
-	y_map[0] = 105;
+	latitude_test[0] = 49.262105;
+	longitude_test[0] = -123.250211;
 
-	latitude_test[1] = 49.261933;
-	longitude_test[1] = -123.250289;
-	x_map[1] = 600;
-	y_map[1] = 105;
+	latitude_test[1] = 49.261995;
+	longitude_test[1] = -123.250240;
 
-	latitude_test[2] = 49.261556;
-	longitude_test[2] = -123.249967;
-	x_map[2] = 400;
-	y_map[2] = 105;
+	latitude_test[2] = 49.261887;
+	longitude_test[2] = -123.250170;
 
-	latitude_test[3] = 49.261061;
-	longitude_test[3] = -123.249583;
-	x_map[3] = 200;
-	y_map[3] = 105;
+	latitude_test[3] = 49.261766;
+	longitude_test[3] = -123.250081;
 
-	latitude_test[4] = 49.260568;
-	longitude_test[4] = -123.249158;
-	x_map[4] = 21;
-	y_map[4] = 105;
+	latitude_test[4] = 49.261622;
+	longitude_test[4] = -123.250038;
 
-	latitude_test[5] = 49.260988;
-	longitude_test[5] = -123.248062;
-	x_map[5] = 21;
-	y_map[5] = 243;
+	latitude_test[5] = 49.261521;
+	longitude_test[5] = -123.249773;
 
-	latitude_test[6] = 49.261360;
-	longitude_test[6] = -123.246977;
-	x_map[6] = 21;
-	y_map[6] = 400;
+	latitude_test[6] = 49.261526;
+	longitude_test[6] = -123.249601;
 
-	latitude_test[7] = 49.261885;
-	longitude_test[7] = -123.247312;
-	x_map[7] = 200;
-	y_map[7] = 400;
+	latitude_test[7] = 49.261596;
+	longitude_test[7] = -123.249333;
 
-	latitude_test[8] = 49.262316;
-	longitude_test[8] = -123.247709;
-	x_map[8] = 400;
-	y_map[8] = 400;
+	latitude_test[8] = 49.261706;
+	longitude_test[8] = -123.249118;
 
-	latitude_test[9] = 49.262838;
-	longitude_test[9] = -123.248073;
-	x_map[9] = 600;
-	y_map[9] = 397;
+	latitude_test[9] = 49.261787;
+	longitude_test[9] = -123.248904;
 
-	latitude_test[10] = 49.262477;
-	longitude_test[10] = -123.250759;
-	x_map[10] = 797;
-	y_map[10] = 105;
+	latitude_test[10] = 49.261902;
+	longitude_test[10] = -123.248807;
+
+	latitude_test[11] = 49.261999;
+	longitude_test[11] = -123.248622;
+
+	latitude_test[12] = 49.262081;
+	longitude_test[12] = -123.248424;
+
+	latitude_test[13] = 49.262098;
+	longitude_test[13] = -123.248603;
+
+	latitude_test[14] = 49.262049;
+	longitude_test[14] = -123.248936;
+
+	latitude_test[15] = 49.262002;
+	longitude_test[15] = -123.249153;
+
+	latitude_test[16] = 49.262076;
+	longitude_test[16] = -123.249505;
+
+	latitude_test[17] = 49.262048;
+	longitude_test[17] = -123.249778;
+
+	latitude_test[18] = 49.261978;
+	longitude_test[18] = -123.250001;
+
+	latitude_test[19] = 49.262105;
+	longitude_test[19] = -123.250211;
 }
 
 /*
@@ -234,15 +238,19 @@ void getLatitude(char *latitude) {
 		// Extract the direction unit (N/S) of the latitude
 		char *direction;
 		getField(direction);
-		sprintf(latitude, "%f %s", latitude_float, direction);
+		if (strcmp(direction, "S") == 0) {
+			latitude_float = 0 - latitude_float;
+		}
+
+		sprintf(latitude, "%f", latitude_float);
 	} else {
 		sprintf(latitude, "Invalid/Empty");
 	}
 
-	latitude_float = getTestLatitude(); // Get hard-coded latitude for testing and demo purposes, uncomment when using in real-time
-
 	// If first log of the session (or before session starts):
 	// Set starting latitude as the current latitude
+	latitude_float = getTestLatitude(); // Get hard-coded latitude for testing and demo purposes, uncomment when using in real-time
+
 	if (extracted_first_log == 0) {
 		start_latitude_float = latitude_float;
 		previous_latitude_float = latitude_float;
@@ -287,21 +295,24 @@ void getLongitude(char *longitude) {
 		float minutes_float = atof(minutes);
 		longitude_float = degrees_float + minutes_float / 60;
 
-		// Extract omma
+		// Extract comma
 		getDataGPS();
 
 		// Extract the direction unit (N/S) of the latitude
 		char *direction;
 		getField(direction);
-		sprintf(longitude, "%f %s", longitude_float, direction);
+		if (strcmp(direction, "W") == 0) {
+			longitude_float = 0 - longitude_float;
+		}
+
+		sprintf(longitude, "%f", longitude_float);
 	} else {
 		sprintf(longitude, "Invalid/Empty");
 	}
 
-	longitude_float = getTestLongitude(); // Get hard-coded longitude for testing and demo purposes, uncomment when using in real-time
-
 	// If first log of the session (or before session starts):
 	// Set starting longitude as the current longitude
+	longitude_float = getTestLongitude(); // Get hard-coded longitude for testing and demo purposes, uncomment when using in real-time
 	if (extracted_first_log == 0) {
 		start_longitude_float = longitude_float;
 		previous_longitude_float = longitude_float;
@@ -331,6 +342,8 @@ void getDistanceAndSpeed(char *distance, char *speed) {
 
 	// If session has not started, distance and speed are both 0
 	if (session_started == 0) {
+		distance_int = 0;
+		speed_int = 0;
 		strcpy(distance, "0 M");
 		strcpy(speed, "0 M/S");
 		return;
@@ -349,7 +362,8 @@ void getDistanceAndSpeed(char *distance, char *speed) {
 
 	// Since distance is in meters and speed is in m/s, and since logs are extracted at 1 second intervals,
 	// speed (m/s) = distance (m)
-	sprintf(speed, "%d M/S", (int)distance_float);
+	speed_int = (int)distance_float;
+	sprintf(speed, "%d M/S", speed_int);
 
 	// If first log of the session (or before session starts):
 	// Set total distance to distance between last two points
@@ -357,6 +371,7 @@ void getDistanceAndSpeed(char *distance, char *speed) {
 	if (extracted_first_log == 0) {
 		distance_int = (int)distance_float;
 		max_speed_int = distance_int;
+		sprintf(max_speed, "%d", (int)distance_float);
 
 		// Else, add distance between last two points to total distance and
 		// Check if maximum speed is less than speed between last two points
@@ -364,10 +379,10 @@ void getDistanceAndSpeed(char *distance, char *speed) {
 		distance_int += (int)distance_float;
 		if (max_speed_int < (int)distance_float) {
 			max_speed_int = (int)distance_float;
+			sprintf(max_speed, "%d", (int)distance_float);
 		}
 	}
 
-	sprintf(max_speed, "%d M/S", max_speed_int);
 	sprintf(distance, "%d M", distance_int);
 }
 
@@ -404,61 +419,50 @@ void getSessionData(void) {
 	printf("End Longitude: %s ", longitude);
 	printf("Total Distance: %s ", distance);
 
-	getAverageSpeed();
-	printf("Average Speed: %s ", average_speed);
-	printf("Maximum Speed: %s, \n\n");
+	getAverageSpeed(average_speed);
+	printf("Average Speed: %s, ", average_speed);
+	printf("Maximum Speed: %s \n\n", max_speed);
 
 	// Push above to database
 }
 
 /*
- * Return the screen's x coordinate mapped to the previous hard-coded latitude
+ * Covert latitude and longitude to the screen's x, y coordinates
  */
-int previousLatitudeToX(float lat_point) {
-	return x_map[test_index - 1];
-}
+void latitudeLongitudeToXY(float lat1, float long1, int *x, int *y) {
 
-/*
- * Return the screen's x coordinate mapped to the previous hard-coded longitude
- */
-int previousLongitudeToY(float long_point) {
-	return y_map[test_index - 1];
-}
-
-/*
- * Return the screen's x coordinate mapped to the hard-coded latitude
- */
-int latitudeToX(float lat_point) {
-	return x_map[test_index];
-}
-
-/*
- * Return the screen's x coordinate mapped to the previous hard-coded longitude
- */
-int longitudeToY(float long_point) {
-	return y_map[test_index];
+	// Calculate the lengths of each latitude and longitude per pixel
+	double latitude_pixel = (TOP_LEFT_LAT - BOTTOM_RIGHT_LAT) / HEIGHT;
+	double longitude_pixel = (BOTTOM_RIGHT_LONG - TOP_LEFT_LONG) / LENGTH;
+	*x = (long1 - TOP_LEFT_LONG) / longitude_pixel + MAP_X_OFFSET;
+	*y = (TOP_LEFT_LAT - lat1) / latitude_pixel + MAP_Y_OFFSET;
 }
 
 /*
  * Draw a path between the last two logged points
  */
 void drawPath(void) {
-	int x1, y1, x2, y2;
+	//int x1, y1, x2, y2;
+	int x1;
+	int y1;
+	int x2;
+	int y2;
 
 	// Draw the path between the last two hard-coded points
 	if (test_index > 0) {
-		x1 = previousLatitudeToX(previous_latitude_float);
-		y1 = previousLongitudeToY(previous_longitude_float);
-		x2 = latitudeToX(latitude_float);
-		y2 = longitudeToY(longitude_float);
-		WriteLine(x1, x2, y1, y2, RED);
+
+		latitudeLongitudeToXY(previous_latitude_float, previous_longitude_float, &x1, &y1);
+		latitudeLongitudeToXY(latitude_float, longitude_float, &x2, &y2);
+
+		WriteLine(x1, x2, y1, y2, 255);
+		Circle(x2, y2, 10, 255);
 	}
 
 	// Increment the index of the hard-coded points, for testing and demo purposes
 	test_index++;
 
-	// There are 10 hard-coded points, reset index
-	if (test_index == 11) {
+	// There are 20 hard-coded points, reset index
+	if (test_index == 20) {
 		test_index = 1;
 	}
 }
@@ -486,7 +490,7 @@ void PrintLog(void) {
 				getTime(current_time);
 				printf("Time: %s, ", current_time);
 
-				getTimeElapsed();
+				getTimeElapsed(time_elapsed);
 				printf("Time Elapsed: %s, ", time_elapsed);
 
 				getLatitude(latitude);
@@ -496,21 +500,16 @@ void PrintLog(void) {
 				printf("Longitude: %s, ", longitude);
 
 				getField(fix);
-				//printf("Fix: %s, ", fix);
 
 				getField(satellites);
-				//printf("Satellites: %s, ", satellites);
 
 				getField(HDOP);
-				//printf("HDOP: %s, ", HDOP);
 
 				getFieldWithUnit(altitude);
-				printf("Altitude: %s, ", altitude);
 
 				getFieldWithUnit(geoidalSeparation);
-				//printf("Geoidal Separation: %s, ", geoidalSeparation);
 
-				getDistanceAndSpeed();
+				getDistanceAndSpeed(distance, speed);
 				printf("Distance: %s, ", distance);
 				printf("Speed: %s \n\n", speed);
 

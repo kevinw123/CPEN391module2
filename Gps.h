@@ -5,8 +5,22 @@
 #define GPS_Baud (*(volatile unsigned char *)(0x84000214))
 
 #define DATASIZE 50
-
 #define pi 3.141592653589793238462643383279502884197169399375105820974944592307816406286
+#define LENGTH 796
+#define HEIGHT 346
+#define IMAGE_LENGTH LENGTH / 4
+#define IMAGE_HEIGHT HEIGHT / 2
+
+#define MAP_X_OFFSET 2
+#define MAP_Y_OFFSET 82
+
+#define MAX_ROWS 1
+#define MAX_COLUMNS 2
+
+#define TOP_LEFT_LAT 49.262188
+#define TOP_LEFT_LONG -123.250502
+#define BOTTOM_RIGHT_LAT 49.261417
+#define BOTTOM_RIGHT_LONG -123.247966
 
 int session_started;
 
@@ -43,6 +57,7 @@ char speed[DATASIZE];
 char average_speed[DATASIZE];
 int max_speed_int;
 char max_speed[DATASIZE];
+
 // Remaining GPS data
 char fix[DATASIZE];
 char satellites[DATASIZE];
