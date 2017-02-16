@@ -123,6 +123,23 @@ void Circle(int x, int y, int radius, int Colour)
 	GraphicsCommandReg = DrawCircle;		// give graphics a "draw Horizontal Line" command
 }
 
+void initializeColours(){
+	int i, j, k;
+	for (i = 0 ; i < 4; i++) {
+		ProgramPalette(i, 0x55 * i);
+	}
+	for (i = 1; i < 8; i++) {
+		for (j = 0; j < 4; j++)
+			ProgramPalette(4 * i + j, (0x24 * i << 8) + 0x55 * j);
+	}
+	for (i = 1; i < 8; i++) {
+		for (j = 1; j < 8; j++) {
+			for (k = 0; k < 4; k++)
+				ProgramPalette(32 * i + 4 * j + k, (0x24 * i << 16) + (0x24 * j << 8) + 0x55 * k);
+		}
+	}
+}
+
 /*
  * Function that displays text on the screen by given x and y values and text color
  */
@@ -169,15 +186,15 @@ void drawLog() {
 	// Draw the time that is displayed on Current Session
 	char time_string[DATASIZE];
 	sprintf(time_string, "Time: %s, Time Elapsed: %s", current_time, time_elapsed);
-	drawString(time_string, 10, 10, 255, WHITE);
+	drawString(time_string, 10, 10, BLACK, WHITE);
 	// Draw the Longitude, Latitude and Altitude that is displayed on Current Session
 	char position_string[4 * DATASIZE];
 	sprintf(position_string, "Lat: %s, Long: %s, Alt: %s", latitude, longitude, altitude);
-	drawString(position_string, 10, 30, 255, WHITE);
+	drawString(position_string, 10, 30, BLACK, WHITE);
 	// Draw the Distance and Speed that is displayed on Current Session
 	char distance_speed_string[DATASIZE];
 	sprintf(distance_speed_string, "Distance: %s, Speed: %s", distance, speed);
-	drawString(distance_speed_string, 10, 50, 255, WHITE);
+	drawString(distance_speed_string, 10, 50, BLACK, WHITE);
 }
 
 /*
@@ -215,19 +232,6 @@ void drawStopButton() {
 void drawMap() {
 	// For loops to program 256 Colour Palettes
 	int i, j, k;
-	for (i = 0 ; i < 4; i++) {
-		ProgramPalette(i, 0x55 * i);
-	}
-	for (i = 1; i < 8; i++) {
-		for (j = 0; j < 4; j++)
-			ProgramPalette(4 * i + j, (0x24 * i << 8) + 0x55 * j);
-	}
-	for (i = 1; i < 8; i++) {
-		for (j = 1; j < 8; j++) {
-			for (k = 0; k < 4; k++)
-				ProgramPalette(32 * i + 4 * j + k, (0x24 * i << 16) + (0x24 * j << 8) + 0x55 * k);
-		}
-	}
 
 	// Draw the map using 8 hex arrays
 	for (j = 0; j < IMAGE_HEIGHT; j++) {
@@ -268,17 +272,17 @@ void drawEntry(char* stime, char* time_elapsed, char* start_latitude, char *star
 	// Draw start time and time elapsed
 	char time_string[DATASIZE];
 	sprintf(time_string, "Start Time: %s, Time Elapsed: %s", stime, time_elapsed);
-	drawString(time_string, x, y, 255, WHITE);
+	drawString(time_string, x, y, BLACK, WHITE);
 
 	// Draw the Distance and Speed
 	char distance_speed_string[DATASIZE];
 	sprintf(distance_speed_string, "Distance: %s, Average Speed: %s", distance, average_speed);
-	drawString(distance_speed_string, x, y + 20, 255, WHITE);
+	drawString(distance_speed_string, x, y + 20, BLACK, WHITE);
 
 	// Draw start position and end position
 	char position_string[4 * DATASIZE];
 	sprintf(position_string, "Started At: (%s, %s), Ended At: (%s, %s)", start_latitude, start_longitude, end_latitude, end_longitude);
-	drawStringSmallFont(position_string, x, y + 40, 255, WHITE);
+	drawStringSmallFont(position_string, x, y + 40, BLACK, WHITE);
 }
 
 void drawListofSessions() {

@@ -162,7 +162,7 @@ void init_all(void)
 {
 	Init_Touch();
 	//Init_WiFi();
-	//Init_GPS();
+	Init_GPS();
 }
 
 int is_Within_Boundary(Point cursor, Point bound1, Point bound2)
@@ -307,6 +307,7 @@ CURRENT_SESSION_STATES:
 			break;
 		case (STATE_CURRENT_STARTED) :
 			printf("STARTED");
+			drawStartSession();
 			session_started = 1;
 			extracted_first_log = 0;
 			test_index = 0;
@@ -732,6 +733,7 @@ int main()
 {
 	printf("Initializing serial ports...\n");
 	init_all();
+	initializeColours();
 
 HOME:
 	printf("Drawing Home Screen...\n");
@@ -771,7 +773,6 @@ STATES:
 		goto HOME;
 	}
 	printf("Done");
-
 	return 0;
-
 }
+
