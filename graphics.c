@@ -165,7 +165,7 @@ void drawHome() {
 	Rectangle(2, 397, 2, 237, MIDNIGHT_BLUE);
 	Rectangle(402, 797, 2, 237, MAROON);
 	Rectangle(2, 397, 242, 477, DARK_SEA_GREEN);
-	Rectangle(402, 797, 242, 477, DARK_MAGENTA);
+	Rectangle(402, 797, 242, 477, PINK);
 
 	char* curSession = "CURRENT SESSION";
 	char* prevSession = "PREVIOUS SESSIONS";
@@ -449,7 +449,7 @@ void drawAchievementDistance1() {
 	int y = 100;
 	// Check the distance1_achieved flag to determine if achievement is locked or not
 	if (distance1_achieved) {
-		Circle(x, y, achievementsRadius, DARK_MAGENTA);
+		Circle(x, y, achievementsRadius, PINK);
 		char *achievementString1 = "100 M IN";
 		drawString(achievementString1, x - 55, y - 15, WHITE, BLACK);
 		char *achievementString2 = "A SESSION";
@@ -468,7 +468,7 @@ void drawAchievementDistance2() {
 	int y = 300;
 	// Check the distance2_achieved flag to determine if achievement is locked or not
 	if (distance2_achieved) {
-		Circle(x, y, achievementsRadius, DARK_MAGENTA);
+		Circle(x, y, achievementsRadius, PINK);
 		char *achievementString1 = "500 M IN";
 		drawString(achievementString1, x - 55, y - 15, WHITE, BLACK);
 		char *achievementString2 = "A SESSION";
