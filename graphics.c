@@ -1,8 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "DrawChar.h"
 #include "Gps.h"
 #include "Colours.h"
 #include "graphics.h"
+#include "map.h"
 
 /**********************************************************************
 * This function writes a single pixel to the x,y coords specified in the specified colour
@@ -130,6 +133,13 @@ void drawString(char *string, int x, int y, int fontcolour, int backgroundcolour
 	}
 }
 
+void drawStringSmallFont(char *string, int x, int y, int fontcolour, int backgroundcolour) {
+	int i;
+	for (i = 0; i < strlen(string); i++) {
+		OutGraphicsCharFont1(x + i * 10, y, fontcolour, backgroundcolour, string[i], 0);
+	}
+}
+
 /*
  * Draw Home Functions
  */
@@ -253,6 +263,61 @@ void drawStartSession() {
 	drawStartButton();
 }
 
+void drawEntry(char* stime, char* time_elapsed, char* start_latitude, char *start_longitude, char* end_latitude, char* end_longitude,
+               char* distance, char* average_speed, int x, int y) {
+	// Draw start time and time elapsed
+	char time_string[DATASIZE];
+	sprintf(time_string, "Start Time: %s, Time Elapsed: %s", stime, time_elapsed);
+	drawString(time_string, x, y, 255, WHITE);
+
+	// Draw the Distance and Speed
+	char distance_speed_string[DATASIZE];
+	sprintf(distance_speed_string, "Distance: %s, Average Speed: %s", distance, average_speed);
+	drawString(distance_speed_string, x, y + 20, 255, WHITE);
+
+	// Draw start position and end position
+	char position_string[4 * DATASIZE];
+	sprintf(position_string, "Started At: (%s, %s), Ended At: (%s, %s)", start_latitude, start_longitude, end_latitude, end_longitude);
+	drawStringSmallFont(position_string, x, y + 40, 255, WHITE);
+}
+
+void drawListofSessions() {
+	// Fetch previous sessions
+	// There's a variable that holds number of sessions in the database, store that variable in num_sessions
+	int num_sessions = 4;
+	char stime[num_sessions][DATASIZE]; // num_sessions or DATASIZE
+	char time_elapsed[num_sessions][DATASIZE];
+	char start_latitude[num_sessions][DATASIZE];
+	char start_longitude[num_sessions][DATASIZE];
+	char end_latitude[num_sessions][DATASIZE];
+	char end_longitude[num_sessions][DATASIZE];
+	char distance[num_sessions][DATASIZE];
+	char average_speed[num_sessions][DATASIZE];
+	//char *maximum_speed[num_sessions];
+
+	int i;
+	/* Test */
+	for (i = 0; i < 4; i++) {
+		strcpy(stime[i], "12:00:00 PST");
+		strcpy(time_elapsed[i], "0:0:1");
+		strcpy(start_latitude[i], "49.021456");
+		strcpy(start_longitude[i], "-123.123456");
+		strcpy(end_latitude[i], "43.098765");
+		strcpy(end_longitude[i], "-123.099876");
+		strcpy(distance[i], "10 M");
+		strcpy(average_speed[i], "10 M/S");
+	}
+
+	int x = 20;
+	int y = 20;
+
+	for (i = 0; i < 4; i++) {
+		if (i < num_sessions) {
+			drawEntry(stime[i], time_elapsed[i], start_latitude[i], start_longitude[i], end_latitude[i], end_longitude[i], distance[i], average_speed[i], x, y + (i * 100));
+		}
+	}
+}
+
 /*
  * Draw Previous Session Screen
  */
@@ -272,6 +337,8 @@ void drawPreviouSession() {
 	char* nextString = "NEXT";
 	drawString(homeString, 170, 450, WHITE, BLACK);
 	drawString(nextString, 570, 450, WHITE, BLACK);
+
+	drawListofSessions();
 
 }
 
