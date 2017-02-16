@@ -14,12 +14,16 @@ relay_test = "/test"
 relay_insert = "/api/db/insert"
 relay_retrieve = "/api/db/get"
 relay_call = "/api/call"
+relay_achieve = "/api/db/insert"
+relay_get = "/api/db/get"
 
 
 -- configure ESP as a station
 wifi.setmode(wifi.STATION)
 wifi.sta.config(SSID,SSID_PASSWORD)
 wifi.sta.autoconnect(1)
+gpio.mode(3, gpio.OUTPUT)
+gpio.write(3, gpio.HIGH)
 
 -- pause for connection to take place - adjust time delay if necessary or repeat until connection made
 print("Waiting to establish wifi...")
@@ -41,10 +45,10 @@ end
 
 if (count <= 5) then
   print("Connected Successfully")
-  gpio.mode(3, gpio.OUTPUT)
   gpio.write(3, gpio.LOW)
 else
   print("Could not find connection")
+  gpio.write(3, gpio.HIGH)
 end
 
 -- This function registers a function to echo back any response from the server, to our DE1/NIOS system
@@ -53,48 +57,178 @@ function display(sck,response)
      print(response)
 end
 
-function testGet()
-  print(relay_ip..relay_test)
-  http.get(relay_ip..relay_test, nil, function(code,data)
-    if (code < 0) then
-      print("HTTP request failed.")
-    else
-      print(code, data)
-    end
-  end)
-end
 
-function testPost()
-  print("Attempting to POST to: "..relay_ip..relay_insert)
-  sampleTable = genTable("0:00","30:00","slat","slong","elat","elong","150","5")
-  encodedTable = cjson.encode(sampleTable)
-  --insert_info(encodedTable)
-  http.post(relay_ip..relay_insert, 'Content-Type: application/json\r\n', encodedTable, function(code,data)
-    if (code < 0) then
-      print("HTTP request failed.")
-    else
-      print(code, data)
-    end
-  end)
-end
+--
+-- Insert a row specifically modeled to represent session statistics.
+--
+function insertDB(id, start_time, time_elapsed, state_latitude, start_longitude, end_latitude, end_longitude, total_distance, speed)
 
-function insertDB(start_time, time_elapsed, state_latitude, start_longitude, end_latitude, end_longitude, total_distance, speed)
-  print("Attempting to POST to: "..relay_ip..relay_insert)
-  sampleTable = genTable(start_time, time_elapsed, state_latitude, start_longitude, end_latitude, end_longitude, total_distance, speed)
+  -- Check wifi status before attempting the POST.
+  status = wifi.sta.status()
+  if (status ~= 5) then
+    print("Wifi not setup yet. Status:"..status.." Aborting...@")
+    return;
+  end
+
+  sampleTable = genTable(id, start_time, time_elapsed, state_latitude, start_longitude, end_latitude, end_longitude, total_distance, speed)
   encodedTable = cjson.encode(sampleTable)
   http.post(relay_ip..relay_insert, 'Content-Type: application/json\r\n', encodedTable, function(code,data)
     if (code < 0) then
-      print("HTTP request failed.")
+      print("HTTP request failed.@")
     else
-      print("HTTP Request Succeeded.")
       print(code, data)
+      print("@")
     end
   end)
 end
--- functions
 
-function genTable(start_time, time_elapsed, start_latitude, start_longitude, end_latitude, end_longitude, total_distance, speed)
+
+--
+--  Call specified number via Twilio API. number must be registered to our Twilio account.
+--
+function twilioCall(numberToCall)
+
+  -- Check wifi status before attempting the POST.
+  status = wifi.sta.status()
+  if (status ~= 5) then
+    print("Wifi not setup yet. Status:"..status.." Aborting...@")
+    return;
+  end
+
   table = {}
+  table["to"] = numberToCall
+  encodedTable = cjson.encode(table);
+  http.post(relay_ip..relay_call, 'Content-Type: application/json\r\n', encodedTable, function(code,data)
+    if (code < 0) then
+      print("HTTP request failed.@")
+    else
+      print(code, data)
+      print("@")
+    end
+  end)
+end
+
+--
+-- Insert a row specifically modeled to hold information regarding achievement states.
+--
+function InsertAchieve(id, dist1, dist2, ses1, ses2, speed1, speed2, numSessions, achieve_radius)
+
+  -- Check wifi status before attempting the POST.
+  status = wifi.sta.status()
+  if (status ~= 5) then
+    print("Wifi not setup yet. Status:"..status.." Aborting...@")
+    return;
+  end
+
+  table = {}
+  table["_id"] = id
+  table["distance1"] = dist1
+  table["distance2"] = dist2
+  table["session1"] = ses1
+  table["session2"] = ses2
+  table["speed1"] = speed1
+  table["speed2"] = speed2
+  table["numSessions"] = numSessions
+  table["achievementRadius"] = achieve_radius
+  encodedTable = cjson.encode(table);
+
+  http.post(relay_ip..relay_achieve, 'Content-Type: application/json\r\n', encodedTable, function(code,data)
+    if (code < 0) then
+      print("HTTP request failed.@")
+    else
+      print(code, data)
+      print("@")
+    end
+  end)
+end
+
+
+--
+-- Update the previous sessions counter in the DB.
+--
+function getPrevSessionCount()
+
+  -- Check wifi status before attempting the POST.
+  status = wifi.sta.status()
+  if (status ~= 5) then
+    print("Wifi not setup yet. Status:"..status.." Aborting...@")
+    return;
+  end
+
+  table = {}
+  table["id"] = "sessionCount"
+  encodedTable = cjson.encode(table)
+
+  http.post(relay_ip..relay_get, 'Content-Type: application/json\r\n', encodedTable, function(code,data)
+    if (code < 0) then
+      print("HTTP request failed.@")
+    else
+      print(code, data)
+      print("@")
+    end
+  end)
+end
+
+--
+-- Update the previous sessions counter in the DB.
+--
+function updatePrevSessionCount(count)
+
+  -- Check wifi status before attempting the POST.
+  status = wifi.sta.status()
+  if (status ~= 5) then
+    print("Wifi not setup yet. Status:"..status.." Aborting...@")
+    return;
+  end
+
+  table = {}
+  table["_id"] = "sessionCount"
+  table["count"] = count
+  encodedTable = cjson.encode(table)
+
+  http.post(relay_ip..relay_insert, 'Content-Type: application/json\r\n', encodedTable, function(code,data)
+    if (code < 0) then
+      print("HTTP request failed.@")
+    else
+      print(code, data)
+      print("@")
+    end
+  end)
+end
+
+
+--
+-- Get a row from the non-relational DB. Specify the ID of the row.
+--
+function getID(id)
+
+  -- Check wifi status before attempting the POST.
+  status = wifi.sta.status()
+  if (status ~= 5) then
+    print("Wifi not setup yet. Status:"..status.." Aborting...@")
+    return;
+  end
+
+  table = {}
+  table["id"] = id
+  encodedTable = cjson.encode(table)
+  http.post(relay_ip..relay_get, 'Content-Type: application/json\r\n', encodedTable, function(code,data)
+    if (code < 0) then
+      print("HTTP request failed.@")
+    else
+      print(code, data)
+      print("@")
+    end
+  end)
+end
+
+
+--
+-- Helper function to format a table for a Previous Fitness Session insert.
+--
+function genTable(id, start_time, time_elapsed, start_latitude, start_longitude, end_latitude, end_longitude, total_distance, speed)
+  table = {}
+  table["_id"] = id
   table["start_time"] = start_time
   table["end_time"] = time_elapsed
   table["start_lat"] = start_latitude
@@ -103,21 +237,5 @@ function genTable(start_time, time_elapsed, start_latitude, start_longitude, end
   table["end_long"] = end_longitude
   table["total_distance"] = total_distance
   table["speed"] = speed
-  print(table)
   return table
-end
-
-function twilioCall(numberToCall)
-  print("Attempting to POST to: "..relay_ip..relay_call)
-  table = {}
-  table["to"] = numberToCall
-  encodedTable = cjson.encode(table);
-  http.post(relay_ip..relay_call, 'Content-Type: application/json\r\n', encodedTable, function(code,data)
-    if (code < 0) then
-      print("HTTP request failed.")
-    else
-      print("HTTP Request Succeeded.")
-      print(code, data)
-    end
-  end)
 end

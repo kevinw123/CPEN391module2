@@ -3,6 +3,13 @@
 #include "Gps.h"
 #include "Colours.h"
 #include "graphics.h"
+#include "wifi.h"
+#include "json.h"
+#include <time.h>
+#include <string.h>
+#include "json.h"
+
+char *lockedAchievementString = "LOCKED";
 
 /**********************************************************************
 * This function writes a single pixel to the x,y coords specified in the specified colour
@@ -256,6 +263,51 @@ void drawStartSession() {
 // Draw Previous Session Screen
 void drawPreviouSession() {
 	ClearScreen();
+	// White background
+		Rectangle(2, 797, 2, 427, BLACK);
+		drawString("Loading...", 15, 15, WHITE, BLACK);
+
+	// invoke wifi function here
+	char *command;
+	char *response;
+
+	command = createGetPrevSessionCountCommand();
+	printf("command built: %s\n", command);
+	sendCommand(command);
+	usleep(5000);
+	response = waitForAPIResponse(64);
+	printf("Prev Ses Response:\n %s \n", response);
+	parseCount(response);
+
+	// Parse count from response;
+
+	int prevSessionCount = 2;
+	int i;
+
+
+	char *curCommand;
+	char *curResponse;
+	for (i = 0; i < prevSessionCount; i++)
+	{
+		char *id;
+		sprintf(id, "%d", i);
+		strcat(id, "_session");
+		strcpy(curCommand, "");
+		strcpy(curResponse, "");
+
+		curCommand = createGetCommand(id);
+		printf("command built: %s\n", curCommand);
+		sendCommand(curCommand);
+		usleep(5000);
+		curResponse = waitForAPIResponse(64);
+		printf("Prev Session #%d : %s\n", i, curResponse);
+		parseSession(curResponse);
+		// parse and save this session somewhere
+	}
+
+	// now draw the sessions screen with all the sessions obtained.
+
+	ClearScreen();
 	// Entries
 	Rectangle(2, 797, 2, 102, WHITE);
 	Rectangle(2, 797, 106, 206, WHITE);
@@ -343,14 +395,7 @@ void printDialNumber(char number, int dialIndex) {
 	OutGraphicsCharFont2a(dialIndex, 40, BLACK, BLACK, number, 0);
 }
 
-int distance1_achieved = 1;
-int distance2_achieved = 1;
-int session1_achieved = 1;
-int session2_achieved = 1;
-int speed1_achieved = 1;
-int speed2_achieved = 1;
-int achievementsRadius = 80;
-char *lockedAchievementString = "LOCKED";
+
 
 void drawLockedAchievement(int x, int y) {
 	Circle(x, y , achievementsRadius, BLACK);
@@ -447,8 +492,57 @@ void drawAchievementSpeed2() {
 void drawAchievementsScreen() {
 	ClearScreen();
 	// White background
-	Rectangle(2, 797, 2, 427, WHITE);
+	Rectangle(2, 797, 2, 427, BLACK);
+	drawString("Loading...", 15, 15, WHITE, BLACK);
+
+	// Download new Achievement states
+	char *command;
+	char *response;
+	command = createGetCommand("achievement_states");
+	printf("command built: %s\n", command);
+	sendCommand(command);
+	usleep(5000);
+	response = waitForAPIResponse(64);
+	printf("response: %s\n Now checking if it's a success...\n", response);
+	char *isSuccess;
+	isSuccess = strstr(response, "200");
+	if (isSuccess) {
+		printf("Parsing achievement response into json decoder...\n");
+		parseAchievements(response);
+	}
+	// parse response
+	// speed1_achieved == blah
+	// speed2_achieved == blah
+
+	// Calculate new Achievements
+
+	// Re-upload new Achievement states
+//	char *command2;
+//	char *response2;
+//
+//	char dist1[5];
+//	sprintf(dist1, "%d", distance1_achieved);
+//	char dist2[5];
+//	sprintf(dist2, "%d", distance2_achieved);
+//	char sess1[5];
+//	sprintf(sess1, "%d", session1_achieved);
+//	char sess2[5];
+//	sprintf(sess2, "%d", session2_achieved);
+//	char speed1[5];
+//	sprintf(speed1, "%d", speed1_achieved);
+//	char speed2[5];
+//	sprintf(speed2, "%d", speed2_achieved);
+//	char achieveRadius[10];
+//	sprintf(achieveRadius, "%d", achievementsRadius);
+//
+//	command2 = createInsertAchieveCommand("achievement_states", dist1, dist2, sess1, sess2, speed1, speed2, "1", achieveRadius);
+//	printf("command built: %s\n", command2);
+//	sendCommand(command2);
+	// Parse response?
+
+
 	// Home
+	Rectangle(2, 797, 2, 427, WHITE);
 	Rectangle(202, 599, 429, 477, MIDNIGHT_BLUE);
 	drawAchievementDistance1();
 	drawAchievementDistance2();
@@ -459,6 +553,7 @@ void drawAchievementsScreen() {
 
 	char* homeString = "HOME";
 	drawString(homeString, 370, 450, WHITE, BLACK);
+	printf("Finished drawing achievements screen.\n");
 }
 
 

@@ -242,6 +242,32 @@ void getSessionData(void) {
 
 	getAverageSpeed();
 	printf("Average Speed: %s, \n\n", average_speed);
+
+	// Get current session count
+	char *countCommand;
+	char *countResponse;
+
+	countCommand = createGetPrevSessionCountCommand();
+	printf("command built: %s\n", countCommand);
+	sendCommand(countCommand);
+	usleep(5000);
+	countResponse = waitForAPIResponse(64);
+	printf("Prev Ses Response:\n %s \n", countResponse);
+	int sessionCount = 0;
+
+	// invoke wifi function here
+	char *command;
+	char *response;
+	char *id;
+
+	sprintf(id, "%d", sessionCount);
+	strcat(id, "_session");
+
+	command = createInsertCommand(id, start_latitude, start_longitude, latitude, longitude, start_time, time_elapsed, distance, average_speed);
+	printf("command built: %s\n", command);
+	sendCommand(command);
+	usleep(5000);
+	response = waitForAPIResponse(64);
 }
 
 void PrintLog(void) {
