@@ -151,7 +151,7 @@ void drawHome() {
 	drawString(callString, 170, 358, WHITE, BLACK);
 }
 
-/* 
+/*
  * Draw Current Session Functions
  */
 void drawLog() {
@@ -159,15 +159,15 @@ void drawLog() {
 	// Draw the time that is displayed on Current Session
 	char time_string[DATASIZE];
 	sprintf(time_string, "Time: %s, Time Elapsed: %s", current_time, time_elapsed);
-	drawString(time_string, 10, 10, BLACK, WHITE);
+	drawString(time_string, 10, 10, 255, WHITE);
 	// Draw the Longitude, Latitude and Altitude that is displayed on Current Session
 	char position_string[4 * DATASIZE];
 	sprintf(position_string, "Lat: %s, Long: %s, Alt: %s", latitude, longitude, altitude);
-	drawString(position_string, 10, 30, BLACK, WHITE);
+	drawString(position_string, 10, 30, 255, WHITE);
 	// Draw the Distance and Speed that is displayed on Current Session
 	char distance_speed_string[DATASIZE];
 	sprintf(distance_speed_string, "Distance: %s, Speed: %s", distance, speed);
-	drawString(distance_speed_string, 10, 50, BLACK, WHITE);
+	drawString(distance_speed_string, 10, 50, 255, WHITE);
 }
 
 /*
@@ -203,73 +203,41 @@ void drawStopButton() {
  * Draw map of UBC in Current Session module
  */
 void drawMap() {
-	Rectangle(2, 797, 82, 427, LIGHT_GREEN);
-	// Main Mall
-	Rectangle(2, 797, 88, 114, SILVER);
+	// For loops to program 256 Colour Palettes
+	int i, j, k;
+	for (i = 0 ; i < 4; i++) {
+		ProgramPalette(i, 0x55 * i);
+	}
+	for (i = 1; i < 8; i++) {
+		for (j = 0; j < 4; j++)
+			ProgramPalette(4 * i + j, (0x24 * i << 8) + 0x55 * j);
+	}
+	for (i = 1; i < 8; i++) {
+		for (j = 1; j < 8; j++) {
+			for (k = 0; k < 4; k++)
+				ProgramPalette(32 * i + 4 * j + k, (0x24 * i << 16) + (0x24 * j << 8) + 0x55 * k);
+		}
+	}
 
-	// Agronomy Road
-	Rectangle(8, 34, 82, 427, SILVER);
-
-	// Engineering Road
-	Rectangle(2, 500, 241, 267, SILVER);
-	Rectangle(474, 500 , 267, 395, SILVER);
-
-	// East Mall
-	Rectangle(2, 797, 395, 421, SILVER);
-
-	// Macleod
-	Rectangle(400, 780, 116, 238, PEACH_PUFF);
-
-	// CEME
-	Rectangle(660, 780, 250, 390, PEACH_PUFF);
-	// EDC
-	Rectangle(510, 650, 250, 390, PEACH_PUFF);
-
-	// ICICS
-	Rectangle(40, 350, 116, 238, PEACH_PUFF);
-
-	// DMP
-	Rectangle(36, 165, 269, 393, PEACH_PUFF);
-	// Engineering Co-op Office
-	Rectangle(170, 295, 269, 393, PEACH_PUFF);
-	// Advanced Materials Process Engineering Labatory
-	Rectangle(300, 472, 269, 393, PEACH_PUFF);
-
-	// Draw Text
-	int i;
-	char* macleodString = "MacLeod";
-	char* cemeString = "CEME";
-	char* edcString = "EDC";
-
-	char* icicsString = "ICICS";
-	char* dmpString = "DMP";
-	char* engCoopString = "Co-op";
-	char* ampelString = "AMPEL";
-
-	char* mainMallString = "Main Mall";
-	char* eastMallString = "East Mall";
-	char* agronomyString = "Agronomy Road";
-	char *engineeringString = "Engineering Road";
-
-	// Write strings for all locations
-	drawString(macleodString, 520, 177, BLACK, WHITE);
-	drawString(cemeString, 690, 320, BLACK, WHITE);
-	drawString(edcString, 560, 320, BLACK, WHITE);
-	drawString(icicsString, 150, 177, BLACK, WHITE);
-	drawString(dmpString, 80, 328, BLACK, WHITE);
-	drawString(engCoopString, 205, 328, BLACK, WHITE);
-	drawString(ampelString, 350, 328, BLACK, WHITE);
-	drawString(mainMallString, 520, 93, BLACK, WHITE);
-	drawString(eastMallString, 520, 399, BLACK, WHITE);
-	drawString(engineeringString, 80, 245, BLACK, WHITE);
-
-	for (i = 0; i < strlen(agronomyString); i++) {
-		OutGraphicsCharFont2a( 14, 100 + i * 15, BLACK, WHITE, agronomyString[i], 0);
+	// Draw the map using 8 hex arrays
+	for (j = 0; j < IMAGE_HEIGHT; j++) {
+		for (i = 0; i < IMAGE_LENGTH; i++) {
+			WriteAPixel(i + MAP_X_OFFSET, j + MAP_Y_OFFSET, map00[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + IMAGE_LENGTH, j + MAP_Y_OFFSET, map01[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + 2 * IMAGE_LENGTH, j + MAP_Y_OFFSET, map02[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + 3 * IMAGE_LENGTH, j + MAP_Y_OFFSET, map03[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map10[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + IMAGE_LENGTH, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map11[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + 2 * IMAGE_LENGTH, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map12[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + 3 * IMAGE_LENGTH, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map13[i + IMAGE_LENGTH * j]);
+		}
 	}
 }
 
+/*
+ * Draw Current Session screen (before starting)
+ */
 void drawStartSession() {
-	int session_started = 1;
 	Rectangle(0, 799, 0, 479, BLACK);
 	Rectangle(2, 797, 2, 80, WHITE);
 
@@ -285,7 +253,9 @@ void drawStartSession() {
 	drawStartButton();
 }
 
-// Draw Previous Session Screen
+/*
+ * Draw Previous Session Screen
+ */
 void drawPreviouSession() {
 	ClearScreen();
 	// Entries
@@ -305,7 +275,9 @@ void drawPreviouSession() {
 
 }
 
-// Draw Call Screen Functions
+/*
+ * Draw Call Screen Functions
+ */
 void drawKeypad() {
 	ClearScreen();
 	// Draw number area
@@ -366,12 +338,16 @@ void drawKeypad() {
 	drawString(callString, 570, 450, WHITE, BLACK);
 }
 
-// Clear the keypad number screen that displays the current phone number
+/*
+ * Clear the keypad number screen that displays the current phone number
+ */
 void clearNumberScreen() {
 	Rectangle(2, 797, 2, 80, WHITE);
 }
 
-// Prints the number pressed on keypad
+/*
+ * Prints the number pressed on keypad
+ */
 void printDialNumber(char number, int dialIndex) {
 	OutGraphicsCharFont2a(dialIndex, 40, BLACK, BLACK, number, 0);
 }
@@ -386,13 +362,17 @@ int speed2_achieved = 1;
 int achievementsRadius = 80;
 char *lockedAchievementString = "LOCKED";
 
-// Write text that the achievements are initially locked
+/*
+ * Write text that the achievements are initially locked
+ */
 void drawLockedAchievement(int x, int y) {
 	Circle(x, y , achievementsRadius, BLACK);
 	drawString(lockedAchievementString, x - 40, y - 5, WHITE, BLACK);
 }
 
-// Drawing the medal for unlocking first distance achievement
+/*
+ * Drawing the medal for unlocking first distance achievement
+ */
 void drawAchievementDistance1() {
 	int x = 120;
 	int y = 100;
@@ -409,7 +389,9 @@ void drawAchievementDistance1() {
 	}
 }
 
-// Drawing the medal for unlocking second distance achievement
+/*
+ * Drawing the medal for unlocking second distance achievement
+ */
 void drawAchievementDistance2() {
 	int x = 120;
 	int y = 300;
@@ -425,7 +407,9 @@ void drawAchievementDistance2() {
 	}
 }
 
-// Drawing the medal for unlocking first session achievement
+/*
+ * Drawing the medal for unlocking first session achievement
+ */
 void drawAchievementSession1() {
 	int x = 399;
 	int y = 100;
@@ -441,7 +425,9 @@ void drawAchievementSession1() {
 	}
 }
 
-// Drawing the medal for unlocking second session achievement
+/*
+ * Drawing the medal for unlocking second session achievement
+ */
 void drawAchievementSession2() {
 	int x = 399;
 	int y = 300;
@@ -457,7 +443,9 @@ void drawAchievementSession2() {
 	}
 }
 
-// Drawing the medal for unlocking first speed achievement
+/*
+ * Drawing the medal for unlocking first speed achievement
+ */
 void drawAchievementSpeed1() {
 	int x = 678;
 	int y = 100;
@@ -473,7 +461,9 @@ void drawAchievementSpeed1() {
 	}
 }
 
-// Drawing the medal for unlocking second speed achievement
+/*
+ * Drawing the medal for unlocking second speed achievement
+ */
 void drawAchievementSpeed2() {
 	int x = 678;
 	int y = 300;
@@ -490,7 +480,9 @@ void drawAchievementSpeed2() {
 
 }
 
-// Draw Achievement Screen Functions
+/*
+ * Draw Achievement Screen Functions
+ */
 void drawAchievementsScreen() {
 	ClearScreen();
 	// White background
@@ -508,6 +500,33 @@ void drawAchievementsScreen() {
 
 	char* homeString = "HOME";
 	drawString(homeString, 370, 450, WHITE, BLACK);
+}
+
+/*
+ * Function that checks if points on screen is within the screen
+ */
+int validPointOnScreen(int x, int y) {
+	// Check if x lies to the left of screen bounds
+	if (x < 0) {
+		return 0;
+	}
+	// 799 is the screen width
+	// Check if x lies to the right of screen bounds
+	if (x > 799) {
+		return 0;
+	}
+
+	// Check if y lies above screen bounds
+	if (y < 0) {
+		return 0;
+	}
+	// 479 is screen height
+	// Check if y lies below screen bounds
+	if (y > 479) {
+		return 0;
+	}
+
+	return 1;
 }
 
 
