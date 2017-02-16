@@ -156,14 +156,15 @@ void drawHome() {
  */
 void drawLog() {
 
+	// Draw the time that is displayed on Current Session
 	char time_string[DATASIZE];
 	sprintf(time_string, "Time: %s, Time Elapsed: %s", current_time, time_elapsed);
 	drawString(time_string, 10, 10, BLACK, WHITE);
-
+	// Draw the Longitude, Latitude and Altitude that is displayed on Current Session
 	char position_string[4 * DATASIZE];
 	sprintf(position_string, "Lat: %s, Long: %s, Alt: %s", latitude, longitude, altitude);
 	drawString(position_string, 10, 30, BLACK, WHITE);
-
+	// Draw the Distance and Speed that is displayed on Current Session
 	char distance_speed_string[DATASIZE];
 	sprintf(distance_speed_string, "Distance: %s, Speed: %s", distance, speed);
 	drawString(distance_speed_string, 10, 50, BLACK, WHITE);
@@ -250,6 +251,7 @@ void drawMap() {
 	char* agronomyString = "Agronomy Road";
 	char *engineeringString = "Engineering Road";
 
+	// Write strings for all locations
 	drawString(macleodString, 520, 177, BLACK, WHITE);
 	drawString(cemeString, 690, 320, BLACK, WHITE);
 	drawString(edcString, 560, 320, BLACK, WHITE);
@@ -273,9 +275,10 @@ void drawStartSession() {
 
 	drawMap();
 
-	// Home
+	// Home button
 	Rectangle(2, 400, 429, 477, MIDNIGHT_BLUE);
 
+	// Write the string for home
 	char* homeString = "HOME";
 	drawString(homeString, 170, 450, WHITE, BLACK);
 
@@ -343,6 +346,7 @@ void drawKeypad() {
 	char* homeString = "HOME";
 	char* callString = "CALL";
 
+	// Writing the numbers onto the correct location of button
 	OutGraphicsCharFont2a( 400, 380, WHITE, BLACK, zero[0], 0);
 	OutGraphicsCharFont2a( 646, 380, WHITE, BLACK, clear[0], 0);
 
@@ -362,7 +366,7 @@ void drawKeypad() {
 	drawString(callString, 570, 450, WHITE, BLACK);
 }
 
-// Clear the keypad number screen
+// Clear the keypad number screen that displays the current phone number
 void clearNumberScreen() {
 	Rectangle(2, 797, 2, 80, WHITE);
 }
@@ -392,6 +396,7 @@ void drawLockedAchievement(int x, int y) {
 void drawAchievementDistance1() {
 	int x = 120;
 	int y = 100;
+	// Check the distance1_achieved flag to determine if achievement is locked or not
 	if (distance1_achieved) {
 		Circle(x, y, achievementsRadius, DARK_MAGENTA);
 		char *achievementString1 = "100 M IN";
@@ -408,6 +413,7 @@ void drawAchievementDistance1() {
 void drawAchievementDistance2() {
 	int x = 120;
 	int y = 300;
+	// Check the distance2_achieved flag to determine if achievement is locked or not
 	if (distance2_achieved) {
 		Circle(x, y, achievementsRadius, DARK_MAGENTA);
 		char *achievementString1 = "500 M IN";
@@ -423,6 +429,7 @@ void drawAchievementDistance2() {
 void drawAchievementSession1() {
 	int x = 399;
 	int y = 100;
+	// Check the session1_achieved flag to determine if achievement is locked or not
 	if (session1_achieved) {
 		Circle(x, y, achievementsRadius, TEAL);
 		char *achievementString1 = "3 SESSIONS";
@@ -438,6 +445,7 @@ void drawAchievementSession1() {
 void drawAchievementSession2() {
 	int x = 399;
 	int y = 300;
+	// Check the session2_achieved flag to determine if achievement is locked or not
 	if (session2_achieved) {
 		Circle(x, y, achievementsRadius, TEAL);
 		char *achievementString1 = "5 SESSIONS";
@@ -453,6 +461,7 @@ void drawAchievementSession2() {
 void drawAchievementSpeed1() {
 	int x = 678;
 	int y = 100;
+	// Check the speed1_achieved flag to determine if achievement is locked or not
 	if (speed1_achieved) {
 		Circle(x, y, achievementsRadius, MEDIUM_VIOLET_RED);
 		char *achievementString1 = "REACHED";
@@ -468,6 +477,7 @@ void drawAchievementSpeed1() {
 void drawAchievementSpeed2() {
 	int x = 678;
 	int y = 300;
+	// Check the speed2_achieved flag to determine if achievement is locked or not
 	if (speed2_achieved) {
 		Circle(x, y, achievementsRadius, MEDIUM_VIOLET_RED);
 		char *achievementString1 = "REACHED";
@@ -487,6 +497,8 @@ void drawAchievementsScreen() {
 	Rectangle(2, 797, 2, 427, WHITE);
 	// Home
 	Rectangle(202, 599, 429, 477, MIDNIGHT_BLUE);
+
+	// Draw the achievements depending if they are unlocked or locked
 	drawAchievementDistance1();
 	drawAchievementDistance2();
 	drawAchievementSession1();
