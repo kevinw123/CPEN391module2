@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "DrawChar.h"
 #include "Gps.h"
 #include "Colours.h"
@@ -8,6 +10,8 @@
 #include <time.h>
 #include <string.h>
 #include "json.h"
+#include "map.h"
+#include "previoussessions.h"
 
 char *lockedAchievementString = "LOCKED";
 
@@ -55,12 +59,13 @@ void WriteLine (int x1, int x2, int y1, int y2, int Colour)
 
 	GraphicsX1Reg = x1;			// write coords to x1, y1
 	GraphicsX2Reg = x2;
-	GraphicsY1Reg = x1;
+	GraphicsY1Reg = y1;
 	GraphicsY2Reg = y2;
 
 	GraphicsColourReg = Colour;		// set pixel colour with a palette number
 	GraphicsCommandReg = DrawLine;		// give graphics a "draw Horizontal Line" command
 }
+
 /*****************************************************************************************
 * This function read a single pixel from x,y coords specified and returns its colour
 * Note returned colour is a palette number (0-255) not a 24 bit RGB value
@@ -91,6 +96,9 @@ void ProgramPalette(int PaletteNumber, int RGB)
 	GraphicsCommandReg = ProgramPaletteColour;	// issue command
 }
 
+/*
+ * Function to clear the screen by drawing a black rectangle for the whole screen
+ */
 void ClearScreen()
 {
 	int i;
@@ -98,6 +106,9 @@ void ClearScreen()
 		WriteHLine(0, 799, i, BLACK);
 }
 
+/*
+ * Function that draws rectangle by drawing a line from x1 to x2 froom y1 to y2
+ */
 void Rectangle(int x1, int x2, int y1, int y2, int Colour)
 {
 	int i;
@@ -105,6 +116,9 @@ void Rectangle(int x1, int x2, int y1, int y2, int Colour)
 		WriteHLine(x1, x2, i, Colour);
 }
 
+/*
+ * Function that draws circle at given coordinate x and y with given radious
+ */
 void Circle(int x, int y, int radius, int Colour)
 {
 	WAIT_FOR_GRAPHICS;			// is graphics ready for new command
@@ -117,6 +131,26 @@ void Circle(int x, int y, int radius, int Colour)
 	GraphicsCommandReg = DrawCircle;		// give graphics a "draw Horizontal Line" command
 }
 
+void initializeColours() {
+	int i, j, k;
+	for (i = 0 ; i < 4; i++) {
+		ProgramPalette(i, 0x55 * i);
+	}
+	for (i = 1; i < 8; i++) {
+		for (j = 0; j < 4; j++)
+			ProgramPalette(4 * i + j, (0x24 * i << 8) + 0x55 * j);
+	}
+	for (i = 1; i < 8; i++) {
+		for (j = 1; j < 8; j++) {
+			for (k = 0; k < 4; k++)
+				ProgramPalette(32 * i + 4 * j + k, (0x24 * i << 16) + (0x24 * j << 8) + 0x55 * k);
+		}
+	}
+}
+
+/*
+ * Function that displays text on the screen by given x and y values and text color
+ */
 void drawString(char *string, int x, int y, int fontcolour, int backgroundcolour) {
 	int i;
 	for (i = 0; i < strlen(string); i++) {
@@ -124,13 +158,22 @@ void drawString(char *string, int x, int y, int fontcolour, int backgroundcolour
 	}
 }
 
-// Draw Home Functions
+void drawStringSmallFont(char *string, int x, int y, int fontcolour, int backgroundcolour) {
+	int i;
+	for (i = 0; i < strlen(string); i++) {
+		OutGraphicsCharFont1(x + i * 10, y, fontcolour, backgroundcolour, string[i], 0);
+	}
+}
+
+/*
+ * Draw Home Functions
+ */
 void drawHome() {
 	ClearScreen();
 	Rectangle(2, 397, 2, 237, MIDNIGHT_BLUE);
 	Rectangle(402, 797, 2, 237, MAROON);
 	Rectangle(2, 397, 242, 477, DARK_SEA_GREEN);
-	Rectangle(402, 797, 242, 477, DARK_MAGENTA);
+	Rectangle(402, 797, 242, 477, PINK);
 
 	char* curSession = "CURRENT SESSION";
 	char* prevSession = "PREVIOUS SESSIONS";
@@ -143,26 +186,35 @@ void drawHome() {
 	drawString(callString, 170, 358, WHITE, BLACK);
 }
 
-// Draw Current Session Functions
+/*
+ * Draw Current Session Functions
+ */
 void drawLog() {
 
+	// Draw the time that is displayed on Current Session
 	char time_string[DATASIZE];
 	sprintf(time_string, "Time: %s, Time Elapsed: %s", current_time, time_elapsed);
 	drawString(time_string, 10, 10, BLACK, WHITE);
-
+	// Draw the Longitude, Latitude and Altitude that is displayed on Current Session
 	char position_string[4 * DATASIZE];
 	sprintf(position_string, "Lat: %s, Long: %s, Alt: %s", latitude, longitude, altitude);
 	drawString(position_string, 10, 30, BLACK, WHITE);
-
+	// Draw the Distance and Speed that is displayed on Current Session
 	char distance_speed_string[DATASIZE];
 	sprintf(distance_speed_string, "Distance: %s, Speed: %s", distance, speed);
 	drawString(distance_speed_string, 10, 50, BLACK, WHITE);
 }
 
+/*
+ * Function that ereases the log printed out by GPS
+ */
 void eraseLogGUI() {
 	Rectangle(2, 797, 2, 80, WHITE);
 }
 
+/*
+ * Function that draws start button for current session
+ */
 void drawStartButton() {
 
 	Rectangle(402, 797, 429, 477, FOREST_GREEN);
@@ -171,6 +223,9 @@ void drawStartButton() {
 	drawString(startString, 570, 450, WHITE, BLACK);
 }
 
+/*
+ * Function that draws stop button for current session
+ */
 void drawStopButton() {
 
 	Rectangle(402, 797, 429, 477, MAROON);
@@ -179,88 +234,94 @@ void drawStopButton() {
 	drawString(stopString, 570, 450, WHITE, BLACK);
 }
 
+/*
+ * Draw map of UBC in Current Session module
+ */
 void drawMap() {
-	Rectangle(2, 797, 82, 427, LIGHT_GREEN);
-	// Main Mall
-	Rectangle(2, 797, 88, 114, SILVER);
+	// For loops to program 256 Colour Palettes
+	int i, j;
 
-	// Agronomy Road
-	Rectangle(8, 34, 82, 427, SILVER);
-
-	// Engineering Road
-	Rectangle(2, 500, 241, 267, SILVER);
-	Rectangle(474, 500 , 267, 395, SILVER);
-
-	// East Mall
-	Rectangle(2, 797, 395, 421, SILVER);
-
-	// Macleod
-	Rectangle(400, 780, 116, 238, PEACH_PUFF);
-
-	// CEME
-	Rectangle(660, 780, 250, 390, PEACH_PUFF);
-	// EDC
-	Rectangle(510, 650, 250, 390, PEACH_PUFF);
-
-	// ICICS
-	Rectangle(40, 350, 116, 238, PEACH_PUFF);
-
-	// DMP
-	Rectangle(36, 165, 269, 393, PEACH_PUFF);
-	// Engineering Co-op Office
-	Rectangle(170, 295, 269, 393, PEACH_PUFF);
-	// Advanced Materials Process Engineering Labatory
-	Rectangle(300, 472, 269, 393, PEACH_PUFF);
-
-	// Draw Text
-	int i;
-	char* macleodString = "MacLeod";
-	char* cemeString = "CEME";
-	char* edcString = "EDC";
-
-	char* icicsString = "ICICS";
-	char* dmpString = "DMP";
-	char* engCoopString = "Co-op";
-	char* ampelString = "AMPEL";
-
-	char* mainMallString = "Main Mall";
-	char* eastMallString = "East Mall";
-	char* agronomyString = "Agronomy Road";
-	char *engineeringString = "Engineering Road";
-
-	drawString(macleodString, 520, 177, BLACK, WHITE);
-	drawString(cemeString, 690, 320, BLACK, WHITE);
-	drawString(edcString, 560, 320, BLACK, WHITE);
-	drawString(icicsString, 150, 177, BLACK, WHITE);
-	drawString(dmpString, 80, 328, BLACK, WHITE);
-	drawString(engCoopString, 205, 328, BLACK, WHITE);
-	drawString(ampelString, 350, 328, BLACK, WHITE);
-	drawString(mainMallString, 520, 93, BLACK, WHITE);
-	drawString(eastMallString, 520, 399, BLACK, WHITE);
-	drawString(engineeringString, 80, 245, BLACK, WHITE);
-
-	for (i = 0; i < strlen(agronomyString); i++) {
-		OutGraphicsCharFont2a( 14, 100 + i * 15, BLACK, WHITE, agronomyString[i], 0);
+	// Draw the map using 8 hex arrays
+	for (j = 0; j < IMAGE_HEIGHT; j++) {
+		for (i = 0; i < IMAGE_LENGTH; i++) {
+			WriteAPixel(i + MAP_X_OFFSET, j + MAP_Y_OFFSET, map00[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + IMAGE_LENGTH, j + MAP_Y_OFFSET, map01[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + 2 * IMAGE_LENGTH, j + MAP_Y_OFFSET, map02[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + 3 * IMAGE_LENGTH, j + MAP_Y_OFFSET, map03[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map10[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + IMAGE_LENGTH, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map11[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + 2 * IMAGE_LENGTH, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map12[i + IMAGE_LENGTH * j]);
+			WriteAPixel(i + MAP_X_OFFSET + 3 * IMAGE_LENGTH, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map13[i + IMAGE_LENGTH * j]);
+		}
 	}
 }
 
+/*
+ * Draw Current Session screen (before starting)
+ */
 void drawStartSession() {
-	int session_started = 1;
 	Rectangle(0, 799, 0, 479, BLACK);
 	Rectangle(2, 797, 2, 80, WHITE);
 
 	drawMap();
 
-	// Home
+	// Home button
 	Rectangle(2, 400, 429, 477, MIDNIGHT_BLUE);
 
+	// Write the string for home
 	char* homeString = "HOME";
 	drawString(homeString, 170, 450, WHITE, BLACK);
 
 	drawStartButton();
 }
 
-// Draw Previous Session Screen
+void drawEntry(char* stime, char* time_elapsed, char* start_latitude, char *start_longitude, char* end_latitude, char* end_longitude,
+               char* distance, char* average_speed, int x, int y) {
+	// Draw start time and time elapsed
+	char time_string[DATASIZE];
+	sprintf(time_string, "Start Time: %s, Time Elapsed: %s", stime, time_elapsed);
+	drawString(time_string, x, y, BLACK, WHITE);
+
+	// Draw the Distance and Speed
+	char distance_speed_string[DATASIZE];
+	sprintf(distance_speed_string, "Distance: %s, Average Speed: %s", distance, average_speed);
+	drawString(distance_speed_string, x, y + 20, BLACK, WHITE);
+
+	// Draw start position and end position
+	char position_string[4 * DATASIZE];
+	sprintf(position_string, "Started At: (%s, %s), Ended At: (%s, %s)", start_latitude, start_longitude, end_latitude, end_longitude);
+	drawStringSmallFont(position_string, x, y + 40, BLACK, WHITE);
+}
+
+void drawListofSessions() {
+	getPreviousSessions();
+
+	int i;
+	/* Test */
+//	for (i = 0; i < 4; i++) {
+//		strcpy(stime_prev[i], "12:00:00 PST");
+//		strcpy(time_elapsed_prev[i], "0:0:1");
+//		strcpy(start_latitude_prev[i], "49.021456");
+//		strcpy(start_longitude_prev[i], "-123.123456");
+//		strcpy(end_latitude_prev[i], "43.098765");
+//		strcpy(end_longitude_prev[i], "-123.099876");
+//		strcpy(distance_prev[i], "10 M");
+//		strcpy(average_speed_prev[i], "10 M/S");
+//	}
+
+	int x = 20;
+	int y = 20;
+
+	for (i = 0; i < 4; i++) {
+		if (i < num_sessions) {
+			drawEntry(stime_prev[i], time_elapsed_prev[i], start_latitude_prev[i], start_longitude_prev[i], end_latitude_prev[i], end_longitude_prev[i], distance_prev[i], average_speed_prev[i], x, y + (i * 100));
+		}
+	}
+}
+
+/*
+ * Draw Previous Session Screen
+ */
 void drawPreviouSession() {
 	ClearScreen();
 	// White background
@@ -268,25 +329,26 @@ void drawPreviouSession() {
 		drawString("Loading...", 15, 15, WHITE, BLACK);
 
 	// invoke wifi function here
-	char *command;
-	char *response;
+	char command[500];
+	char response[500];
 
-	command = createGetPrevSessionCountCommand();
+	createGetPrevSessionCountCommand(command);
 	printf("command built: %s\n", command);
 	sendCommand(command);
 	usleep(5000);
-	response = waitForAPIResponse(64);
+	waitForAPIResponse(64, response);
 	printf("Prev Ses Response:\n %s \n", response);
 	parseCount(response);
 
 	// Parse count from response;
 
-	int prevSessionCount = 2;
+	int prevSessionCount;
 	int i;
+	prevSessionCount = atoi(cur_session);
 
 
-	char *curCommand;
-	char *curResponse;
+	char curCommand[500];
+	char curResponse[500];
 	for (i = 0; i < prevSessionCount; i++)
 	{
 		char *id;
@@ -295,13 +357,13 @@ void drawPreviouSession() {
 		strcpy(curCommand, "");
 		strcpy(curResponse, "");
 
-		curCommand = createGetCommand(id);
+		createGetCommand(id, curCommand);
 		printf("command built: %s\n", curCommand);
 		sendCommand(curCommand);
 		usleep(5000);
-		curResponse = waitForAPIResponse(64);
+		waitForAPIResponse(64, curResponse);
 		printf("Prev Session #%d : %s\n", i, curResponse);
-		parseSession(curResponse);
+		parseSession(curResponse, i);
 		// parse and save this session somewhere
 	}
 
@@ -323,9 +385,13 @@ void drawPreviouSession() {
 	drawString(homeString, 170, 450, WHITE, BLACK);
 	drawString(nextString, 570, 450, WHITE, BLACK);
 
+	drawListofSessions();
+
 }
 
-// Draw Call Screen Functions
+/*
+ * Draw Call Screen Functions
+ */
 void drawKeypad() {
 	ClearScreen();
 	// Draw number area
@@ -366,6 +432,7 @@ void drawKeypad() {
 	char* homeString = "HOME";
 	char* callString = "CALL";
 
+	// Writing the numbers onto the correct location of button
 	OutGraphicsCharFont2a( 400, 380, WHITE, BLACK, zero[0], 0);
 	OutGraphicsCharFont2a( 646, 380, WHITE, BLACK, clear[0], 0);
 
@@ -385,28 +452,39 @@ void drawKeypad() {
 	drawString(callString, 570, 450, WHITE, BLACK);
 }
 
-// Clear the keypad number screen
+/*
+ * Clear the keypad number screen that displays the current phone number
+ */
 void clearNumberScreen() {
 	Rectangle(2, 797, 2, 80, WHITE);
 }
 
-// Prints the number pressed on keypad
+/*
+ * Prints the number pressed on keypad
+ */
 void printDialNumber(char number, int dialIndex) {
 	OutGraphicsCharFont2a(dialIndex, 40, BLACK, BLACK, number, 0);
 }
 
 
 
+/*
+ * Write text that the achievements are initially locked
+ */
 void drawLockedAchievement(int x, int y) {
 	Circle(x, y , achievementsRadius, BLACK);
 	drawString(lockedAchievementString, x - 40, y - 5, WHITE, BLACK);
 }
 
+/*
+ * Drawing the medal for unlocking first distance achievement
+ */
 void drawAchievementDistance1() {
 	int x = 120;
 	int y = 100;
+	// Check the distance1_achieved flag to determine if achievement is locked or not
 	if (distance1_achieved) {
-		Circle(x, y, achievementsRadius, DARK_MAGENTA);
+		Circle(x, y, achievementsRadius, PINK);
 		char *achievementString1 = "100 M IN";
 		drawString(achievementString1, x - 55, y - 15, WHITE, BLACK);
 		char *achievementString2 = "A SESSION";
@@ -417,11 +495,15 @@ void drawAchievementDistance1() {
 	}
 }
 
+/*
+ * Drawing the medal for unlocking second distance achievement
+ */
 void drawAchievementDistance2() {
 	int x = 120;
 	int y = 300;
+	// Check the distance2_achieved flag to determine if achievement is locked or not
 	if (distance2_achieved) {
-		Circle(x, y, achievementsRadius, DARK_MAGENTA);
+		Circle(x, y, achievementsRadius, PINK);
 		char *achievementString1 = "500 M IN";
 		drawString(achievementString1, x - 55, y - 15, WHITE, BLACK);
 		char *achievementString2 = "A SESSION";
@@ -431,9 +513,13 @@ void drawAchievementDistance2() {
 	}
 }
 
+/*
+ * Drawing the medal for unlocking first session achievement
+ */
 void drawAchievementSession1() {
 	int x = 399;
 	int y = 100;
+	// Check the session1_achieved flag to determine if achievement is locked or not
 	if (session1_achieved) {
 		Circle(x, y, achievementsRadius, TEAL);
 		char *achievementString1 = "3 SESSIONS";
@@ -445,9 +531,13 @@ void drawAchievementSession1() {
 	}
 }
 
+/*
+ * Drawing the medal for unlocking second session achievement
+ */
 void drawAchievementSession2() {
 	int x = 399;
 	int y = 300;
+	// Check the session2_achieved flag to determine if achievement is locked or not
 	if (session2_achieved) {
 		Circle(x, y, achievementsRadius, TEAL);
 		char *achievementString1 = "5 SESSIONS";
@@ -459,9 +549,13 @@ void drawAchievementSession2() {
 	}
 }
 
+/*
+ * Drawing the medal for unlocking first speed achievement
+ */
 void drawAchievementSpeed1() {
 	int x = 678;
 	int y = 100;
+	// Check the speed1_achieved flag to determine if achievement is locked or not
 	if (speed1_achieved) {
 		Circle(x, y, achievementsRadius, MEDIUM_VIOLET_RED);
 		char *achievementString1 = "REACHED";
@@ -473,9 +567,13 @@ void drawAchievementSpeed1() {
 	}
 }
 
+/*
+ * Drawing the medal for unlocking second speed achievement
+ */
 void drawAchievementSpeed2() {
 	int x = 678;
 	int y = 300;
+	// Check the speed2_achieved flag to determine if achievement is locked or not
 	if (speed2_achieved) {
 		Circle(x, y, achievementsRadius, MEDIUM_VIOLET_RED);
 		char *achievementString1 = "REACHED";
@@ -488,7 +586,9 @@ void drawAchievementSpeed2() {
 
 }
 
-// Draw Achievement Screen Functions
+/*
+ * Draw Achievement Screen Functions
+ */
 void drawAchievementsScreen() {
 	ClearScreen();
 	// White background
@@ -496,14 +596,14 @@ void drawAchievementsScreen() {
 	drawString("Loading...", 15, 15, WHITE, BLACK);
 
 	// Download new Achievement states
-	char *command;
-	char *response;
-	command = createGetCommand("achievement_states");
+	char command[500];
+	char response[500];
+	createGetCommand("achievement_states", command);
 	printf("command built: %s\n", command);
 	sendCommand(command);
 	usleep(5000);
-	response = waitForAPIResponse(64);
-	printf("response: %s\n Now checking if it's a success...\n", response);
+	waitForAPIResponse(64, response);
+	//printf("response: %s\n Now checking if it's a success...\n", response);
 	char *isSuccess;
 	isSuccess = strstr(response, "200");
 	if (isSuccess) {
@@ -544,6 +644,8 @@ void drawAchievementsScreen() {
 	// Home
 	Rectangle(2, 797, 2, 427, WHITE);
 	Rectangle(202, 599, 429, 477, MIDNIGHT_BLUE);
+
+	// Draw the achievements depending if they are unlocked or locked
 	drawAchievementDistance1();
 	drawAchievementDistance2();
 	drawAchievementSession1();
@@ -556,5 +658,29 @@ void drawAchievementsScreen() {
 	printf("Finished drawing achievements screen.\n");
 }
 
+/*
+ * Function that checks if points on screen is within the screen
+ */
+int validPointOnScreen(int x, int y) {
+	// Check if x lies to the left of screen bounds
+	if (x < 0) {
+		return 0;
+	}
+	// 799 is the screen width
+	// Check if x lies to the right of screen bounds
+	if (x > 799) {
+		return 0;
+	}
 
+	// Check if y lies above screen bounds
+	if (y < 0) {
+		return 0;
+	}
+	// 479 is screen height
+	// Check if y lies below screen bounds
+	if (y > 479) {
+		return 0;
+	}
 
+	return 1;
+}

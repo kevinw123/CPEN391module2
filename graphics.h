@@ -26,8 +26,8 @@
 // that is pre-programmed into each of the 256 palettes
 
 
-#define GraphicsCommandReg   		(*(volatile unsigned short int *)(0x84000000))
-#define GraphicsStatusReg   		(*(volatile unsigned short int *)(0x84000000))
+#define GraphicsCommandReg   	(*(volatile unsigned short int *)(0x84000000))
+#define GraphicsStatusReg   	(*(volatile unsigned short int *)(0x84000000))
 #define GraphicsX1Reg   		(*(volatile unsigned short int *)(0x84000002))
 #define GraphicsY1Reg   		(*(volatile unsigned short int *)(0x84000004))
 #define GraphicsX2Reg   		(*(volatile unsigned short int *)(0x84000006))
@@ -37,7 +37,6 @@
 
 
 // Function prototypes
-
 void WriteAPixel (int x, int y, int Colour);
 void WriteHLine (int x1, int x2, int y, int Colour);
 void WriteVLine (int x, int y1, int y2, int Colour);
@@ -62,3 +61,4 @@ int dialIndex;
 void printDialNumber(char number, int dialIndex);
 void clearNumberScreen();
 void drawMap();
+int validPointOnScreen(int x, int y);

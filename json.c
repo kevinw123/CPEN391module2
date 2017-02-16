@@ -2,6 +2,7 @@
 #include <string.h>
 #include "jsmn.h"
 #include "json.h"
+#include "previoussessions.h"
 
 static int jsoneq(const char *json, jsmntok_t *tok, const char *s) {
     if (tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
@@ -136,7 +137,7 @@ void parseAchievements(char * JSON_STRING){
 }
 
 
-void parseSession(char * JSON_STRING){
+void parseSession(char * JSON_STRING, int index){
 	 	int k;
 	    char * result;
 	    int count;
@@ -154,6 +155,7 @@ void parseSession(char * JSON_STRING){
 	    result[count] = '\0';
 	    printf("%s\n", result);
 	    JSON_STRING = result;
+	    printf("\n\n CURRENT SESSION INDEX : %d \n\n", index);
 
 	    int i;
 	    int r;
@@ -173,6 +175,8 @@ void parseSession(char * JSON_STRING){
 	        return;
 	    }
 
+	    //int sessionIndex = atoi(cur_session);
+
 	    /* Loop over all keys of the root object */
 	    for (i = 1; i < r; i++) {
 	        if (jsoneq(JSON_STRING, &t[i], "_id") == 0) {
@@ -189,7 +193,7 @@ void parseSession(char * JSON_STRING){
 	            sprintf(startTime, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",startTime);
 	            //sprintf(dist1, "%d", distance1_achieved);
-	            //speed2_achieved = atoi(startTime) / 10;
+	            strcpy(stime_prev[index], startTime);
 	            i++;
 	        } else if (jsoneq(JSON_STRING, &t[i], "end_time") == 0) {
 	            /* We may want to do strtol() here to get numeric value */
@@ -198,7 +202,7 @@ void parseSession(char * JSON_STRING){
 	            char *endTime;
 	            sprintf(endTime, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",endTime);
-	            //session1_achieved = atoi(session1) / 10;
+	            strcpy(time_elapsed_prev[index], endTime);
 	            i++;
 	        } else if (jsoneq(JSON_STRING, &t[i], "start_lat") == 0) {
 	            /* We may want to do strtol() here to get numeric value */
@@ -207,7 +211,7 @@ void parseSession(char * JSON_STRING){
 	            char *startLat;
 	            sprintf(startLat, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",startLat);
-	            //distance1_achieved = atoi(distance1) / 10;
+	            strcpy(start_latitude_prev[index], startLat);
 	            i++;
 	        } else if (jsoneq(JSON_STRING, &t[i], "start_long") == 0) {
 	            /* We may want to do strtol() here to get numeric value */
@@ -216,7 +220,7 @@ void parseSession(char * JSON_STRING){
 	            char *start_long;
 	            sprintf(start_long, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",start_long);
-	            //session2_achieved = atoi(session2);
+	            strcpy(start_longitude_prev[index], start_long);
 	            i++;
 	        } else if (jsoneq(JSON_STRING, &t[i], "end_lat") == 0) {
 	            /* We may want to do strtol() here to get numeric value */
@@ -225,7 +229,7 @@ void parseSession(char * JSON_STRING){
 	            char *endLat;
 	            sprintf(endLat, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",endLat);
-	            //asda = atoi(endLat);
+	            strcpy(end_latitude_prev[index], endLat);
 	            i++;
 	        } else if (jsoneq(JSON_STRING, &t[i], "end_long") == 0) {
 	            /* We may want to do strtol() here to get numeric value */
@@ -234,6 +238,7 @@ void parseSession(char * JSON_STRING){
 	            char *endLong;
 	            sprintf(endLong, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",endLong);
+	            strcpy(end_longitude_prev[index], endLong);
 	            i++;
 	        } else if (jsoneq(JSON_STRING, &t[i], "total_distance") == 0) {
 	            /* We may want to do strtol() here to get numeric value */
@@ -242,7 +247,7 @@ void parseSession(char * JSON_STRING){
 	            char *totalDistance;
 	            sprintf(totalDistance, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",totalDistance);
-	            //distance2_achieved = atoi(totalDistance);
+	            strcpy(distance_prev[index], totalDistance);
 	            i++;
 	        } else if (jsoneq(JSON_STRING, &t[i], "speed") == 0) {
 	            /* We may want to do strtol() here to get numeric value */
@@ -251,6 +256,7 @@ void parseSession(char * JSON_STRING){
 	            char *speed;
 	            sprintf(speed, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",speed);
+	            strcpy(average_speed_prev[index], speed);
 	            i++;
 	        }
 
@@ -314,6 +320,7 @@ void parseCount(char * JSON_STRING){
 	            //strncpy(startTime, JSON_STRING + t[i+1].start, t[i+1].end-t[i+1].start);
 	            sprintf(prevCount, "%.*s", t[i+1].end-t[i+1].start, JSON_STRING + t[i+1].start);
 	            printf("\n %s \n",prevCount);
+	            strcpy(cur_session, prevCount);
 	            //sprintf(dist1, "%d", distance1_achieved);
 	            //speed2_achieved = atoi(startTime) / 10;
 	            i++;

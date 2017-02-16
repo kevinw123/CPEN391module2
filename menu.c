@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "Gps.h"
 #include "graphics.h"
 #include "touchscreen.h"
@@ -308,8 +311,11 @@ CURRENT_SESSION_STATES:
 			break;
 		case (STATE_CURRENT_STARTED) :
 			printf("STARTED");
+			drawStartSession();
 			session_started = 1;
 			extracted_first_log = 0;
+			test_index = 0;
+			initPointsTest();
 			drawStopButton();
 			break;
 		case (STATE_CURRENT_STOPPED) :
@@ -593,84 +599,83 @@ void Call(void)
 CALL_STATES:
 		switch (state)
 		{
-		case (STATE_CALL) :
+		case (STATE_CALLMENU_HOME) :
 			printf("YOU PRESSED HOME\n");
 			dialNumber = strcpy(dialNumber, "");
 			return;
 			break;
-		case (STATE_CURS) :
-			printf("YOU PRESSED CALL\n");
-			// invoke wifi function here
-			char *command;
-			command = createCallCommand(dialNumber);
+		case (STATE_CALLMENU_CALL) :
+			printf("CALL NUMBER\n");
+			char command[500];
+			createCallCommand(dialNumber, command);
 			sendCommand(command);
 			dialNumber = strcpy(dialNumber, "");
 			break;
 		case (STATE_CALLMENU_0) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('0', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "0");
 			}
 			break;
 		case (STATE_CALLMENU_1) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('1', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "1");
 			}
 			break;
 		case (STATE_CALLMENU_2) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('2', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "2");
 			}
 			break;
 		case (STATE_CALLMENU_3) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('3', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "3");
 			}
 			break;
 		case (STATE_CALLMENU_4) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('4', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "4");
 			}
 			break;
 		case (STATE_CALLMENU_5) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('5', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "5");
 			}
 			break;
 		case (STATE_CALLMENU_6) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('6', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "6");
 			}
 			break;
 		case (STATE_CALLMENU_7) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('7', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "7");
 			}
 			break;
 		case (STATE_CALLMENU_8) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('8', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "8");
 			}
 			break;
 		case (STATE_CALLMENU_9) :
-			if(dialIndex < 700){
+			if (dialIndex < 700) {
 				printDialNumber('9', dialIndex);
 				dialIndex += 15;
 				dialNumber = strcat(dialNumber, "9");
@@ -735,8 +740,8 @@ int main()
 {
 	printf("Initializing serial ports...\n");
 	init_all();
+	initializeColours();
 
-	printf("Drawing home screen...\n");
 HOME:
 	printf("Drawing Home Screen...\n");
 	drawHome();
@@ -775,81 +780,6 @@ STATES:
 		goto HOME;
 	}
 	printf("Done");
-
 	return 0;
-}
-
-/*
- * A small example of jsmn parsing when JSON structure is known and number of
- * tokens is predictable.
- */
-
-static const char *JSON_STRING =
-/*"{\"user2\": \"johndoe23423333\", \"admin\": false, \"uid\": 1000,\n  "
-"\"groups\": [\"users\", \"wheel\", \"audio\", \"video\"]}";*/
-
-"{\"sub\": \"1234567890\", \"name\": \"John Doe\",\"admin\": true}";
-
-static int jsoneq(const char *json, jsmntok_t *tok, const char *s) {
-    if (tok->type == JSMN_STRING && (int) strlen(s) == tok->end - tok->start &&
-        strncmp(json + tok->start, s, tok->end - tok->start) == 0) {
-        return 0;
-    }
-    return -1;
-}
-
-int main3() {
-    int i;
-    int r;
-    jsmn_parser p;
-    jsmntok_t t[128]; /* We expect no more than 128 tokens */
-
-    jsmn_init(&p);
-    r = jsmn_parse(&p, JSON_STRING, strlen(JSON_STRING), t, sizeof(t)/sizeof(t[0]));
-    if (r < 0) {
-        printf("Failed to parse JSON: %d\n", r);
-        return 1;
-    }
-
-    /* Assume the top-level element is an object */
-    if (r < 1 || t[0].type != JSMN_OBJECT) {
-        printf("Object expected\n");
-        return 1;
-    }
-
-    /* Loop over all keys of the root object */
-    for (i = 1; i < r; i++) {
-        if (jsoneq(JSON_STRING, &t[i], "sub") == 0) {
-            /* We may use strndup() to fetch string value */
-            printf("- Sub: %.*s\n", t[i+1].end-t[i+1].start,
-                   JSON_STRING + t[i+1].start);
-            i++;
-        } else if (jsoneq(JSON_STRING, &t[i], "name") == 0) {
-            /* We may additionally check if the value is either "true" or "false" */
-            printf("- Name: %.*s\n", t[i+1].end-t[i+1].start,
-                   JSON_STRING + t[i+1].start);
-            i++;
-        } else if (jsoneq(JSON_STRING, &t[i], "uid") == 0) {
-            /* We may want to do strtol() here to get numeric value */
-            printf("- UID: %.*s\n", t[i+1].end-t[i+1].start,
-                   JSON_STRING + t[i+1].start);
-            i++;
-        } else if (jsoneq(JSON_STRING, &t[i], "groups") == 0) {
-            int j;
-            printf("- Groups:\n");
-            if (t[i+1].type != JSMN_ARRAY) {
-                continue; /* We expect groups to be an array of strings */
-            }
-            for (j = 0; j < t[i+1].size; j++) {
-                jsmntok_t *g = &t[i+j+2];
-                printf("  * %.*s\n", g->end - g->start, JSON_STRING + g->start);
-            }
-            i += t[i+1].size + 1;
-        } else {
-            printf("Unexpected key: %.*s\n", t[i].end-t[i].start,
-                   JSON_STRING + t[i].start);
-        }
-    }
-    return EXIT_SUCCESS;
 }
 

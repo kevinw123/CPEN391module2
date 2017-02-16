@@ -12,7 +12,7 @@ void writeReturnNewLine(void) {
 
 void Init_WiFi(void)
 {
- // Program 6850 and baud rate generator to communicate with GPS
+// Program 6850 and baud rate generator to communicate with GPS
 	WiFi_Control = 0x15;			//
 	WiFi_Baud = 0x01;				// 115k baud 0x01
 
@@ -29,8 +29,8 @@ void Init_WiFi(void)
 
 	sendCommand(SETUP_LUA);
 	usleep(5000);
-	char *response;
-	response = waitForAPIResponse(62);
+	char response[500];
+	waitForAPIResponse(62, response);
 	char *isSuccess;
 	isSuccess = strstr(response, "Connected Successfully");
 
@@ -45,7 +45,7 @@ void Init_WiFi(void)
 	free(isSuccess);
 }
 
-char* waitForAPIResponse(int ascii)
+void waitForAPIResponse(int ascii, char* resp)
 {
 	char response[500];
 	int i = 0;
@@ -59,13 +59,15 @@ char* waitForAPIResponse(int ascii)
 			//printf("%c", WiFi_RxData);
 		}
 	}
-	return response;
+	printf("%s\n", response);
+	strcpy(resp, response);
+	return;
 }
 
 
 int putcharWiFi(int c) {
 	// Poll Tx bit in 6850 status register. Wait for it to become '1'
-	while ((WiFi_Status & 2) == 0){
+	while ((WiFi_Status & 2) == 0) {
 	}
 	// Write 'c' to the 6850 TxData register to output the character
 	WiFi_TxData = c;
@@ -87,24 +89,24 @@ int checkIfNewData(void) {
 void test_wifi(void)
 {
 	Init_WiFi();
-	char cmd1[(sizeof(SETUP_LUA))-1] = SETUP_LUA;
-	char cmd2[(sizeof(SEND_SMS))-1] = SEND_SMS;
+	char cmd1[(sizeof(SETUP_LUA)) - 1] = SETUP_LUA;
+	char cmd2[(sizeof(SEND_SMS)) - 1] = SEND_SMS;
 
-	int i,j;
+	int i, j;
 
 	printf("Sending dofile command...\n");
-	for (i = 0; i < ((sizeof(SETUP_LUA)-1)); i++) {
+	for (i = 0; i < ((sizeof(SETUP_LUA) - 1)); i++) {
 		putcharWiFi((int) cmd1[i]);
-		printf("%c",getcharWiFi());
+		printf("%c", getcharWiFi());
 	}
 	writeReturnNewLine();
 	printf("\n");
 	usleep(20000);
 
 	printf("Sending check_wifi() command...\n");
-	for (j = 0; j < ((sizeof(SEND_SMS)-1)); j++) {
+	for (j = 0; j < ((sizeof(SEND_SMS) - 1)); j++) {
 		putcharWiFi((int) cmd2[j]);
-		printf("%c",getcharWiFi());
+		printf("%c", getcharWiFi());
 	}
 	writeReturnNewLine();
 	//while(1) {
@@ -125,9 +127,8 @@ void sendCommand(char *string)
 	writeReturnNewLine();
 }
 
-char* createInsertCommand(char *id, char *start_lat, char *start_long, char *end_lat, char *end_long, char *start_time, char *time_elapsed, char *total_distance, char *speed)
+void createInsertCommand(char *id, char *start_lat, char *start_long, char *end_lat, char *end_long, char *start_time, char *time_elapsed, char *total_distance, char *speed, char* ret)
 {
-	char *command;
 	char *literal_start = "insertDB(";
 	char *literal_end = ")";
 	int cmd_size = strlen(literal_start) + strlen(id) + strlen(start_lat) + strlen(start_long) + strlen(end_lat) + strlen(end_long) + strlen(start_time) + strlen(time_elapsed) + strlen(total_distance) + strlen(speed) + strlen(literal_end);
@@ -153,14 +154,12 @@ char* createInsertCommand(char *id, char *start_lat, char *start_long, char *end
 	strcat(cmd, speed);
 	strcat(cmd, "\"");
 	strcat(cmd, literal_end);
-	strcpy(command, cmd);
-	return command;
+	strcpy(ret, cmd);
 }
 
-char* createInsertAchieveCommand(char *id, char *dist1, char *dist2, char *ses1, char *ses2, char *speed1, char *speed2, char *numSessions, char *achieve_radius)
+void createInsertAchieveCommand(char *id, char *dist1, char *dist2, char *ses1, char *ses2, char *speed1, char *speed2, char *numSessions, char *achieve_radius, char *ret)
 {
 	// InsertAchieve(id, dist1, dist2, ses1, ses2, speed1, speed2, numSessions, achieve_radius)
-	char *command;
 	char *literal_start = "InsertAchieve(";
 	char *literal_end = ")";
 	int cmd_size = strlen(literal_start) + strlen(id) + strlen(dist1) + strlen(dist2) + strlen(ses1) + strlen(ses2) + strlen(speed1) + strlen(speed2) + strlen(numSessions) + strlen(achieve_radius) + strlen(literal_end);
@@ -186,14 +185,12 @@ char* createInsertAchieveCommand(char *id, char *dist1, char *dist2, char *ses1,
 	strcat(cmd, achieve_radius);
 	strcat(cmd, "\"");
 	strcat(cmd, literal_end);
-	strcpy(command, cmd);
-	return command;
+	strcpy(ret, cmd);
 }
 
-char* createGetCommand(char *id)
+void createGetCommand(char *id, char *ret)
 {
 	// getID(id)
-	char *command;
 	char *literal_start = "getID(";
 	char *literal_end = ")";
 	int cmd_size = strlen(literal_start) + strlen(id) + strlen(literal_end);
@@ -203,14 +200,12 @@ char* createGetCommand(char *id)
 	strcat(cmd, id);
 	strcat(cmd, "\"");
 	strcat(cmd, literal_end);
-	strcpy(command, cmd);
-	return command;
+	strcpy(ret, cmd);
 }
 
-char* createCallCommand(char *numberToCall)
+void createCallCommand(char *numberToCall, char *ret)
 {
 	// twilioCall(numberToCall)
-	char *command;
 	char *literal_start = "twilioCall(";
 	char *literal_end = ")";
 	int cmd_size = strlen(literal_start) + strlen(numberToCall) + strlen(literal_end);
@@ -220,20 +215,16 @@ char* createCallCommand(char *numberToCall)
 	strcat(cmd, numberToCall);
 	strcat(cmd, "\"");
 	strcat(cmd, literal_end);
-	strcpy(command, cmd);
-	return command;
+	strcpy(ret, cmd);
 }
 
-char* createGetPrevSessionCountCommand()
+void createGetPrevSessionCountCommand(char *ret)
 {
-	char *command;
-	command = "getPrevSessionCount()";
-	return command;
+	strcpy(ret, "getPrevSessionCount()");
 }
 // function updatePrevSessionCount(count)
-char* createUpdatePrevSessionCountCommand(char *count)
+void createUpdatePrevSessionCountCommand(char *count, char *ret)
 {
-	char *command;
 	char *literal_start = "updatePrevSessionCount(";
 	char *literal_end = ")";
 	int cmd_size = strlen(literal_start) + strlen(count) + strlen(literal_end);
@@ -243,6 +234,5 @@ char* createUpdatePrevSessionCountCommand(char *count)
 	strcat(cmd, count);
 	strcat(cmd, "\"");
 	strcat(cmd, literal_end);
-	strcpy(command, cmd);
-	return command;
+	strcpy(ret, cmd);
 }
