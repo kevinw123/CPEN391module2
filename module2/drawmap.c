@@ -71,21 +71,60 @@ void drawArea(int map_width, int map_height, int area)
 	Rectangle(0, 800, 400, 480, BLACK);
 }
 
-void movePlayer(int curPosX, int curPosY, int newPosX, int newPosY, int area)
+void movePlayer(Point curPos, Point newPos, int area)
 {
 	Point space_point, player_point;
-	map[area][curPosX][curPosY] = SPACE;
-	map[area][newPosX][newPosY] = PLAYER;
+	//map[area][curPos.x][curPos.y] = SPACE;
+	//map[area][newPos.x][newPos.y] = PLAYER;
 	//drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, area);
-	space_point.x = curPosX;
-	space_point.y = curPosY;
-	player_point.x = newPosX;
-	player_point.y = newPosY;
-	drawSpace(space_point);
+	drawSpace(curPos);
 	drawPlayer(player_point);
 }
 
-void movePlayerUp()
+int movePlayerUp(Point playerCoords, area)
 {
-	
+	if (isValidMovementUp(Point playerCoords)){
+		Point old_playerCoords = playerCoords;
+		playerCoords.y--;
+		movePlayer(old_playerCoords, playerCoords, area);
+		return 0
+	}
+	else
+		return -1;
+}
+
+int movePlayerDown(Point playerCoords, area)
+{
+	if (isValidMovementDown(Point playerCoords)){
+		Point old_playerCoords = playerCoords;
+		playerCoords.y++;
+		movePlayer(old_playerCoords, playerCoords, area);
+		return 0
+	}
+	else
+		return -1;
+}
+
+int movePlayerLeft(Point playerCoords, area)
+{
+	if (isValidMovementLeft(Point playerCoords)){
+		Point old_playerCoords = playerCoords;
+		playerCoords.x--;
+		movePlayer(old_playerCoords, playerCoords, area);
+		return 0
+	}
+	else
+		return -1;
+}
+
+int movePlayerRight(Point playerCoords, area)
+{
+	if (isValidMovementRight(Point playerCoords)){
+		Point old_playerCoords = playerCoords;
+		playerCoords.x++;
+		movePlayer(old_playerCoords, playerCoords, area);
+		return 0
+	}
+	else
+		return -1;
 }
