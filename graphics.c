@@ -111,8 +111,8 @@ void ClearScreen()
 void Rectangle(int x1, int x2, int y1, int y2, int Colour)
 {
 	int i;
-	for (i = y1; i < y2 + 1; i++)
-		WriteHLine(x1, x2, i, Colour);
+	for (i = y1; i < y2; i++)
+		WriteHLine(x1, x2-1, i, Colour);
 }
 
 /*

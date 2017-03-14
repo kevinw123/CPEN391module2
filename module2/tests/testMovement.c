@@ -24,7 +24,7 @@ bool isValidMovementUp(int area)
 	if (player_current_y_pos == 0)
 		return false;
 
-	char nextSpace = map[area][player_current_x_pos][player_current_y_pos + 1];
+	char nextSpace = map[area][player_current_y_pos - 1 ][player_current_x_pos];
 
 	// Direction is headed towards a wall.
 	if (nextSpace == '#')
@@ -47,7 +47,7 @@ bool isValidMovementRight(int area)
 	if (player_current_x_pos == 7)
 		return false;
 
-	char nextSpace = map[area][player_current_x_pos + 1][player_current_y_pos];
+	char nextSpace = map[area][player_current_y_pos][player_current_x_pos + 1];
 
 	// Direction is headed towards a wall.
 	if (nextSpace == '#')
@@ -66,11 +66,47 @@ bool isValidMovementRight(int area)
 
 bool isValidMovementDown(int area)
 {
+	// Player is already at bottom
+	if (player_current_x_pos == 7)
+		return false;
+
+	char nextSpace = map[area][player_current_y_pos + 1][player_current_x_pos];
+
+	// Direction is headed towards a wall.
+	if (nextSpace == '#')
+		return false;
+
+	// Direction is headed towards an enemy.
+	if (nextSpace == 'X')
+		return false;
+
+	// Direction is empty
+	if (nextSpace == 'O')
+		return true;
+
 	return false;
 }
 
 bool isValidMovementLeft(int area)
 {
+	// Player is already at rightmost of map.
+	if (player_current_x_pos == 7)
+		return false;
+
+	char nextSpace = map[area][player_current_y_pos][player_current_x_pos - 1];
+
+	// Direction is headed towards a wall.
+	if (nextSpace == '#')
+		return false;
+
+	// Direction is headed towards an enemy.
+	if (nextSpace == 'X')
+		return false;
+
+	// Direction is empty
+	if (nextSpace == 'O')
+		return true;
+
 	return false;
 }
 

@@ -30,7 +30,7 @@ int player_current_y_pos;
 
 static int startPos [MAX_AREAS][2] =
 {
-		{ 7, 1 },
+		{ 1, 7 },
 		{ 0, 0 },
 		{ 0, 0 }
 };

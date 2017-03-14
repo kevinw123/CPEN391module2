@@ -6,6 +6,7 @@
  */
 
 #include "mapdesign.h"
+#include "states.h"
 #include "../graphics.h"
 #include "../touchscreen.h"
 #include "../Colours.h"
@@ -73,57 +74,88 @@ void drawArea(int map_width, int map_height, int area)
 
 void movePlayer(Point curPos, Point newPos, int area)
 {
-	Point space_point, player_point;
+	printf("curposx: %d\n", curPos.x);
+	printf("curposy: %d\n", curPos.y);
+	printf("newposx: %d\n", newPos.x);
+	printf("newposy: %d\n", newPos.y);
 	//map[area][curPos.x][curPos.y] = SPACE;
 	//map[area][newPos.x][newPos.y] = PLAYER;
 	//drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, area);
 	drawSpace(curPos);
-	drawPlayer(player_point);
+	drawPlayer(newPos);
 }
 
-int movePlayerUp(Point playerCoords, area)
+int movePlayerUp(int x, int y, int area)
 {
-	if (isValidMovementUp(Point playerCoords)){
+	Point playerCoords;
+	playerCoords = getCoord(x, y);
+	printf("x: %d\n", playerCoords.x);
+	printf("y: %d\n", playerCoords.y);
+
+	if (isValidMovementUp(curArea)){
 		Point old_playerCoords = playerCoords;
-		playerCoords.y--;
+		playerCoords.y = playerCoords.y - 50;
 		movePlayer(old_playerCoords, playerCoords, area);
-		return 0
+
+		player_current_y_pos--;
+		return 0;
 	}
 	else
 		return -1;
 }
 
-int movePlayerDown(Point playerCoords, area)
+int movePlayerDown(int x, int y, int area)
 {
-	if (isValidMovementDown(Point playerCoords)){
+	Point playerCoords;
+		playerCoords = getCoord(x, y);
+		printf("x: %d\n", playerCoords.x);
+		printf("y: %d\n", playerCoords.y);
+
+	if (isValidMovementDown(curArea)){
 		Point old_playerCoords = playerCoords;
-		playerCoords.y++;
+		playerCoords.y = playerCoords.y + 50;
 		movePlayer(old_playerCoords, playerCoords, area);
-		return 0
+
+		player_current_y_pos++;
+		return 0;
 	}
 	else
 		return -1;
 }
 
-int movePlayerLeft(Point playerCoords, area)
+int movePlayerLeft(int x, int y, int area)
 {
-	if (isValidMovementLeft(Point playerCoords)){
+	Point playerCoords;
+		playerCoords = getCoord(x, y);
+		printf("x: %d\n", playerCoords.x);
+		printf("y: %d\n", playerCoords.y);
+
+	if (isValidMovementLeft(curArea)){
 		Point old_playerCoords = playerCoords;
-		playerCoords.x--;
+		playerCoords.x = playerCoords.x - 50;
 		movePlayer(old_playerCoords, playerCoords, area);
-		return 0
+
+		player_current_x_pos--;
+		return 0;
 	}
 	else
 		return -1;
 }
 
-int movePlayerRight(Point playerCoords, area)
+int movePlayerRight(int x, int y, int area)
 {
-	if (isValidMovementRight(Point playerCoords)){
+	Point playerCoords;
+		playerCoords = getCoord(x, y);
+		printf("x: %d\n", playerCoords.x);
+		printf("y: %d\n", playerCoords.y);
+
+	if (isValidMovementRight(curArea)){
 		Point old_playerCoords = playerCoords;
-		playerCoords.x++;
+		playerCoords.x = playerCoords.x + 50;
 		movePlayer(old_playerCoords, playerCoords, area);
-		return 0
+
+		player_current_x_pos++;
+		return 0;
 	}
 	else
 		return -1;
