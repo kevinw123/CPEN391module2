@@ -92,6 +92,7 @@ char getBluetoothCommand(void) {
 		}
 		printf("Receiving : %c\n", a);
 	}
+	return result;
 }
 
 // int main()
