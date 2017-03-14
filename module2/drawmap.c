@@ -71,4 +71,16 @@ void drawArea(int map_width, int map_height, int area)
 	Rectangle(0, 800, 400, 480, BLACK);
 }
 
+void movePlayer(int curPosX, int curPosY, int newPosX, int newPosY, int area)
+{
+	map[area][curPosX][curPosY] = SPACE;
+	map[area][newPosX][newPosY] = PLAYER;
+	drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, area);
+}
+
+void movePlayerUp()
+{
+
+}
+
 

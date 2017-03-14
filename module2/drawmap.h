@@ -11,6 +11,7 @@
 #include "../touchscreen.h"
 
 // Functions
+void movePlayer(int curPosX, int curPosY, int newPosX, int newPosY, int area);
 void drawArea(int map_width, int map_height, int area);
 void drawSquare(char square, Point point);
 Point getCoord(int x, int y);

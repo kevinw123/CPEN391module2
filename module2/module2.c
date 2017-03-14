@@ -22,6 +22,7 @@ void state_machine()
 		{
 		case (STATE_REDRAW) :
 			drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, curArea);
+
 			curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
 			break;
 		case (STATE_RECEIVE_BLUETOOTH_COMMAND) :
