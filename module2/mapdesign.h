@@ -23,6 +23,18 @@
 #define ENEMY 88				// 88 = X
 #define PLAYER 80				// 80 = P
 
+// Player's current position in terms of the character map below. For example, these two values would initialize to
+// 1 and 7 respectively (according to the position of 'P' in map[0].
+int player_current_x_pos;
+int player_current_y_pos;
+
+static int startPos [MAX_AREAS][2] =
+{
+		{ 7, 1 },
+		{ 0, 0 },
+		{ 0, 0 }
+};
+
 static unsigned char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES] =
 {
 		{

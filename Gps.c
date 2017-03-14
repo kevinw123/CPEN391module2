@@ -6,7 +6,6 @@
 #include "graphics.h"
 #include "Colours.h"
 #include "Gps.h"
-#include "map.h"
 #include "previoussessions.h"
 
 // Hard-coded mapping of latitude-longitude points to the screen's x, y coordinates

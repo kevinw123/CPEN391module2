@@ -15,37 +15,75 @@
 #include "../states.h"
 #include "../movement.h"
 
+//static player_current_x_pos;
+//static player_current_y_pos;
 
-bool isValidMovementUp(Point playerCoords)
+bool isValidMovementUp(int area)
+{
+	// Player is already at the top of the map
+	if (player_current_y_pos == 0)
+		return false;
+
+	char nextSpace = map[area][player_current_x_pos][player_current_y_pos + 1];
+
+	// Direction is headed towards a wall.
+	if (nextSpace == '#')
+		return false;
+
+	// Direction is headed towards an enemy.
+	if (nextSpace == 'X')
+		return false;
+
+	// Direction is empty
+	if (nextSpace == 'O')
+		return true;
+
+	return false;
+}
+
+bool isValidMovementRight(int area)
+{
+	// Player is already at rightmost of map.
+	if (player_current_x_pos == 7)
+		return false;
+
+	char nextSpace = map[area][player_current_x_pos + 1][player_current_y_pos];
+
+	// Direction is headed towards a wall.
+	if (nextSpace == '#')
+		return false;
+
+	// Direction is headed towards an enemy.
+	if (nextSpace == 'X')
+		return false;
+
+	// Direction is empty
+	if (nextSpace == 'O')
+		return true;
+
+	return false;
+}
+
+bool isValidMovementDown(int area)
 {
 	return false;
 }
 
-bool isValidMovementRight(Point playerCoords)
+bool isValidMovementLeft(int area)
 {
 	return false;
 }
 
-bool isValidMovementDown(Point playerCoords)
-{
-	return false;
-}
-
-bool isValidMovementLeft(Point playerCoords)
-{
-	return false;
-}
-
-bool isValidMovement(int direction, Point playerCoords)
+bool isValidMovement(int direction, int area)
 {
 	if (direction == DIRECTION_UP)
-		return isValidMovementUp(playerCoords);
+		return isValidMovementUp(area);
 	else if (direction == DIRECTION_RIGHT)
-		return isValidMovementRight(playerCoords);
+		return isValidMovementRight(area);
 	else if (direction == DIRECTION_DOWN)
-		return isValidMovementDown(playerCoords);
+		return isValidMovementDown(area);
 	else if (direction == DIRECTION_LEFT)
-		return isValidMovementLeft(playerCoords);
+		return isValidMovementLeft(area);
 }
 
 bool isValidBluetoothCommand()

@@ -10,7 +10,6 @@
 #include <time.h>
 #include <string.h>
 #include "json.h"
-#include "map.h"
 #include "previoussessions.h"
 
 char *lockedAchievementString = "LOCKED";
@@ -230,27 +229,7 @@ void drawStopButton() {
 	drawString(stopString, 570, 450, WHITE, BLACK);
 }
 
-/*
- * Draw map of UBC in Current Session module
- */
-void drawMap() {
-	// For loops to program 256 Colour Palettes
-	int i, j;
 
-	// Draw the map using 8 hex arrays
-	for (j = 0; j < IMAGE_HEIGHT; j++) {
-		for (i = 0; i < IMAGE_LENGTH; i++) {
-			WriteAPixel(i + MAP_X_OFFSET, j + MAP_Y_OFFSET, map00[i + IMAGE_LENGTH * j]);
-			WriteAPixel(i + MAP_X_OFFSET + IMAGE_LENGTH, j + MAP_Y_OFFSET, map01[i + IMAGE_LENGTH * j]);
-			WriteAPixel(i + MAP_X_OFFSET + 2 * IMAGE_LENGTH, j + MAP_Y_OFFSET, map02[i + IMAGE_LENGTH * j]);
-			WriteAPixel(i + MAP_X_OFFSET + 3 * IMAGE_LENGTH, j + MAP_Y_OFFSET, map03[i + IMAGE_LENGTH * j]);
-			WriteAPixel(i + MAP_X_OFFSET, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map10[i + IMAGE_LENGTH * j]);
-			WriteAPixel(i + MAP_X_OFFSET + IMAGE_LENGTH, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map11[i + IMAGE_LENGTH * j]);
-			WriteAPixel(i + MAP_X_OFFSET + 2 * IMAGE_LENGTH, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map12[i + IMAGE_LENGTH * j]);
-			WriteAPixel(i + MAP_X_OFFSET + 3 * IMAGE_LENGTH, j + IMAGE_HEIGHT + MAP_Y_OFFSET, map13[i + IMAGE_LENGTH * j]);
-		}
-	}
-}
 
 /*
  * Draw Current Session screen (before starting)
@@ -259,7 +238,6 @@ void drawStartSession() {
 	Rectangle(0, 799, 0, 479, BLACK);
 	Rectangle(2, 797, 2, 80, WHITE);
 
-	drawMap();
 
 	// Home button
 	Rectangle(2, 400, 429, 477, MIDNIGHT_BLUE);

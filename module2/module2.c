@@ -12,6 +12,8 @@ void init_module2()
 	printf("Initializing module2 stuff...\n");
 	curState = STATE_REDRAW;
 	curArea = 0;
+	player_current_x_pos = startPos[curArea][1];
+	player_current_y_pos = startPos[curArea][0];
 }
 
 void state_machine()
@@ -22,7 +24,10 @@ void state_machine()
 		{
 		case (STATE_REDRAW) :
 			drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, curArea);
-
+			printf("Valid move up? %d\n", isValidMovementUp(curArea));
+			printf("Valid move right? %d\n", isValidMovementRight(curArea));
+			printf("Valid move down? %d\n", isValidMovementDown(curArea));
+			printf("Valid move left? %d\n", isValidMovementLeft(curArea));
 			curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
 			break;
 		case (STATE_RECEIVE_BLUETOOTH_COMMAND) :
