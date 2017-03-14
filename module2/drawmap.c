@@ -7,9 +7,9 @@
 
 #include "mapdesign.h"
 #include "states.h"
-#include "../graphics.h"
-#include "../touchscreen.h"
-#include "../Colours.h"
+#include "graphics.h"
+#include "touchscreen.h"
+#include "Colours.h"
 
 
 Point getCoord(int x, int y)

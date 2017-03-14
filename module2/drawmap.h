@@ -8,7 +8,7 @@
 #ifndef DRAWMAP_H_
 #define DRAWMAP_H_
 
-#include "../touchscreen.h"
+#include "touchscreen.h"
 
 // Functions
 void movePlayer(int curPosX, int curPosY, int newPosX, int newPosY, int area);

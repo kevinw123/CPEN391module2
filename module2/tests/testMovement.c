@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include "test.h"
 #include "../mapdesign.h"
-#include "../../graphics.h"
-#include "../../touchscreen.h"
-#include "../../Colours.h"
+#include "../graphics.h"
+#include "../touchscreen.h"
+#include "../Colours.h"
 #include "../drawmap.h"
 #include "../states.h"
 #include "../movement.h"
