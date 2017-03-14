@@ -73,14 +73,19 @@ void drawArea(int map_width, int map_height, int area)
 
 void movePlayer(int curPosX, int curPosY, int newPosX, int newPosY, int area)
 {
+	Point space_point, player_point;
 	map[area][curPosX][curPosY] = SPACE;
 	map[area][newPosX][newPosY] = PLAYER;
-	drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, area);
+	//drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, area);
+	space_point.x = curPosX;
+	space_point.y = curPosY;
+	player_point.x = newPosX;
+	player_point.y = newPosY;
+	drawSpace(space_point);
+	drawPlayer(player_point);
 }
 
 void movePlayerUp()
 {
-
+	
 }
-
-
