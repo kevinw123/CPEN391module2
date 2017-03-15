@@ -1,10 +1,3 @@
-/*
- * bluetooth.h
- *
- *  Created on: Mar 14, 2017
- *      Author: Kevin Wong
- */
-
 #define BlueTooth_Control (*(volatile unsigned char *)(0x84000220))
 #define BlueTooth_Status (*(volatile unsigned char *)(0x84000220))
 #define BlueTooth_TxData (*(volatile unsigned char *)(0x84000222))

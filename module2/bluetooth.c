@@ -1,4 +1,6 @@
 #include "bluetooth.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 void initBluetooth() {
 	BlueTooth_Baud = 0x01;
@@ -29,7 +31,7 @@ void changeName() {
 
 void factoryReset() {
 	char *fact_reset = "SF,1\r\n";
-	printf("Factory Reseting\n");
+	printf("Factory Reseting \n");
 	sendStringBluetooth(fact_reset);
 }
 
