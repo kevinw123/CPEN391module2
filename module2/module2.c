@@ -31,26 +31,53 @@ void state_machine()
 		case (STATE_REDRAW) :
 			drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, curArea);
 
-		/*
+
 			printf("Valid move up? %d\n", isValidMovementUp(curArea));
 			printf("Valid move right? %d\n", isValidMovementRight(curArea));
 			printf("Valid move down? %d\n", isValidMovementDown(curArea));
 			printf("Valid move left? %d\n", isValidMovementLeft(curArea));
 
-			usleep(10000000);
-			printf("%d\n", movePlayerUp(player_current_x_pos, player_current_y_pos, curArea));
-			usleep(10000000);
-			printf("%d\n", movePlayerRight(player_current_x_pos, player_current_y_pos, curArea));
-			usleep(10000000);
-			printf("%d\n", movePlayerDown(player_current_x_pos, player_current_y_pos, curArea));
-		*/
+
+			execCommand(1);
+			usleep(300000);
+			execCommand(1);
+			usleep(300000);
+			execCommand(1);
+			usleep(300000);
+			execCommand(1);
+			usleep(300000);
+			execCommand(1);
+			usleep(300000);
+			execCommand(1);
+			usleep(300000);
+			execCommand(3);
+			usleep(300000);
+			execCommand(3);
+			usleep(300000);
+			execCommand(3);
+			usleep(300000);
+			execCommand(3);
+			usleep(300000);
+			execCommand(2);
+			usleep(300000);
+			execCommand(2);
+			usleep(300000);
+			execCommand(2);
+			usleep(300000);
+			execCommand(4);
+			usleep(300000);
+			execCommand(4);
+			usleep(300000);
+			execCommand(4);
+			usleep(300000);
+			execCommand(4);
 
 			curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
 			break;
 		case (STATE_RECEIVE_BLUETOOTH_COMMAND) :
 			printf("Waiting for bluetooth commands...\n");
-			char command = getBluetoothCommand();
-			int result = execCommand(command);
+			//char command = getBluetoothCommand();
+			//int result = execCommand(command);
 
 
 
@@ -58,7 +85,7 @@ void state_machine()
 
 
 			while(1) {
-				printf("%c\n", getBluetoothCommand());
+				//printf("%c\n", getBluetoothCommand());
 			}
 			break;
 		}
@@ -70,3 +97,5 @@ int main()
 	init_module2();
 	state_machine();
 }
+
+
