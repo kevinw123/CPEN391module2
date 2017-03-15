@@ -38,7 +38,7 @@ void state_machine()
 			printf("Valid move left? %d\n", isValidMovementLeft(curArea));
 
 
-			execCommand(1);
+			/*execCommand(1);
 			usleep(300000);
 			execCommand(1);
 			usleep(300000);
@@ -70,22 +70,21 @@ void state_machine()
 			usleep(300000);
 			execCommand(4);
 			usleep(300000);
-			execCommand(4);
+			execCommand(4);*/
 
 			curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
 			break;
 		case (STATE_RECEIVE_BLUETOOTH_COMMAND) :
 			printf("Waiting for bluetooth commands...\n");
-			//char command = getBluetoothCommand();
-			//int result = execCommand(command);
-
-
-
-
-
-
-			while(1) {
-				//printf("%c\n", getBluetoothCommand());
+			while(1){
+				char a = getcharBluetooth();
+				if((a -'0') < 5 && (a - '0') > 0){
+					execCommand(a - '0');
+				}
+				if(a == '$'){
+					break;
+				}
+				printf("Receiving : %c\n", a);
 			}
 			break;
 		}
