@@ -11,6 +11,13 @@
 #include "touchscreen.h"
 #include "Colours.h"
 
+void init_game() {
+	curArea = 0;
+	player_current_y_pos = startPos[curArea][1];
+	player_current_x_pos = startPos[curArea][0];
+	printf("Player x pos: %d\n", player_current_x_pos);
+	printf("Player y pos: %d\n", player_current_y_pos);
+}
 
 Point getCoord(int x, int y)
 {
@@ -107,11 +114,11 @@ int movePlayerUp(int x, int y, int area)
 int movePlayerDown(int x, int y, int area)
 {
 	Point playerCoords;
-		playerCoords = getCoord(x, y);
-		printf("x: %d\n", playerCoords.x);
-		printf("y: %d\n", playerCoords.y);
+	playerCoords = getCoord(x, y);
+	printf("x: %d\n", playerCoords.x);
+	printf("y: %d\n", playerCoords.y);
 
-	if (isValidMovementDown(curArea)){
+	if (isValidMovementDown(curArea)) {
 		Point old_playerCoords = playerCoords;
 		playerCoords.y = playerCoords.y + 50;
 		movePlayer(old_playerCoords, playerCoords, area);
@@ -126,11 +133,11 @@ int movePlayerDown(int x, int y, int area)
 int movePlayerLeft(int x, int y, int area)
 {
 	Point playerCoords;
-		playerCoords = getCoord(x, y);
-		printf("x: %d\n", playerCoords.x);
-		printf("y: %d\n", playerCoords.y);
+	playerCoords = getCoord(x, y);
+	printf("x: %d\n", playerCoords.x);
+	printf("y: %d\n", playerCoords.y);
 
-	if (isValidMovementLeft(curArea)){
+	if (isValidMovementLeft(curArea)) {
 		Point old_playerCoords = playerCoords;
 		playerCoords.x = playerCoords.x - 50;
 		movePlayer(old_playerCoords, playerCoords, area);
@@ -145,11 +152,11 @@ int movePlayerLeft(int x, int y, int area)
 int movePlayerRight(int x, int y, int area)
 {
 	Point playerCoords;
-		playerCoords = getCoord(x, y);
-		printf("x: %d\n", playerCoords.x);
-		printf("y: %d\n", playerCoords.y);
+	playerCoords = getCoord(x, y);
+	printf("x: %d\n", playerCoords.x);
+	printf("y: %d\n", playerCoords.y);
 
-	if (isValidMovementRight(curArea)){
+	if (isValidMovementRight(curArea)) {
 		Point old_playerCoords = playerCoords;
 		playerCoords.x = playerCoords.x + 50;
 		movePlayer(old_playerCoords, playerCoords, area);

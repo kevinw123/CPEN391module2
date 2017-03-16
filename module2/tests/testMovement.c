@@ -25,6 +25,7 @@ bool isValidMovementUp(int area)
 		return false;
 
 	char nextSpace = map[area][player_current_y_pos - 1 ][player_current_x_pos];
+	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
 	if (nextSpace == '#')
@@ -35,7 +36,7 @@ bool isValidMovementUp(int area)
 		return false;
 
 	// Direction is empty
-	if (nextSpace == 'O')
+	if (nextSpace == 'O' || nextSpace == 'P')
 		return true;
 
 	return false;
@@ -48,7 +49,7 @@ bool isValidMovementRight(int area)
 		return false;
 
 	char nextSpace = map[area][player_current_y_pos][player_current_x_pos + 1];
-
+	printf("Next space: %c\n", nextSpace);
 	// Direction is headed towards a wall.
 	if (nextSpace == '#')
 		return false;
@@ -58,7 +59,7 @@ bool isValidMovementRight(int area)
 		return false;
 
 	// Direction is empty
-	if (nextSpace == 'O')
+	if (nextSpace == 'O' || nextSpace == 'P')
 		return true;
 
 	return false;
@@ -71,6 +72,7 @@ bool isValidMovementDown(int area)
 		return false;
 
 	char nextSpace = map[area][player_current_y_pos + 1][player_current_x_pos];
+	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
 	if (nextSpace == '#')
@@ -81,7 +83,7 @@ bool isValidMovementDown(int area)
 		return false;
 
 	// Direction is empty
-	if (nextSpace == 'O')
+	if (nextSpace == 'O' || nextSpace == 'P')
 		return true;
 
 	return false;
@@ -94,6 +96,7 @@ bool isValidMovementLeft(int area)
 		return false;
 
 	char nextSpace = map[area][player_current_y_pos][player_current_x_pos - 1];
+	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
 	if (nextSpace == '#')
@@ -104,7 +107,7 @@ bool isValidMovementLeft(int area)
 		return false;
 
 	// Direction is empty
-	if (nextSpace == 'O')
+	if (nextSpace == 'O' || nextSpace == 'P')
 		return true;
 
 	return false;

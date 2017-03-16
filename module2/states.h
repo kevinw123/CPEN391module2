@@ -8,10 +8,12 @@
 #ifndef STATES_H_
 #define STATES_H_
 
-#define STATE_REDRAW 0
-#define STATE_RECEIVE_BLUETOOTH_COMMAND 1
+#define STATE_MENU 0
+#define STATE_REDRAW 1
+#define STATE_RECEIVE_BLUETOOTH_COMMAND 2
 
 // Bluetooth Command Definitions
+#define PLAY 0
 #define MOVE_UP 1
 #define MOVE_RIGHT 2
 #define MOVE_DOWN 3
