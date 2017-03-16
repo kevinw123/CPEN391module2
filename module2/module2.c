@@ -10,6 +10,7 @@
 #include "bluetooth.h"
 #include "drawmenu.h"
 #include "graphics.h"
+#include "questions.h"
 
 void init_module2()
 {
@@ -77,24 +78,33 @@ void state_machine()
 			break;
 		case (STATE_RECEIVE_BLUETOOTH_COMMAND) :
 			printf("Waiting for bluetooth commands...\n");
-			char command;
+			int command;
 			while (1) {
 				char a = getcharBluetooth();
-				if ((a - '0') < 5 && (a - '0') >= 0) {
-					printf("Receiving : %c\n", a);
+				if ((a - '0') < 100 && (a - '0') >= 0) {
 					command = a - '0';
-					if (command == PLAY){
-						curState = STATE_REDRAW;
-					}
-				}
-				if (a == '$') {
-					printf("Receiving : %c\n", a);
+					printf("Receiving : %c %d\n", a, command);
 					break;
 				}
+
+				/*if (a == '$') {
+					printf("Receiving : %c\n", a);
+					break;
+				}*/
 			}
+
 			execCommand(command);
+			if (command == PLAY){
+				curState = STATE_REDRAW;
+			} /*else if (command == QUESTION){
+				curState = STATE_QUESTION;
+			}*/
 
 			break;
+
+		/*case (STATE_QUESTION) :
+			ask_question();
+			break; */
 		}
 		printf("Current State: %d\n", curState);
 	}

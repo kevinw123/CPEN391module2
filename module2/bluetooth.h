@@ -4,6 +4,9 @@
 #define BlueTooth_RxData (*(volatile unsigned char *)(0x84000222))
 #define BlueTooth_Baud (*(volatile unsigned char *)(0x84000224))
 
+#define MOVE_COMMAND "0"
+#define QUESTION_COMMAND "1"
+
 void initBluetooth();
 char getcharBluetooth();
 void enterCommandMode();

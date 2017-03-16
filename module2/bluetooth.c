@@ -43,11 +43,12 @@ void setBluetoothPassword() {
 }
 
 void sendStringBluetooth(char *string) {
+	printf("Sending %s\n", string);
 	char index;
 	while ((index = *string) != 0) {
 		while ((BlueTooth_Status & 0x02) != 0x02){}
 		BlueTooth_TxData = index & (char) 0x7F;
 		string++;
 	}
-	printf("Finished loop");
+	printf("Finished loop\n");
 }

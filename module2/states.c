@@ -11,8 +11,9 @@
 #include "mapdesign.h"
 #include "drawmap.h"
 
-int execCommand(char command)
+int execCommand(int command)
 {
+	printf("Executing command...\n");
 	switch (command)
 	{
 	case (PLAY) :
@@ -30,6 +31,9 @@ int execCommand(char command)
 		break;
 	case (MOVE_LEFT) :
 		printf("Moving left: %d\n", movePlayerLeft(player_current_x_pos, player_current_y_pos, curArea));
+		break;
+	default :
+		printf("in default\n");
 		break;
 	}
 	return 1;

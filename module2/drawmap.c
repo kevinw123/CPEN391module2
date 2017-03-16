@@ -10,8 +10,11 @@
 #include "graphics.h"
 #include "touchscreen.h"
 #include "Colours.h"
+#include "bluetooth.h"
 
 void init_game() {
+	init_questions();
+
 	curArea = 0;
 	player_current_y_pos = startPos[curArea][1];
 	player_current_x_pos = startPos[curArea][0];
