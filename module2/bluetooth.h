@@ -8,9 +8,9 @@
 #define QUESTION_COMMAND "1"
 
 void initBluetooth();
-char getcharBluetooth();
 void enterCommandMode();
-void changeName();
-void factoryReset();
-void setBluetoothPassword();
+char getcharBluetooth();
 void sendStringBluetooth(char *string);
+void changeName();
+void factoryResetDevice();
+void changePassword();
