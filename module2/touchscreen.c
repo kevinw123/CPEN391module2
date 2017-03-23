@@ -201,7 +201,7 @@ Point Get_Touch_Point(void)
 	while(1) {
 		Point p1 = GetPress();
 		Point p2 = GetRelease();
-		return p2;
+		return p1;
 	}
 }
 

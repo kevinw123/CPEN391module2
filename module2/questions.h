@@ -34,21 +34,20 @@
 #define QUESTION_4_BOTRIGHT_Y 375
 
 struct Question{
-	/*
-	char question[DATASIZE];
-	char answerA[DATASIZE];
-	char answerB[DATASIZE];
-	char answerC[DATASIZE];
-	char answerD[DATASIZE];
-	char correctChoice[DATASIZE];
-	*/
 	char *question;
+	char *question2;
 	char *answerA;
 	char *answerB;
 	char *answerC;
 	char *answerD;
 	char *correctChoice;
 };
+
+// Placeholders to hold the index value of the question presented in a box.
+int qbox1_index;
+int qbox2_index;
+int qbox3_index;
+int qbox4_index;
 
 struct Question questions[NUM_QUESTIONS];
 int questions_asked;

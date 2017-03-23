@@ -57,20 +57,22 @@ void state_machine()
 		case (STATE_QUESTION) :
 			printf("Landed on question...\n");
 			// Draw Question Screen
-
 			// Draw four questions? Maybe in a 2x2 grid fashion.
-
+			ask_question();
 			// Wait for a touch response on any of the four grid options
-
-			// Send a character index to the android according to the question selection
+			Point p;
+			while(1) {
+				p = Get_Touch_Point();
+				// Check the touched point and compare it to bounds of the four question boxes
+				// if a match with one of the four bounds, break and obtain qbox index
+			}
+			// Send qbox index to the android according to the question selection
 
 			// Redraw map and character (when running drawmap, it redraws the initial starting map, so we need to redraw
 			// the player in the right location
-
 			// set state to receive bluetooth then break
-			ask_question();
-			usleep(5000000);
 			curState = STATE_REDRAW;
+
 			break;
 		}
 	}

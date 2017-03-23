@@ -11,6 +11,7 @@
 #include "touchscreen.h"
 #include "Colours.h"
 #include "bluetooth.h"
+#include "playerSprite.h"
 
 void init_game() {
 	init_questions();
@@ -61,19 +62,40 @@ void drawSpace(Point p)
 
 void drawFinish(Point p)
 {
-	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, PINK);
+	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, PINK);
+	int i, j;
+
+			for (j = 0; j < 50; j++) {
+				for (i = 0; i < 50; i++) {
+					WriteAPixel(p.x + i, p.y + j, princess[i + 50 * j]);
+				}
+	}
 }
 
 void drawEnemy(Point p)
 {
-	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
-	Rectangle(p.x+1, p.x + SQUARE_WIDTH-2, p.y+1, p.y + SQUARE_HEIGHT-2, RED);
+	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
+	//Rectangle(p.x+1, p.x + SQUARE_WIDTH-2, p.y+1, p.y + SQUARE_HEIGHT-2, RED);
+	int i, j;
+
+		for (j = 0; j < 50; j++) {
+			for (i = 0; i < 50; i++) {
+				WriteAPixel(p.x + i, p.y + j, bear[i + 50 * j]);
+			}
+	}
 }
 
 void drawPlayer(Point p)
 {
-	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
-	Rectangle(p.x+1, p.x + SQUARE_WIDTH-2, p.y+1, p.y + SQUARE_HEIGHT-2, FOREST_GREEN);
+	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
+	//Rectangle(p.x+1, p.x + SQUARE_WIDTH-2, p.y+1, p.y + SQUARE_HEIGHT-2, FOREST_GREEN);
+	int i, j;
+
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, ness[i + 50 * j]);
+		}
+	}
 }
 
 void drawSquare(char square, Point point)

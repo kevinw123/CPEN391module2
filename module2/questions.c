@@ -20,13 +20,16 @@ void init_questions(){
 	}
 
 	questionArray[0].question = "What is 1 + 1?";
+	questionArray[0].question2 = "";
 	questionArray[0].answerA = "1";
 	questionArray[0].answerB = "2";
 	questionArray[0].answerC = "3";
 	questionArray[0].answerD = "4";
 	questionArray[0].correctChoice = "B";
 
-	questionArray[1].question = "What is the capital city of Canada?";
+	questionArray[1].question = "What is the capital ";
+	questionArray[1].question2 = "";
+	questionArray[1].question2 = "city of Canada?";
 	questionArray[1].answerA = "Vancouver, BC";
 	questionArray[1].answerB = "Edmonton, AB";
 	questionArray[1].answerC = "Toronto, ON";
@@ -34,6 +37,7 @@ void init_questions(){
 	questionArray[1].correctChoice = "D";
 
 	questionArray[2].question = "Which object is the largest?";
+	questionArray[2].question2 = "";
 	questionArray[2].answerA = "Elephant";
 	questionArray[2].answerB = "Peanut";
 	questionArray[2].answerC = "Moon";
@@ -41,6 +45,7 @@ void init_questions(){
 	questionArray[2].correctChoice = "C";
 
 	questionArray[3].question = "Where can you find Polar Bears?";
+	questionArray[3].question2 = "";
 	questionArray[3].answerA = "Antartica";
 	questionArray[3].answerB = "Artic";
 	questionArray[3].answerC = "Iceland";
@@ -61,30 +66,8 @@ void drawQuestionsScreen() {
 	drawStringSmallFont("It challenges you with a question, answer it to", 25, 430, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont("gain passage!", 25, 445, WHITE, MIDNIGHT_BLUE);
 
-/*
-#define QUESTION_1_TOPLEFT_X 25
-#define QUESTION_1_TOPLEFT_Y 25
-#define QUESTION_1_BOTRIGHT_X 375
-#define QUESTION_1_BOTRIGHT_Y 185
-
-#define QUESTION_2_TOPLEFT_X 425
-#define QUESTION_2_TOPLEFT_Y 25
-#define QUESTION_2_BOTRIGHT_X 775
-#define QUESTION_2_BOTRIGHT_Y 185
-
-#define QUESTION_3_TOPLEFT_X 25
-#define QUESTION_3_TOPLEFT_Y 215
-#define QUESTION_3_BOTRIGHT_X 375
-#define QUESTION_3_BOTRIGHT_Y 375
-
-#define QUESTION_4_TOPLEFT_X 425
-#define QUESTION_4_TOPLEFT_Y 215
-#define QUESTION_4_BOTRIGHT_X 775
-#define QUESTION_4_BOTRIGHT_Y 375
-*/
-
 	// Choice Selections
-	Rectangle(25,375,QUESTION_1_TOPLEFT_X,QUESTION_1_TOPLEFT_Y, WHITE);
+	Rectangle(25,375,25,185, WHITE);
 	Rectangle(26,374,26,184, BLACK);
 	Rectangle(425,775,25,185, WHITE);
 	Rectangle(426,774,26,184, BLACK);
@@ -96,10 +79,27 @@ void drawQuestionsScreen() {
 
 void ask_question(){
 	drawQuestionsScreen();
-	//drawString(questionArray[questions_asked].question, 250, 250, MIDNIGHT_BLUE, BLACK);
 
-	questions_asked++;
-	if (questions_asked >= NUM_QUESTIONS)
-		questions_asked = 0;
+	int r = rand() % NUM_QUESTIONS;
+
+	//q1 box
+	qbox1_index = r;
+	drawStringSmallFont(questionArray[r].question, 50, 50, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont(questionArray[r].question2, 50, 75, WHITE, MIDNIGHT_BLUE);
+	r = (r + 1) % NUM_QUESTIONS;
+	//q2 box
+	qbox2_index = r;
+	drawStringSmallFont(questionArray[r].question, 460, 50, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont(questionArray[r].question2, 460, 75, WHITE, MIDNIGHT_BLUE);
+	r = (r + 1) % NUM_QUESTIONS;
+	//q3 box
+	qbox3_index = r;
+	drawStringSmallFont(questionArray[r].question, 50, 240, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont(questionArray[r].question2, 50, 265, WHITE, MIDNIGHT_BLUE);
+	r = (r + 1) % NUM_QUESTIONS;
+	//q4 box
+	qbox4_index = r;
+	drawStringSmallFont(questionArray[r].question, 460, 240, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont(questionArray[r].question2, 460, 265, WHITE, MIDNIGHT_BLUE);
 }
 
