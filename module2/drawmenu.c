@@ -20,7 +20,7 @@ void draw_menu_prompt() {
 }
 
 void draw_menu() {
-	Rectangle(0, 799, 0, 479, MIDNIGHT_BLUE);
+	Rectangle(0, 800, 0, 480, MIDNIGHT_BLUE);
 	draw_menu_prompt();
 }
 

@@ -17,64 +17,26 @@ void init_module2()
 	printf("Initializing module2 stuff...\n");
 	initializeColours();
 	initBluetooth();
+	init_game();
 }
 
 void state_machine()
 {
 	printf("Initializing state machine...\n");
 	while (1) {
+		printf("Current State: %d\n", curState);
 		switch (curState)
 		{
 		case (STATE_MENU) :
 			draw_menu();
 			curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
 			break;
-
 		case (STATE_REDRAW) :
 			drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, curArea);
-
-
-			printf("Valid move up? %d\n", isValidMovementUp(curArea));
-			printf("Valid move right? %d\n", isValidMovementRight(curArea));
-			printf("Valid move down? %d\n", isValidMovementDown(curArea));
-			printf("Valid move left? %d\n", isValidMovementLeft(curArea));
-
-
-			/*execCommand(1);
-			usleep(300000);
-			execCommand(1);
-			usleep(300000);
-			execCommand(1);
-			usleep(300000);
-			execCommand(1);
-			usleep(300000);
-			execCommand(1);
-			usleep(300000);
-			execCommand(1);
-			usleep(300000);
-			execCommand(3);
-			usleep(300000);
-			execCommand(3);
-			usleep(300000);
-			execCommand(3);
-			usleep(300000);
-			execCommand(3);
-			usleep(300000);
-			execCommand(2);
-			usleep(300000);
-			execCommand(2);
-			usleep(300000);
-			execCommand(2);
-			usleep(300000);
-			execCommand(4);
-			usleep(300000);
-			execCommand(4);
-			usleep(300000);
-			execCommand(4);
-			usleep(300000);
-			execCommand(4);*/
-
 			curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
+			Point playerCoords;
+			playerCoords = getCoord(player_current_x_pos, player_current_y_pos);
+			drawPlayer(playerCoords);
 			break;
 		case (STATE_RECEIVE_BLUETOOTH_COMMAND) :
 			printf("Waiting for bluetooth commands...\n");
@@ -86,33 +48,38 @@ void state_machine()
 					printf("Receiving : %c %d\n", a, command);
 					break;
 				}
-
-				/*if (a == '$') {
-					printf("Receiving : %c\n", a);
-					break;
-				}*/
 			}
 
-			execCommand(command);
-			if (command == PLAY){
-				curState = STATE_REDRAW;
-			} /*else if (command == QUESTION){
-				curState = STATE_QUESTION;
-			}*/
+			int nextState = execCommand(command);
+			curState = nextState;
 
 			break;
+		case (STATE_QUESTION) :
+			printf("Landed on question...\n");
+			// Draw Question Screen
 
-		/*case (STATE_QUESTION) :
+			// Draw four questions? Maybe in a 2x2 grid fashion.
+
+			// Wait for a touch response on any of the four grid options
+
+			// Send a character index to the android according to the question selection
+
+			// Redraw map and character (when running drawmap, it redraws the initial starting map, so we need to redraw
+			// the player in the right location
+
+			// set state to receive bluetooth then break
 			ask_question();
-			break; */
+			usleep(5000000);
+			curState = STATE_REDRAW;
+			break;
 		}
-		printf("Current State: %d\n", curState);
 	}
 }
 
 int main()
 {
 	init_module2();
+	curState = STATE_REDRAW;
 	state_machine();
 }
 

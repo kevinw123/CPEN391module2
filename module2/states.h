@@ -20,11 +20,14 @@
 #define MOVE_DOWN 3
 #define MOVE_LEFT 4
 #define QUESTION 5
+#define SCROLL_TEXT 6
+
 
 // Global ints
 static int curState;
 static int curArea;
 
 int execCommand(int command);
+int checkCombat(void);
 
 #endif /* STATES_H_ */

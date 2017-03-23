@@ -32,12 +32,15 @@ Point getCoord(int x, int y)
 
 void drawWall(Point p)
 {
-	Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, MIDNIGHT_BLUE);
+	//Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, MIDNIGHT_BLUE);
+	Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, WHITE);
+	Rectangle(p.x + 1, p.x + SQUARE_WIDTH - 1, p.y + 1, p.y + SQUARE_HEIGHT - 1, BLACK);
 }
 
 void drawSpace(Point p)
 {
-	Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, WHITE);
+	//Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, WHITE);
+	Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, BLACK);
 }
 
 void drawFinish(Point p)
@@ -79,7 +82,10 @@ void drawArea(int map_width, int map_height, int area)
 			drawSquare(curSquare, point);
 		}
 	}
-	Rectangle(0, 800, 400, 480, BLACK);
+	Rectangle(0, 800, 400, 480, WHITE);
+	Rectangle(1, 799, 401, 479, BLACK);
+	drawStringSmallFont("The dungeon warden is keeping the princess prisoner!", 25, 415, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont("You need to save her!", 25, 430, WHITE, MIDNIGHT_BLUE);
 }
 
 void movePlayer(Point curPos, Point newPos, int area)

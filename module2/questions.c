@@ -8,50 +8,98 @@
 #include <string.h>
 #include "questions.h"
 #include "bluetooth.h"
+#include "Colours.h"
+#include "graphics.h"
 
 void init_questions(){
-	strcpy(questions[0].question, "What is 1 + 1?");
-	strcpy(questions[0].answerA, "1");
-	strcpy(questions[0].answerB, "2");
-	strcpy(questions[0].answerC, "3");
-	strcpy(questions[0].answerD, "4");
-	strcpy(questions[0].correctChoice, "B");
 
-	strcpy(questions[1].question, "What is the capital city of Canada?");
-	strcpy(questions[1].answerA, "Vancouver, BC");
-	strcpy(questions[1].answerB, "Edmonton, AB");
-	strcpy(questions[1].answerC, "Toronto, ON");
-	strcpy(questions[1].answerD, "Ottawa, ON");
-	strcpy(questions[1].correctChoice, "D");
+	int i;
+	for (i = 0; i < NUM_QUESTIONS; i++) {
+		struct Question q;
+		questionArray[i] = q;
+	}
 
-	strcpy(questions[2].question, "Which object is the largest?");
-	strcpy(questions[2].answerA, "Elephant");
-	strcpy(questions[2].answerB, "Peanut");
-	strcpy(questions[2].answerC, "Moon");
-	strcpy(questions[2].answerD, "Eiffel Tower");
-	strcpy(questions[2].correctChoice, "C");
+	questionArray[0].question = "What is 1 + 1?";
+	questionArray[0].answerA = "1";
+	questionArray[0].answerB = "2";
+	questionArray[0].answerC = "3";
+	questionArray[0].answerD = "4";
+	questionArray[0].correctChoice = "B";
+
+	questionArray[1].question = "What is the capital city of Canada?";
+	questionArray[1].answerA = "Vancouver, BC";
+	questionArray[1].answerB = "Edmonton, AB";
+	questionArray[1].answerC = "Toronto, ON";
+	questionArray[1].answerD = "Ottawa, ON";
+	questionArray[1].correctChoice = "D";
+
+	questionArray[2].question = "Which object is the largest?";
+	questionArray[2].answerA = "Elephant";
+	questionArray[2].answerB = "Peanut";
+	questionArray[2].answerC = "Moon";
+	questionArray[2].answerD = "Eiffel Tower";
+	questionArray[2].correctChoice = "C";
+
+	questionArray[3].question = "Where can you find Polar Bears?";
+	questionArray[3].answerA = "Antartica";
+	questionArray[3].answerB = "Artic";
+	questionArray[3].answerC = "Iceland";
+	questionArray[3].answerD = "Greenland";
+	questionArray[3].correctChoice = "B";
 
 	questions_asked = 0;
 }
 
-void ask_question(){
-	struct Question curQuestion = questions[questions_asked];
+void drawQuestionsScreen() {
+	// Background
+	Rectangle(0, 800, 0, 400, BLACK);
+	Rectangle(1, 799, 400, 479, BLACK);
 
-	char *question_to_DE2 = "$";
-	strcat(question_to_DE2, curQuestion.question);
-	strcat(question_to_DE2, ",");
-	strcat(question_to_DE2, curQuestion.answerA);
-	strcat(question_to_DE2, ",");
-	strcat(question_to_DE2, curQuestion.answerB);
-	strcat(question_to_DE2, ",");
-	strcat(question_to_DE2, curQuestion.answerC);
-	strcat(question_to_DE2, ",");
-	strcat(question_to_DE2, curQuestion.answerD);
-	strcat(question_to_DE2, ",");
-	strcat(question_to_DE2, curQuestion.correctChoice);
-	printf("Question: %s\n", question_to_DE2);
-	sendStringBluetooth(question_to_DE2);
+	// Title
+	//Rectangle(200,600,50,250, WHITE);
+	drawStringSmallFont("You approach a gatekeeper.", 25, 415, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont("It challenges you with a question, answer it to", 25, 430, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont("gain passage!", 25, 445, WHITE, MIDNIGHT_BLUE);
+
+/*
+#define QUESTION_1_TOPLEFT_X 25
+#define QUESTION_1_TOPLEFT_Y 25
+#define QUESTION_1_BOTRIGHT_X 375
+#define QUESTION_1_BOTRIGHT_Y 185
+
+#define QUESTION_2_TOPLEFT_X 425
+#define QUESTION_2_TOPLEFT_Y 25
+#define QUESTION_2_BOTRIGHT_X 775
+#define QUESTION_2_BOTRIGHT_Y 185
+
+#define QUESTION_3_TOPLEFT_X 25
+#define QUESTION_3_TOPLEFT_Y 215
+#define QUESTION_3_BOTRIGHT_X 375
+#define QUESTION_3_BOTRIGHT_Y 375
+
+#define QUESTION_4_TOPLEFT_X 425
+#define QUESTION_4_TOPLEFT_Y 215
+#define QUESTION_4_BOTRIGHT_X 775
+#define QUESTION_4_BOTRIGHT_Y 375
+*/
+
+	// Choice Selections
+	Rectangle(25,375,QUESTION_1_TOPLEFT_X,QUESTION_1_TOPLEFT_Y, WHITE);
+	Rectangle(26,374,26,184, BLACK);
+	Rectangle(425,775,25,185, WHITE);
+	Rectangle(426,774,26,184, BLACK);
+	Rectangle(25,375,215,375, WHITE);
+	Rectangle(26,374,216,374, BLACK);
+	Rectangle(425,775,215,375, WHITE);
+	Rectangle(426,774,216,374, BLACK);
+}
+
+void ask_question(){
+	drawQuestionsScreen();
+	//drawString(questionArray[questions_asked].question, 250, 250, MIDNIGHT_BLUE, BLACK);
 
 	questions_asked++;
+	if (questions_asked >= NUM_QUESTIONS)
+		questions_asked = 0;
 }
 

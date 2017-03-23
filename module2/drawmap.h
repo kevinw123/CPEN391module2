@@ -12,6 +12,10 @@
 
 // Functions
 void movePlayer(int curPosX, int curPosY, int newPosX, int newPosY, int area);
+int movePlayerUp(int x, int y, int area);
+int movePlayerRight(int x, int y, int area);
+int movePlayerDown(int x, int y, int area);
+int movePlayerLeft(int x, int y, int area);
 void drawArea(int map_width, int map_height, int area);
 void drawSquare(char square, Point point);
 Point getCoord(int x, int y);
