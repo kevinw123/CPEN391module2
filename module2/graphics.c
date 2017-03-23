@@ -108,10 +108,16 @@ void ClearScreen()
 void Rectangle(int x1, int x2, int y1, int y2, int Colour)
 {
 	int i;
-	for (i = y1; i < y2; i++)
-		WriteHLine(x1, x2-1, i, Colour);
+	for (i = y1; i < y2 + 1; i++)
+		WriteHLine(x1, x2, i, Colour);
 }
 
+void VRectangle(int x1, int x2, int y1, int y2, int Colour)
+{
+	int i;
+	for (i = x1; i < x2 + 1; i++)
+		WriteVLine(i, y1, y2, Colour);
+}
 /*
  * Function that draws circle at given coordinate x and y with given radious
  */

@@ -32,30 +32,48 @@ Point getCoord(int x, int y)
 
 void drawWall(Point p)
 {
-	//Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, MIDNIGHT_BLUE);
-	Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, WHITE);
-	Rectangle(p.x + 1, p.x + SQUARE_WIDTH - 1, p.y + 1, p.y + SQUARE_HEIGHT - 1, BLACK);
+	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, MIDNIGHT_BLUE);
+	WriteHLine (p.x, p.x + SQUARE_WIDTH-1, p.y, BLACK);
+	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y + 11, p.y + 12, BLACK);
+	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y + 24, p.y + 25, BLACK);
+	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y + 37, p.y + 38, BLACK);
+	WriteHLine (p.x, p.x + SQUARE_WIDTH-1, p.y + SQUARE_HEIGHT-1, BLACK);
+
+	WriteVLine(p.x, p.y, p.y + 10, BLACK);
+	VRectangle(p.x + 24, p.x + 25, p.y, p.y + 10, BLACK);
+	WriteVLine(p.x + SQUARE_WIDTH-1, p.y, p.y + 10, BLACK);
+
+	WriteVLine(p.x, p.y + 26, p.y + 36, BLACK);
+	VRectangle(p.x + 24, p.x + 25, p.y + 26, p.y + 36, BLACK);
+	WriteVLine(p.x + SQUARE_WIDTH-1, p.y + 26, p.y + 36, BLACK);
+
+	VRectangle(p.x + 11, p.x + 12, p.y + 13, p.y + 23, BLACK);
+	VRectangle(p.x + 37, p.x + 38, p.y + 13, p.y + 23, BLACK);
+
+	VRectangle(p.x + 11, p.x + 12, p.y + 39, p.y + SQUARE_HEIGHT - 2, BLACK);
+	VRectangle(p.x + 37, p.x + 38, p.y + 39, p.y + SQUARE_HEIGHT - 2, BLACK);
 }
 
 void drawSpace(Point p)
 {
-	//Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, WHITE);
-	Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, BLACK);
+	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
 }
 
 void drawFinish(Point p)
 {
-	Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, PINK);
+	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, PINK);
 }
 
 void drawEnemy(Point p)
 {
-	Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, RED);
+	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
+	Rectangle(p.x+1, p.x + SQUARE_WIDTH-2, p.y+1, p.y + SQUARE_HEIGHT-2, RED);
 }
 
 void drawPlayer(Point p)
 {
-	Rectangle(p.x, p.x + SQUARE_WIDTH, p.y, p.y + SQUARE_HEIGHT, FOREST_GREEN);
+	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
+	Rectangle(p.x+1, p.x + SQUARE_WIDTH-2, p.y+1, p.y + SQUARE_HEIGHT-2, FOREST_GREEN);
 }
 
 void drawSquare(char square, Point point)
@@ -82,8 +100,8 @@ void drawArea(int map_width, int map_height, int area)
 			drawSquare(curSquare, point);
 		}
 	}
-	Rectangle(0, 800, 400, 480, WHITE);
-	Rectangle(1, 799, 401, 479, BLACK);
+	Rectangle(0, 800, 400, 479, WHITE);
+	Rectangle(1, 799, 401, 478, BLACK);
 	drawStringSmallFont("The dungeon warden is keeping the princess prisoner!", 25, 415, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont("You need to save her!", 25, 430, WHITE, MIDNIGHT_BLUE);
 }

@@ -52,8 +52,8 @@ void init_questions(){
 
 void drawQuestionsScreen() {
 	// Background
-	Rectangle(0, 800, 0, 400, BLACK);
-	Rectangle(1, 799, 400, 479, BLACK);
+	Rectangle(0, 800, 0, 399, BLACK);
+	Rectangle(1, 799, 401, 478, BLACK);
 
 	// Title
 	//Rectangle(200,600,50,250, WHITE);
