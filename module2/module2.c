@@ -6,6 +6,7 @@
 // Module1 Definitions
 #include "drawmap.h"
 #include "states.h"
+#define MAIN_FILE
 #include "mapdesign.h"
 #include "bluetooth.h"
 #include "drawmenu.h"
@@ -17,6 +18,7 @@ void init_module2()
 	printf("Initializing module2 stuff...\n");
 	initializeColours();
 	initBluetooth();
+	Init_Touch();
 	init_game();
 }
 
@@ -55,24 +57,35 @@ void state_machine()
 
 			break;
 		case (STATE_QUESTION) :
-			printf("Landed on question...\n");
-			// Draw Question Screen
-			// Draw four questions? Maybe in a 2x2 grid fashion.
 			ask_question();
-			// Wait for a touch response on any of the four grid options
-			Point p;
-			while(1) {
-				p = Get_Touch_Point();
-				// Check the touched point and compare it to bounds of the four question boxes
-				// if a match with one of the four bounds, break and obtain qbox index
-			}
+			int choice = choose_question();
+			printf("Chose: %d\n", choice);
 			// Send qbox index to the android according to the question selection
-
+			printf("Sending: %c\n",qbox_index[choice]);
+			sendStringBluetooth(qbox_index[choice]);
 			// Redraw map and character (when running drawmap, it redraws the initial starting map, so we need to redraw
 			// the player in the right location
 			// set state to receive bluetooth then break
+			if (1){
+				printf("test!\n");
+				char nextSpaceUp = map[curArea][player_current_y_pos - 1 ][player_current_x_pos];
+				printf("Up: %c\n", nextSpaceUp);
+				char nextSpaceRight = map[curArea][player_current_y_pos][player_current_x_pos + 1];
+				printf("Right: %c\n", nextSpaceRight);
+				char nextSpaceDown = map[curArea][player_current_y_pos + 1][player_current_x_pos];
+				printf("Down: %c\n", nextSpaceDown);
+				if (nextSpaceUp == 'X') {
+					map[curArea][player_current_y_pos - 1][player_current_x_pos] = 'O';
+					printf("testbdasd: %c\n", map[curArea][player_current_y_pos - 1][player_current_x_pos]);
+				}
+				else if (nextSpaceRight == 'X')
+					map[curArea][player_current_y_pos][player_current_x_pos + 1] = 'O';
+				else if (nextSpaceDown == 'X')
+					map[curArea][player_current_y_pos + 1][player_current_x_pos] = 'O';
+				else
+					map[curArea][player_current_y_pos][player_current_x_pos - 1] = 'O';
+			}
 			curState = STATE_REDRAW;
-
 			break;
 		}
 	}

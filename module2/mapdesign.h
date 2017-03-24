@@ -35,7 +35,8 @@ static int startPos [MAX_AREAS][2] =
 		{ 1, 7 }
 };
 
-static unsigned char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES] =
+#ifdef  MAIN_FILE
+char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES] =
 {
 		{
 				{'#','#','#','#','#','#','#','#','#','#','#','O','O','O','O','$'},
@@ -68,3 +69,6 @@ static unsigned char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES] =
 				{'#','O','#','#','#','#','O','O','O','O','#','#','#','O','O','$'}
 		}
 };
+#else
+extern char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES];
+#endif
