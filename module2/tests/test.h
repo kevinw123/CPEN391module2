@@ -12,5 +12,9 @@ typedef int bool;
 #define true 1
 #define false 0
 
+bool isValidMovementUp(int area);
+bool isValidMovementRight(int area);
+bool isValidMovementDown(int area);
+bool isValidMovementLeft(int area);
 
 #endif /* TEST_H_ */

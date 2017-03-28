@@ -55,10 +55,11 @@ char qbox_index[4];
 struct Question questions[NUM_QUESTIONS];
 int questions_asked;
 
-void init_questions();
-void send_question_command();
-void ask_question();
-int choose_question();
+
+void init_questions(void);
+void send_question_command(void);
+void ask_question(void);
+int choose_question(void);
 
 struct Question questionArray [NUM_QUESTIONS];
 

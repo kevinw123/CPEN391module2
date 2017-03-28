@@ -9,5 +9,6 @@
 #define DRAWMENU_H_
 
 void draw_menu();
+void draw_finish_screen();
 
 #endif /* DRAWMENU_H_ */

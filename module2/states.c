@@ -10,18 +10,33 @@
 #include "movement.h"
 #include "mapdesign.h"
 #include "drawmap.h"
+#include "movement.h"
 
-int checkQuestion(void) {
-
+int checkEvents(void) {
 	char nextSpaceUp = map[curArea][player_current_y_pos - 1 ][player_current_x_pos];
 	char nextSpaceRight = map[curArea][player_current_y_pos][player_current_x_pos + 1];
 	char nextSpaceDown = map[curArea][player_current_y_pos + 1][player_current_x_pos];
 	char nextSpaceLeft = map[curArea][player_current_y_pos][player_current_x_pos - 1];
 
-	if ( (nextSpaceUp == 'X') ||  (nextSpaceRight == 'X') || (nextSpaceDown == 'X') || (nextSpaceLeft == 'X')){
-		return 1;
+	int event = 0;
+
+	if ( (nextSpaceUp == '$') ||  (nextSpaceRight == '$') || (nextSpaceDown == '$') || (nextSpaceLeft == '$')){
+		event = EVENT_PRINCESS;
 	}
-	return 0;
+
+	else if ( (nextSpaceUp == 'X') ||  (nextSpaceRight == 'X') || (nextSpaceDown == 'X') || (nextSpaceLeft == 'X')){
+		event = EVENT_QUESTION;
+	}
+
+	switch (event)
+	{
+	case(EVENT_PRINCESS) :
+			return STATE_FINISH;
+	case(EVENT_QUESTION) :
+			return STATE_QUESTION;
+	default :
+		return STATE_RECEIVE_BLUETOOTH_COMMAND;
+	}
 }
 
 int execCommand(int command)
@@ -38,35 +53,19 @@ int execCommand(int command)
 		break;
 	case (MOVE_UP) :
 		printf("Moving up: %d\n", movePlayerUp(player_current_x_pos, player_current_y_pos, curArea));
-		check = checkQuestion();
-		if (check == 1)
-			ret = STATE_QUESTION;
-		else
-			ret = STATE_RECEIVE_BLUETOOTH_COMMAND;
+		ret = checkEvents();
 		break;
 	case (MOVE_RIGHT) :
 		printf("Moving right: %d\n", movePlayerRight(player_current_x_pos, player_current_y_pos, curArea));
-		check = checkQuestion();
-		if (check == 1)
-			ret = STATE_QUESTION;
-		else
-			ret = STATE_RECEIVE_BLUETOOTH_COMMAND;
+		ret = checkEvents();
 		break;
 	case (MOVE_DOWN) :
 		printf("Moving down: %d\n", movePlayerDown(player_current_x_pos, player_current_y_pos, curArea));
-		check = checkQuestion();
-		if (check == 1)
-			ret = STATE_QUESTION;
-		else
-			ret = STATE_RECEIVE_BLUETOOTH_COMMAND;
+		ret = checkEvents();
 		break;
 	case (MOVE_LEFT) :
 		printf("Moving left: %d\n", movePlayerLeft(player_current_x_pos, player_current_y_pos, curArea));
-		check = checkQuestion();
-		if (check == 1)
-			ret = STATE_QUESTION;
-		else
-			ret = STATE_RECEIVE_BLUETOOTH_COMMAND;
+		ret = checkEvents();
 		break;
 	default :
 		printf("in default\n");

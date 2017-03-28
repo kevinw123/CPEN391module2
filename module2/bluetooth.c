@@ -42,7 +42,7 @@ void sendStringBluetooth(char *string) {
 		BlueTooth_TxData = index & (char) 0x7F;
 		string++;
 	}
-	printf("Finished loop\n");
+	printf("**********************BLUETOOTH CHAR SENT\n");
 }
 
 /*

@@ -24,4 +24,20 @@ void draw_menu() {
 	draw_menu_prompt();
 }
 
+void draw_finish_screen() {
+	Rectangle(0,800,0,480,BLACK);
+	while(1) {
+		drawString("Congratulations!", 250, 200, DARK_SEA_GREEN, MIDNIGHT_BLUE);
+		drawString("Congratulations!", 250, 200, MIDNIGHT_BLUE, MIDNIGHT_BLUE);
+		drawString("Congratulations!", 250, 200, TEAL, MIDNIGHT_BLUE);
+		drawString("Congratulations!", 250, 200, BROWN, MIDNIGHT_BLUE);
+		drawString("Congratulations!", 250, 200, FOREST_GREEN, MIDNIGHT_BLUE);
+		drawString("Congratulations!", 250, 200, MAROON, MIDNIGHT_BLUE);
+		drawString("Congratulations!", 250, 200, MEDIUM_VIOLET_RED, MIDNIGHT_BLUE);
+		drawString("Congratulations!", 250, 200, RED, MIDNIGHT_BLUE);
+		drawString("Congratulations!", 250, 200, PINK, MIDNIGHT_BLUE);
+		drawString("Congratulations!", 250, 200, WHITE, MIDNIGHT_BLUE);
+	}
+}
+
 

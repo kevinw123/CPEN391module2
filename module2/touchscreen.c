@@ -70,7 +70,7 @@ int Write_Data(int c)
   TouchScreen_TxData = c;
 
 	// Poll Rx bit in 6850 status register. Wait for it to become '1' (Data register containing unread char)
-	while (TouchScreen_Status & 1 == 0){
+	while ((TouchScreen_Status & 1) == 0){
 	}
 
 	int responsePacket = TouchScreen_RxData;
@@ -94,7 +94,7 @@ int ScreenTouched( void )
  // or FALSE otherwise
 
 // Poll Rx bit in 6850 status register. Wait for it to become '1' (Data register containing unread char)
-	if (TouchScreen_Status & 1 == 0){
+	if ((TouchScreen_Status & 1) == 0){
 		return 0;
 	}
 	return 1;
@@ -198,11 +198,13 @@ int compensateX (int x)
 
 Point Get_Touch_Point(void)
 {
+	Point p1, p2;
 	while(1) {
-		Point p1 = GetPress();
-		Point p2 = GetRelease();
+		p1 = GetPress();
+		p2 = GetRelease();
 		return p1;
 	}
+	return p2;
 }
 
 //int main()

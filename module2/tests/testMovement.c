@@ -17,14 +17,11 @@
 #include "../questions.h"
 #include "../bluetooth.h"
 
-//static player_current_x_pos;
-//static player_current_y_pos;
-
 bool isValidMovementUp(int area)
 {
 	// Player is already at the top of the map
 	if (player_current_y_pos == 0){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 
@@ -33,18 +30,18 @@ bool isValidMovementUp(int area)
 
 	// Direction is headed towards a wall.
 	if (nextSpace == '#'){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 	// Direction is headed towards an enemy.
 	if (nextSpace == 'X'){
-		sendStringBluetooth(QUESTION_COMMAND);
+		//sendStringBluetooth(QUESTION_COMMAND);
 		return false;
 	}
 
 	// Direction is empty
 	if (nextSpace == 'O' || nextSpace == 'P'){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return true;
 	}
 
@@ -55,7 +52,7 @@ bool isValidMovementRight(int area)
 {
 	// Player is already at rightmost of map.
 	if (player_current_x_pos == 15){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 
@@ -64,18 +61,18 @@ bool isValidMovementRight(int area)
 
 	// Direction is headed towards a wall.
 	if (nextSpace == '#'){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 	// Direction is headed towards an enemy.
 	if (nextSpace == 'X'){
-		sendStringBluetooth(QUESTION_COMMAND);
+		//sendStringBluetooth(QUESTION_COMMAND);
 		return false;
 	}
 
 	// Direction is empty
 	if (nextSpace == 'O' || nextSpace == 'P'){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return true;
 	}
 
@@ -86,7 +83,7 @@ bool isValidMovementDown(int area)
 {
 	// Player is already at bottom
 	if (player_current_y_pos == 7){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 
@@ -95,18 +92,18 @@ bool isValidMovementDown(int area)
 
 	// Direction is headed towards a wall.
 	if (nextSpace == '#'){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 	// Direction is headed towards an enemy.
 	if (nextSpace == 'X'){
-		sendStringBluetooth(QUESTION_COMMAND);
+		//sendStringBluetooth(QUESTION_COMMAND);
 		return false;
 	}
 
 	// Direction is empty
 	if (nextSpace == 'O' || nextSpace == 'P'){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return true;
 	}
 
@@ -117,7 +114,7 @@ bool isValidMovementLeft(int area)
 {
 	// Player is already at rightmost of map.
 	if (player_current_x_pos == 0){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 
@@ -126,18 +123,18 @@ bool isValidMovementLeft(int area)
 
 	// Direction is headed towards a wall.
 	if (nextSpace == '#'){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 	// Direction is headed towards an enemy.
 	if (nextSpace == 'X'){
-		sendStringBluetooth(QUESTION_COMMAND);
+		//sendStringBluetooth(QUESTION_COMMAND);
 		return false;
 	}
 
 	// Direction is empty
 	if (nextSpace == 'O' || nextSpace == 'P'){
-		sendStringBluetooth(MOVE_COMMAND);
+		//sendStringBluetooth(MOVE_COMMAND);
 		return true;
 	}
 
@@ -154,6 +151,8 @@ bool isValidMovement(int direction, int area)
 		return isValidMovementDown(area);
 	else if (direction == DIRECTION_LEFT)
 		return isValidMovementLeft(area);
+
+	return false;
 }
 
 bool isValidBluetoothCommand()

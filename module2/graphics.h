@@ -63,3 +63,4 @@ void clearNumberScreen();
 void drawMap();
 int validPointOnScreen(int x, int y);
 void VRectangle(int x1, int x2, int y1, int y2, int Colour);
+void initializeColours(void);

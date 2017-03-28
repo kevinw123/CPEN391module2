@@ -21,6 +21,39 @@ void init_game() {
 	player_current_x_pos = startPos[curArea][0];
 	printf("Player x pos: %d\n", player_current_x_pos);
 	printf("Player y pos: %d\n", player_current_y_pos);
+
+	int count = 0;
+	int line1 = 0;
+	int line2 = 1;
+	int line3 = 2;
+	Rectangle(0, 800, 0, 479, BLACK);
+	Rectangle(0, 800, 400, 479, WHITE);
+	Rectangle(1, 799, 401, 478, BLACK);
+	drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
+	while(count < NUM_STORY_LINES) {
+		int command;
+		while (1) {
+				char a = getcharBluetooth();
+				if ((a - '0') < 100 && (a - '0') >= 0) {
+					command = a - '0';
+					printf("Receiving : %c %d\n", a, command);
+					break;
+				}
+		}
+		if (command == 6) {
+			printf("test\n");
+			Rectangle(1, 799, 401, 478, BLACK);
+			drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
+			drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
+			drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
+			line1++;
+			line2++;
+			line3++;
+			count++;
+		}
+	}
 }
 
 Point getCoord(int x, int y)
@@ -124,95 +157,7 @@ void drawArea(int map_width, int map_height, int area)
 	}
 	Rectangle(0, 800, 400, 479, WHITE);
 	Rectangle(1, 799, 401, 478, BLACK);
-	drawStringSmallFont("The dungeon warden is keeping the princess prisoner!", 25, 415, WHITE, MIDNIGHT_BLUE);
-	drawStringSmallFont("You need to save her!", 25, 430, WHITE, MIDNIGHT_BLUE);
-}
-
-void movePlayer(Point curPos, Point newPos, int area)
-{
-	printf("curposx: %d\n", curPos.x);
-	printf("curposy: %d\n", curPos.y);
-	printf("newposx: %d\n", newPos.x);
-	printf("newposy: %d\n", newPos.y);
-	//map[area][curPos.x][curPos.y] = SPACE;
-	//map[area][newPos.x][newPos.y] = PLAYER;
-	//drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, area);
-	drawSpace(curPos);
-	drawPlayer(newPos);
-}
-
-int movePlayerUp(int x, int y, int area)
-{
-	Point playerCoords;
-	playerCoords = getCoord(x, y);
-	printf("x: %d\n", playerCoords.x);
-	printf("y: %d\n", playerCoords.y);
-
-	if (isValidMovementUp(curArea)){
-		Point old_playerCoords = playerCoords;
-		playerCoords.y = playerCoords.y - 50;
-		movePlayer(old_playerCoords, playerCoords, area);
-
-		player_current_y_pos--;
-		return 0;
-	}
-	else
-		return -1;
-}
-
-int movePlayerDown(int x, int y, int area)
-{
-	Point playerCoords;
-	playerCoords = getCoord(x, y);
-	printf("x: %d\n", playerCoords.x);
-	printf("y: %d\n", playerCoords.y);
-
-	if (isValidMovementDown(curArea)) {
-		Point old_playerCoords = playerCoords;
-		playerCoords.y = playerCoords.y + 50;
-		movePlayer(old_playerCoords, playerCoords, area);
-
-		player_current_y_pos++;
-		return 0;
-	}
-	else
-		return -1;
-}
-
-int movePlayerLeft(int x, int y, int area)
-{
-	Point playerCoords;
-	playerCoords = getCoord(x, y);
-	printf("x: %d\n", playerCoords.x);
-	printf("y: %d\n", playerCoords.y);
-
-	if (isValidMovementLeft(curArea)) {
-		Point old_playerCoords = playerCoords;
-		playerCoords.x = playerCoords.x - 50;
-		movePlayer(old_playerCoords, playerCoords, area);
-
-		player_current_x_pos--;
-		return 0;
-	}
-	else
-		return -1;
-}
-
-int movePlayerRight(int x, int y, int area)
-{
-	Point playerCoords;
-	playerCoords = getCoord(x, y);
-	printf("x: %d\n", playerCoords.x);
-	printf("y: %d\n", playerCoords.y);
-
-	if (isValidMovementRight(curArea)) {
-		Point old_playerCoords = playerCoords;
-		playerCoords.x = playerCoords.x + 50;
-		movePlayer(old_playerCoords, playerCoords, area);
-
-		player_current_x_pos++;
-		return 0;
-	}
-	else
-		return -1;
+	drawStringSmallFont("Instructions:", 25, 415, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont("Eliminate enemy objects by getting to the square next to them.", 25, 430, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont("Continue until you reach the princess.", 25, 445, WHITE, MIDNIGHT_BLUE);
 }
