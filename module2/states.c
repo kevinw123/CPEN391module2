@@ -30,6 +30,10 @@ int checkEvents(void) {
 
 	switch (event)
 	{
+	case(0) :
+		printf("Sending movement char\n");
+		sendStringBluetooth("M");
+		return STATE_RECEIVE_BLUETOOTH_COMMAND;
 	case(EVENT_PRINCESS) :
 			return STATE_FINISH;
 	case(EVENT_QUESTION) :

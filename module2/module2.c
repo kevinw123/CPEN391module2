@@ -66,6 +66,8 @@ void state_question()
 	// Send qbox index to the android according to the question selection
 	printf("Sending: %c\n",qbox_index[choice]);
 	sendStringBluetooth(&qbox_index[choice]);
+	//printf("Sending: 1");
+	//sendStringBluetooth("1");
 	// Redraw map and character (when running drawmap, it redraws the initial starting map, so we need to redraw
 	// the player in the right location
 	// set state to receive bluetooth then break

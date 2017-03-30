@@ -50,7 +50,7 @@ struct Question{
 //char qbox2_index;
 //char qbox3_index;
 //char qbox4_index;
-char qbox_index[4];
+char *qbox_index[4];
 
 struct Question questions[NUM_QUESTIONS];
 int questions_asked;
