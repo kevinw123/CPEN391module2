@@ -38,7 +38,7 @@ void state_redraw()
 	curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
 	Point playerCoords;
 	playerCoords = getCoord(player_current_x_pos, player_current_y_pos);
-	drawPlayer(playerCoords);
+	drawPlayerDown0(playerCoords);
 }
 
 void state_receive_bluetooth_command()

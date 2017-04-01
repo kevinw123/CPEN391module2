@@ -12,6 +12,10 @@
 #include "Colours.h"
 #include "bluetooth.h"
 #include "playerSprite.h"
+#include "PlayerSpritesAnimation.h"
+#include "tests/test.h"
+
+#define FRAME_RATE 4
 
 void init_game() {
 	init_questions();
@@ -21,39 +25,6 @@ void init_game() {
 	player_current_x_pos = startPos[curArea][0];
 	printf("Player x pos: %d\n", player_current_x_pos);
 	printf("Player y pos: %d\n", player_current_y_pos);
-
-	int count = 0;
-	int line1 = 0;
-	int line2 = 1;
-	int line3 = 2;
-	Rectangle(0, 800, 0, 479, BLACK);
-	Rectangle(0, 800, 400, 479, WHITE);
-	Rectangle(1, 799, 401, 478, BLACK);
-	drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
-	drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
-	drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
-	while(count < NUM_STORY_LINES) {
-		int command;
-		while (1) {
-				char a = getcharBluetooth();
-				if ((a - '0') < 100 && (a - '0') >= 0) {
-					command = a - '0';
-					printf("Receiving : %c %d\n", a, command);
-					break;
-				}
-		}
-		if (command == 6) {
-			printf("test\n");
-			Rectangle(1, 799, 401, 478, BLACK);
-			drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
-			drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
-			drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
-			line1++;
-			line2++;
-			line3++;
-			count++;
-		}
-	}
 }
 
 Point getCoord(int x, int y)
@@ -131,6 +102,107 @@ void drawPlayer(Point p)
 	}
 }
 
+void drawPlayerDown0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, down_0[i + 50 * j]);
+		}
+	}
+}
+
+void drawPlayerDown1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, down_1[i + 50 * j]);
+		}
+	}
+}
+
+void drawPlayerDown2(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, down_2[i + 50 * j]);
+		}
+	}
+}
+
+
+void drawPlayerLeft0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, left_0[i + 50 * j]);
+		}
+	}
+}
+
+void drawPlayerLeft1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, left_1[i + 50 * j]);
+		}
+	}
+}
+
+void drawPlayerRight0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, right_0[i + 50 * j]);
+		}
+	}
+}
+
+void drawPlayerRight1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, right_1[i + 50 * j]);
+		}
+	}
+}
+
+void drawPlayerUp0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, up_0[i + 50 * j]);
+		}
+	}
+}
+
+void drawPlayerUp1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, up_1[i + 50 * j]);
+		}
+	}
+}
+
+void drawPlayerUp2(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, up_2[i + 50 * j]);
+		}
+	}
+}
+
 void drawSquare(char square, Point point)
 {
 	if (square == WALL)
@@ -142,7 +214,7 @@ void drawSquare(char square, Point point)
 	else if (square == ENEMY)
 		drawEnemy(point);
 	else if (square == PLAYER)
-		drawPlayer(point);
+		drawPlayerUp0(point);
 }
 
 void drawArea(int map_width, int map_height, int area)
@@ -157,7 +229,6 @@ void drawArea(int map_width, int map_height, int area)
 	}
 	Rectangle(0, 800, 400, 479, WHITE);
 	Rectangle(1, 799, 401, 478, BLACK);
-	drawStringSmallFont("Instructions:", 25, 415, WHITE, MIDNIGHT_BLUE);
-	drawStringSmallFont("Eliminate enemy objects by getting to the square next to them.", 25, 430, WHITE, MIDNIGHT_BLUE);
-	drawStringSmallFont("Continue until you reach the princess.", 25, 445, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont("The dungeon warden is keeping the princess prisoner!", 25, 415, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont("You need to save her!", 25, 430, WHITE, MIDNIGHT_BLUE);
 }

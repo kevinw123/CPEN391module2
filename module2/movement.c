@@ -6,11 +6,18 @@
  */
 
 #include <stdio.h>
+#include "Colours.h"
 #include "drawmap.h"
 #include "mapdesign.h"
 #include "states.h"
 #include "tests/test.h"
+#include "movement.h"
+#include "graphics.h"
 
+bool down_flag = false;
+bool up_flag = false;
+
+/*
 void movePlayer(Point curPos, Point newPos, int area)
 {
 	printf("curposx: %d\n", curPos.x);
@@ -23,6 +30,7 @@ void movePlayer(Point curPos, Point newPos, int area)
 	drawSpace(curPos);
 	drawPlayer(newPos);
 }
+*/
 
 int movePlayerUp(int x, int y, int area)
 {
@@ -33,10 +41,26 @@ int movePlayerUp(int x, int y, int area)
 
 	if (isValidMovementUp(curArea)){
 		Point old_playerCoords = playerCoords;
-		playerCoords.y = playerCoords.y - 50;
-		movePlayer(old_playerCoords, playerCoords, area);
+		int i;
+		up_flag = !up_flag;
+		for (i = 0; i < 25; i += FRAME_RATE) {
+			playerCoords.y = old_playerCoords.y - i;
+			if (up_flag)
+				drawPlayerUp1(playerCoords);
+			else
+				drawPlayerUp2(playerCoords);
+			Rectangle(old_playerCoords.x, old_playerCoords.x + SQUARE_WIDTH-1, old_playerCoords.y + SQUARE_WIDTH - FRAME_RATE - i, old_playerCoords.y + SQUARE_WIDTH - 1 - i, BLACK);
+		}
 
+		for (i = 25; i < 50; i += FRAME_RATE) {
+			playerCoords.y = old_playerCoords.y - i;
+			drawPlayerUp0(playerCoords);
+			Rectangle(old_playerCoords.x, old_playerCoords.x + SQUARE_WIDTH-1, old_playerCoords.y + SQUARE_WIDTH - FRAME_RATE - i, old_playerCoords.y + SQUARE_WIDTH - 1 - i, BLACK);
+		}
+		playerCoords.y = old_playerCoords.y - 50;
+		drawPlayerUp0(playerCoords);
 		player_current_y_pos--;
+		printf("debug up y: %d\n", player_current_y_pos);
 		return 0;
 	}
 	else
@@ -52,9 +76,24 @@ int movePlayerDown(int x, int y, int area)
 
 	if (isValidMovementDown(curArea)) {
 		Point old_playerCoords = playerCoords;
-		playerCoords.y = playerCoords.y + 50;
-		movePlayer(old_playerCoords, playerCoords, area);
+		int i;
+		down_flag = !down_flag;
+		for (i = 0; i < 25; i += FRAME_RATE) {
+			playerCoords.y = old_playerCoords.y + i;
+			if (down_flag)
+				drawPlayerDown1(playerCoords);
+			else
+				drawPlayerDown2(playerCoords);
+			Rectangle(old_playerCoords.x, old_playerCoords.x + SQUARE_WIDTH-1, old_playerCoords.y + i, old_playerCoords.y + FRAME_RATE + i, BLACK);
+		}
 
+		for (i = 25; i < 50; i += FRAME_RATE) {
+			playerCoords.y = old_playerCoords.y + i;
+			drawPlayerDown0(playerCoords);
+			Rectangle(old_playerCoords.x, old_playerCoords.x + SQUARE_WIDTH-1, old_playerCoords.y + i, old_playerCoords.y + FRAME_RATE + i, BLACK);
+		}
+		playerCoords.y = old_playerCoords.y + 50;
+		drawPlayerDown0(playerCoords);
 		player_current_y_pos++;
 		return 0;
 	}
@@ -71,8 +110,21 @@ int movePlayerLeft(int x, int y, int area)
 
 	if (isValidMovementLeft(curArea)) {
 		Point old_playerCoords = playerCoords;
-		playerCoords.x = playerCoords.x - 50;
-		movePlayer(old_playerCoords, playerCoords, area);
+
+		int i;
+		for (i = 0; i < 25; i += FRAME_RATE) {
+			playerCoords.x = old_playerCoords.x - i;
+			drawPlayerLeft1(playerCoords);
+			VRectangle(old_playerCoords.x + SQUARE_WIDTH - 1 - FRAME_RATE - i, old_playerCoords.x + SQUARE_WIDTH - 1 - i, old_playerCoords.y, old_playerCoords.y + SQUARE_WIDTH - 1, BLACK);
+		}
+
+		for (i = 25; i < 50; i += FRAME_RATE) {
+			playerCoords.x = old_playerCoords.x - i;
+			drawPlayerLeft0(playerCoords);
+			VRectangle(old_playerCoords.x + SQUARE_WIDTH - 1 - FRAME_RATE - i, old_playerCoords.x + SQUARE_WIDTH - 1 - i, old_playerCoords.y, old_playerCoords.y + SQUARE_WIDTH - 1, BLACK);
+		}
+		playerCoords.x = old_playerCoords.x - 50;
+		drawPlayerLeft0(playerCoords);
 
 		player_current_x_pos--;
 		return 0;
@@ -90,8 +142,20 @@ int movePlayerRight(int x, int y, int area)
 
 	if (isValidMovementRight(curArea)) {
 		Point old_playerCoords = playerCoords;
-		playerCoords.x = playerCoords.x + 50;
-		movePlayer(old_playerCoords, playerCoords, area);
+		int i;
+		for (i = 0; i < 25; i += FRAME_RATE) {
+			playerCoords.x = old_playerCoords.x + i;
+			drawPlayerRight1(playerCoords);
+			VRectangle(old_playerCoords.x + i, old_playerCoords.x + FRAME_RATE + i, old_playerCoords.y, old_playerCoords.y + SQUARE_WIDTH - 1, BLACK);
+		}
+
+		for (i = 25; i < 50; i += FRAME_RATE) {
+			playerCoords.x = old_playerCoords.x + i;
+			drawPlayerRight0(playerCoords);
+			VRectangle(old_playerCoords.x + i, old_playerCoords.x + FRAME_RATE + i, old_playerCoords.y, old_playerCoords.y + SQUARE_WIDTH - 1, BLACK);
+		}
+		playerCoords.x = old_playerCoords.x + 50;
+		drawPlayerRight0(playerCoords);
 
 		player_current_x_pos++;
 		return 0;
@@ -99,6 +163,3 @@ int movePlayerRight(int x, int y, int area)
 	else
 		return -1;
 }
-
-
-
