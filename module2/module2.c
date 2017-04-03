@@ -41,12 +41,17 @@ void state_receive_bluetooth_command()
 	printf("Waiting for bluetooth commands...\n");
 	int command;
 	while (1) {
-		char a = getcharBluetooth();
-		if ((a - '0') < 100 && (a - '0') >= 0) {
-			command = a - '0';
-			printf("Receiving : %c %d\n", a, command);
-			break;
+		// There's a bluetooth command
+		if ((BlueTooth_Status & 0x01) != 0x01) {
+			char a = getcharBluetooth();
+			if ((a - '0') < 100 && (a - '0') >= 0) {
+				command = a - '0';
+				printf("Receiving : %c %d\n", a, command);
+				break;
+			}
 		}
+		// Calculate enemy movements draw them
+		redrawEnemies();
 	}
 	int nextState = execCommand(command);
 	curState = nextState;

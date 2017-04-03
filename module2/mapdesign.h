@@ -16,7 +16,7 @@
 #define SQUARE_WIDTH 50
 #define SQUARE_HEIGHT 50
 #define NUM_STORY_LINES 27
-
+#define MAX_ENEMY 4
 
 // Character definitions
 #define WALL 35					// 35 = #
@@ -47,7 +47,7 @@ char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES] =
 				{'#','O','#','#','O','O','X','O','#','O','#','#','O','#','#','#'},
 				{'#','O','#','#','O','#','#','#','#','X','O','O','O','#','#','#'},
 				{'#','O','#','#','O','#','#','#','#','O','#','#','O','#','#','O'},
-				{'#','O','O','X','O','#','#','#','#','O','#','#','O','#','#','O'},
+				{'#','O','O','O','X','#','#','#','#','O','#','#','O','#','#','O'},
 				{'#','O','#','#','#','#','#','#','#','O','#','#','O','O','O','O'}
 		},
 		{
@@ -103,9 +103,32 @@ char *story [NUM_STORY_LINES] =
 		"Good luck!"
 };
 
+int enemyPos [MAX_AREAS][MAX_ENEMY][2] =
+{
+		{
+				{ 6, 4 },
+				{ 3, 6 },
+				{ 9, 4 },
+				{ 13, 1 }
+		},
+		{
+				{ 3, 6 },
+				{ 6, 3 },
+				{ 9, 4 },
+				{ 13, 1 }
+		},
+		{
+				{ 3, 6 },
+				{ 6, 3 },
+				{ 9, 4 },
+				{ 13, 1 }
+		}
+};
+
 #else
 extern char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES];
 extern char *story [NUM_STORY_LINES];
+extern int enemyPos [MAX_AREAS][MAX_ENEMY][2];
 #endif
 
 

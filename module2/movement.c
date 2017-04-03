@@ -39,7 +39,7 @@ int movePlayerUp(int x, int y, int area)
 	printf("x: %d\n", playerCoords.x);
 	printf("y: %d\n", playerCoords.y);
 
-	if (isValidMovementUp(curArea)){
+	if (isValidMovementUp(curArea,x,y)){
 		Point old_playerCoords = playerCoords;
 		int i;
 		up_flag = !up_flag;
@@ -74,7 +74,7 @@ int movePlayerDown(int x, int y, int area)
 	printf("x: %d\n", playerCoords.x);
 	printf("y: %d\n", playerCoords.y);
 
-	if (isValidMovementDown(curArea)) {
+	if (isValidMovementDown(curArea,x,y)) {
 		Point old_playerCoords = playerCoords;
 		int i;
 		down_flag = !down_flag;
@@ -108,7 +108,7 @@ int movePlayerLeft(int x, int y, int area)
 	printf("x: %d\n", playerCoords.x);
 	printf("y: %d\n", playerCoords.y);
 
-	if (isValidMovementLeft(curArea)) {
+	if (isValidMovementLeft(curArea,x,y)) {
 		Point old_playerCoords = playerCoords;
 
 		int i;
@@ -140,7 +140,7 @@ int movePlayerRight(int x, int y, int area)
 	printf("x: %d\n", playerCoords.x);
 	printf("y: %d\n", playerCoords.y);
 
-	if (isValidMovementRight(curArea)) {
+	if (isValidMovementRight(curArea,x,y)) {
 		Point old_playerCoords = playerCoords;
 		int i;
 		for (i = 0; i < 25; i += FRAME_RATE) {
@@ -163,3 +163,70 @@ int movePlayerRight(int x, int y, int area)
 	else
 		return -1;
 }
+
+int moveEnemyUp(int x, int y, int area)
+{
+	Point oldPoint, newPoint;
+
+	map[0][y][x] = 'O';
+	map[0][y - 1][x] = 'X';
+
+	oldPoint = getCoord(x, y);
+	newPoint = getCoord(x, y - 1);
+
+	drawSpace(oldPoint);
+	drawEnemy(newPoint);
+
+	return 0;
+}
+
+int moveEnemyRight(int x, int y, int area)
+{
+	Point oldPoint, newPoint;
+
+	map[0][y][x] = 'O';
+	map[0][y][x + 1] = 'X';
+
+	oldPoint = getCoord(x, y);
+	newPoint = getCoord(x + 1, y);
+
+	drawSpace(oldPoint);
+	drawEnemy(newPoint);
+
+	return 0;
+}
+
+
+int moveEnemyDown(int x, int y, int area)
+{
+	Point oldPoint, newPoint;
+
+	map[0][y][x] = 'O';
+	map[0][y + 1][x] = 'X';
+
+	oldPoint = getCoord(x, y);
+	newPoint = getCoord(x, y + 1);
+
+	drawSpace(oldPoint);
+	drawEnemy(newPoint);
+
+	return 0;
+}
+
+
+int moveEnemyLeft(int x, int y, int area)
+{
+	Point oldPoint, newPoint;
+
+	map[0][y][x] = 'O';
+	map[0][y][x - 1] = 'X';
+
+	oldPoint = getCoord(x, y);
+	newPoint = getCoord(x - 1, y);
+
+	drawSpace(oldPoint);
+	drawEnemy(newPoint);
+
+	return 0;
+}
+

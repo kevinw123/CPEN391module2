@@ -14,6 +14,8 @@
 #include "playerSprite.h"
 #include "PlayerSpritesAnimation.h"
 #include "tests/test.h"
+#include <stdlib.h>
+#include "movement.h"
 
 #define FRAME_RATE 4
 
@@ -264,4 +266,77 @@ void drawArea(int map_width, int map_height, int area)
 	Rectangle(1, 799, 401, 478, BLACK);
 	drawStringSmallFont("The dungeon warden is keeping the princess prisoner!", 25, 415, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont("You need to save her!", 25, 430, WHITE, MIDNIGHT_BLUE);
+}
+
+void printMap()
+{
+	int i,j;
+		for (j = 0; j < MAX_VERT_SQUARES; j++) {
+			for (i = 0; i < MAX_HORI_SQUARES; i++) {
+				printf("%c ", map[0][j][i]);
+			}
+			printf("\n");
+		}
+		usleep(3000000);
+		printf("\n");
+		printf("\n");
+		printf("\n");
+		printf("\n");
+}
+
+int enemy_chooseDirection()
+{
+	return rand() % 4;
+}
+
+void enemy_moveDirection(int direction, int x, int y, int index)
+{
+	if (enemy_isValidMovement(direction, 0, x, y)) {
+		// redraw
+		switch (direction) {
+
+		case(DIRECTION_UP) :
+				moveEnemyUp(x, y, curArea);
+				enemyPos[0][index][0]--;
+				break;
+		case(DIRECTION_RIGHT) :
+				moveEnemyRight(x, y, curArea);
+				enemyPos[0][index][1]++;
+				break;
+		case(DIRECTION_DOWN) :
+				moveEnemyDown(x, y, curArea);
+				enemyPos[0][index][0]++;
+				break;
+		case(DIRECTION_LEFT) :
+				moveEnemyLeft(x, y, curArea);
+				enemyPos[0][index][1]--;
+				break;
+
+		}
+	}
+	// invalid move
+}
+
+//enemyPos [MAX_AREAS][3][2]
+//enemy_isValidMovement(int direction, int area, int enemyPosX, int enemyPosY)
+void redrawEnemies()
+{
+
+	int i, j, curEX, curEY;
+	for (i = 0; i < MAX_ENEMY; i++) {
+		curEX = enemyPos[0][i][1];
+		curEY = enemyPos[0][i][0];
+		int direction = enemy_chooseDirection();
+		enemy_moveDirection(direction, curEX, curEY, i);
+	}
+
+
+	/*
+	int curEX = enemyPos[0][1][1];
+	int curEY = enemyPos[0][1][0];
+	printf("%d and %d \n", curEX, curEY);
+	int direction = enemy_chooseDirection();
+	enemy_moveDirection(direction, curEX, curEY, 1);
+	*/
+	printMap();
 }

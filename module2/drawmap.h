@@ -20,5 +20,7 @@ void drawSpace(Point p);
 void drawFinish(Point p);
 void drawEnemy(Point p);
 void drawPlayer(Point p);
+void redrawEnemies(void);
+void printMap(void);
 
 #endif /* DRAWMAP_H_ */
