@@ -105,6 +105,7 @@ void state_machine()
 		break;
 		case (STATE_STORY_TEXT) :
 				init_game();
+				curState = STATE_REDRAW;
 		break;
 		case (STATE_REDRAW) :
 				state_redraw();
@@ -125,7 +126,7 @@ void state_machine()
 int main()
 {
 	init_module2();
-	curState = STATE_REDRAW;
+	curState = STATE_STORY_TEXT;
 	state_machine();
 	return 0;
 }
