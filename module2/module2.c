@@ -19,7 +19,9 @@ void init_module2()
 	initializeColours();
 	initBluetooth();
 	init_questions();
-	//Init_Touch();
+	printf("test\n");
+	Init_Touch();
+	printf("test\n");
 }
 
 void state_menu()
@@ -57,17 +59,12 @@ void state_receive_bluetooth_command()
 void state_question()
 {
 	ask_question();
-	usleep(5000000);
-	int choice = 1;//choose_question();
+	//usleep(5000000);
+	int choice = choose_question();
 	printf("Chose: %d\n", choice);
-	// Send qbox index to the android according to the question selection
+
 	printf("Sending: %c\n",qbox_index[choice]);
 	sendStringBluetooth(&qbox_index[choice]);
-	//printf("Sending: 1");
-	//sendStringBluetooth("1");
-	// Redraw map and character (when running drawmap, it redraws the initial starting map, so we need to redraw
-	// the player in the right location
-	// set state to receive bluetooth then break
 	if (1){
 		printf("test!\n");
 		char nextSpaceUp = map[curArea][player_current_y_pos - 1 ][player_current_x_pos];
@@ -88,6 +85,13 @@ void state_question()
 			map[curArea][player_current_y_pos][player_current_x_pos - 1] = 'O';
 	}
 	curState = STATE_REDRAW;
+}
+
+void state_last_question()
+{
+	draw_last_question();
+	sendStringBluetooth("L");
+	curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
 }
 
 void state_finish()
@@ -118,6 +122,9 @@ void state_machine()
 		case (STATE_QUESTION) :
 				state_question();
 		break;
+		case (STATE_LAST_QUESTION) :
+				state_last_question();
+		break;
 		case (STATE_FINISH) :
 				state_finish();
 		break;
@@ -135,7 +142,7 @@ int main()
 	player_current_y_pos = startPos[curArea][1];
 	player_current_x_pos = startPos[curArea][0];
 	*/
-	curState = STATE_STORY_TEXT;
+	curState = STATE_MENU;
 	state_machine();
 	return 0;
 }

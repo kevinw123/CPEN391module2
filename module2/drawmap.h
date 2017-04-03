@@ -22,5 +22,6 @@ void drawEnemy(Point p);
 void drawPlayer(Point p);
 void redrawEnemies(void);
 void printMap(void);
+void resetEnemyLocation(void);
 
 #endif /* DRAWMAP_H_ */

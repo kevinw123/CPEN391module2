@@ -35,7 +35,7 @@ int checkEvents(void) {
 		sendStringBluetooth("M");
 		return STATE_RECEIVE_BLUETOOTH_COMMAND;
 	case(EVENT_PRINCESS) :
-			return STATE_FINISH;
+			return STATE_LAST_QUESTION;
 	case(EVENT_QUESTION) :
 			return STATE_QUESTION;
 	default :
@@ -52,7 +52,8 @@ int execCommand(int command)
 	{
 	case (PLAY) :
 		printf("Starting game\n");
-		init_game();
+		//reset enemy locations
+		resetEnemyLocation();
 		ret = STATE_STORY_TEXT;
 		break;
 	case (MOVE_UP) :
@@ -74,6 +75,9 @@ int execCommand(int command)
 		redrawEnemies();
 		printf("Moving left: %d\n", movePlayerLeft(player_current_x_pos, player_current_y_pos, curArea));
 		ret = checkEvents();
+		break;
+	case (WIN) :
+			ret = STATE_FINISH;
 		break;
 	default :
 		printf("in default\n");

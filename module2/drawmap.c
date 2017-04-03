@@ -16,6 +16,8 @@
 #include "tests/test.h"
 #include <stdlib.h>
 #include "movement.h"
+#include <stdio.h>
+#include <string.h>
 
 #define FRAME_RATE 4
 
@@ -354,4 +356,23 @@ void redrawEnemies()
 	enemy_moveDirection(direction, curEX, curEY, 1);
 	*/
 	printMap();
+}
+
+//
+void resetEnemyLocation()
+{
+	int i,j,k;
+	for (i = 0; i < MAX_AREAS; i++) {
+		for (j = 0; j < MAX_ENEMY; j++) {
+			for (k = 0; k < 3; k++) {
+				enemyPos[i][j][k] = enemyPos_init[i][j][k];
+			}
+			int x = enemyPos[i][j][1];
+			int y = enemyPos[i][j][0];
+			map[i][y][x] = 'X';
+		}
+	}
+
+	int length = sizeof(map) / sizeof(map[0][0][0]) - 1;
+	memcpy(&map, &map_init, length * (sizeof(char)));
 }
