@@ -17,13 +17,8 @@ void init_module2()
 {
 	printf("Initializing module2 stuff...\n");
 	initializeColours();
-	printf("test\n");
 	initBluetooth();
-	printf("test\n");
 	//Init_Touch();
-	printf("test\n");
-	init_game();
-	printf("test\n");
 }
 
 void state_menu()
@@ -107,6 +102,9 @@ void state_machine()
 		{
 		case (STATE_MENU) :
 				state_menu();
+		break;
+		case (STATE_STORY_TEXT) :
+				init_game();
 		break;
 		case (STATE_REDRAW) :
 				state_redraw();

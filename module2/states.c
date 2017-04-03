@@ -53,7 +53,7 @@ int execCommand(int command)
 	case (PLAY) :
 		printf("Starting game\n");
 		init_game();
-		ret = STATE_REDRAW;
+		ret = STATE_STORY_TEXT;
 		break;
 	case (MOVE_UP) :
 		printf("Moving up: %d\n", movePlayerUp(player_current_x_pos, player_current_y_pos, curArea));

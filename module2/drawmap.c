@@ -25,6 +25,39 @@ void init_game() {
 	player_current_x_pos = startPos[curArea][0];
 	printf("Player x pos: %d\n", player_current_x_pos);
 	printf("Player y pos: %d\n", player_current_y_pos);
+
+	int count = 0;
+	int line1 = 0;
+	int line2 = 1;
+	int line3 = 2;
+	Rectangle(0, 800, 0, 479, BLACK);
+	Rectangle(0, 800, 400, 479, WHITE);
+	Rectangle(1, 799, 401, 478, BLACK);
+	drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
+	while(count < NUM_STORY_LINES) {
+		int command;
+		while (1) {
+				char a = getcharBluetooth();
+				if ((a - '0') < 100 && (a - '0') >= 0) {
+					command = a - '0';
+					printf("Receiving : %c %d\n", a, command);
+					break;
+				}
+		}
+		if (command == 6) {
+			Rectangle(1, 799, 401, 478, BLACK);
+			drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
+			drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
+			drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
+			line1++;
+			line2++;
+			line3++;
+			count++;
+		}
+	}
+	curState = STATE_REDRAW;
 }
 
 Point getCoord(int x, int y)

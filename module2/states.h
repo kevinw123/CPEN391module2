@@ -13,6 +13,7 @@
 #define STATE_RECEIVE_BLUETOOTH_COMMAND 2
 #define STATE_QUESTION 3
 #define STATE_FINISH 4
+#define STATE_STORY_TEXT 5
 
 
 // Bluetooth Command Definitions
