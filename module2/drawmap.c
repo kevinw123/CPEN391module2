@@ -27,6 +27,9 @@ void init_game() {
 	player_current_x_pos = startPos[curArea][0];
 	printf("Player x pos: %d\n", player_current_x_pos);
 	printf("Player y pos: %d\n", player_current_y_pos);
+	Point p;
+	p.x = 375;
+	p.y = 225;
 
 	int count = 0;
 	int line1 = 0;
@@ -35,9 +38,11 @@ void init_game() {
 	Rectangle(0, 800, 0, 479, BLACK);
 	Rectangle(0, 800, 400, 479, WHITE);
 	Rectangle(1, 799, 401, 478, BLACK);
+	drawPlayerDown0(p);
 	drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
+
 	while(count < NUM_STORY_LINES) {
 		int command;
 		while (1) {
@@ -49,6 +54,10 @@ void init_game() {
 				}
 		}
 		if (command == 6) {
+			if ((count%2) == 1)
+				drawPlayerDown1(p);
+			else
+				drawPlayerDown2(p);
 			Rectangle(1, 799, 401, 478, BLACK);
 			drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
 			drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
@@ -277,7 +286,7 @@ void printMap()
 			}
 			printf("\n");
 		}
-		usleep(3000000);
+		//usleep(3000000);
 		printf("\n");
 		printf("\n");
 		printf("\n");
@@ -321,11 +330,17 @@ void enemy_moveDirection(int direction, int x, int y, int index)
 //enemy_isValidMovement(int direction, int area, int enemyPosX, int enemyPosY)
 void redrawEnemies()
 {
+	int j;
+		for (j = 0; j < MAX_ENEMY; j++) {
+			printf("%d and %d and %d\n", enemyPos[0][j][0], enemyPos[0][j][1], enemyPos[0][j][2]);
+		}
 
-	int i, j, curEX, curEY;
-	for (i = 0; i < MAX_ENEMY; i++) {
+	int i, curEX, curEY;
+	for (i = 0; i < MAX_ENEMY - 1; i++) {
 		curEX = enemyPos[0][i][1];
 		curEY = enemyPos[0][i][0];
+		if (map[0][curEY][curEX] == 'O') { enemyPos[0][i][2] = ENEMY_DEAD; }
+		if (enemyPos[0][i][2] == ENEMY_DEAD) {continue;}
 		int direction = enemy_chooseDirection();
 		enemy_moveDirection(direction, curEX, curEY, i);
 	}

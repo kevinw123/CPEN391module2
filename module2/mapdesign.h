@@ -17,6 +17,7 @@
 #define SQUARE_HEIGHT 50
 #define NUM_STORY_LINES 27
 #define MAX_ENEMY 4
+#define ENEMY_DEAD 1
 
 // Character definitions
 #define WALL 35					// 35 = #
@@ -103,32 +104,32 @@ char *story [NUM_STORY_LINES] =
 		"Good luck!"
 };
 
-int enemyPos [MAX_AREAS][MAX_ENEMY][2] =
+int enemyPos [MAX_AREAS][MAX_ENEMY][3] =
 {
 		{
-				{ 6, 4 },
-				{ 3, 6 },
-				{ 9, 4 },
-				{ 13, 1 }
+				{ 6, 4, 0},
+				{ 3, 6, 0},
+				{ 4, 9, 0},
+				{ 1, 13, 0}
 		},
 		{
-				{ 3, 6 },
-				{ 6, 3 },
-				{ 9, 4 },
-				{ 13, 1 }
+				{ 6, 4, 0},
+				{ 3, 6, 0},
+				{ 4, 9, 0},
+				{ 13, 1, 0}
 		},
 		{
-				{ 3, 6 },
-				{ 6, 3 },
-				{ 9, 4 },
-				{ 13, 1 }
+				{ 6, 4, 0},
+				{ 3, 6, 0},
+				{ 9, 4, 0},
+				{ 13, 1, 0}
 		}
 };
 
 #else
 extern char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES];
 extern char *story [NUM_STORY_LINES];
-extern int enemyPos [MAX_AREAS][MAX_ENEMY][2];
+extern int enemyPos [MAX_AREAS][MAX_ENEMY][3];
 #endif
 
 

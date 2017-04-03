@@ -18,6 +18,7 @@ void init_module2()
 	printf("Initializing module2 stuff...\n");
 	initializeColours();
 	initBluetooth();
+	init_questions();
 	//Init_Touch();
 }
 
@@ -33,7 +34,7 @@ void state_redraw()
 	curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
 	Point playerCoords;
 	playerCoords = getCoord(player_current_x_pos, player_current_y_pos);
-	drawPlayerDown0(playerCoords);
+	drawPlayerUp0(playerCoords);
 }
 
 void state_receive_bluetooth_command()
@@ -42,16 +43,12 @@ void state_receive_bluetooth_command()
 	int command;
 	while (1) {
 		// There's a bluetooth command
-		if ((BlueTooth_Status & 0x01) != 0x01) {
 			char a = getcharBluetooth();
 			if ((a - '0') < 100 && (a - '0') >= 0) {
 				command = a - '0';
 				printf("Receiving : %c %d\n", a, command);
 				break;
 			}
-		}
-		// Calculate enemy movements draw them
-		redrawEnemies();
 	}
 	int nextState = execCommand(command);
 	curState = nextState;
@@ -110,6 +107,7 @@ void state_machine()
 		break;
 		case (STATE_STORY_TEXT) :
 				init_game();
+				curState = STATE_REDRAW;
 		break;
 		case (STATE_REDRAW) :
 				state_redraw();
@@ -129,8 +127,15 @@ void state_machine()
 
 int main()
 {
+
 	init_module2();
+	/*
 	curState = STATE_REDRAW;
+	curArea = 0;
+	player_current_y_pos = startPos[curArea][1];
+	player_current_x_pos = startPos[curArea][0];
+	*/
+	curState = STATE_STORY_TEXT;
 	state_machine();
 	return 0;
 }
