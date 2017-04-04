@@ -22,13 +22,12 @@
 #define FRAME_RATE 4
 
 void init_game() {
-	init_questions();
 
+	// Initializations
+	init_questions();
 	curArea = 0;
 	player_current_y_pos = startPos[curArea][1];
 	player_current_x_pos = startPos[curArea][0];
-	printf("Player x pos: %d\n", player_current_x_pos);
-	printf("Player y pos: %d\n", player_current_y_pos);
 	Point p;
 	p.x = 375;
 	p.y = 225;
@@ -37,6 +36,10 @@ void init_game() {
 	int line1 = 0;
 	int line2 = 1;
 	int line3 = 2;
+
+	// Draw the initial blank black background and text area.
+	// Also draw the player sprite facing downwards as a
+	// cool animation during the story text sequence.
 	Rectangle(0, 800, 0, 479, BLACK);
 	Rectangle(0, 800, 400, 479, WHITE);
 	Rectangle(1, 799, 401, 478, BLACK);
@@ -45,6 +48,9 @@ void init_game() {
 	drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
 
+	// This while loop implements the sequence of story text in the
+	// beginning of the game. Player will have to scroll through the
+	// text by click the scroll button.
 	while(count < NUM_STORY_LINES) {
 		int command;
 		while (1) {
@@ -70,6 +76,8 @@ void init_game() {
 			count++;
 		}
 	}
+
+	// Set the next state to draw the actual map (with player sprites and etc.)
 	curState = STATE_REDRAW;
 }
 
@@ -112,35 +120,27 @@ void drawSpace(Point p)
 
 void drawFinish(Point p)
 {
-	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, PINK);
 	int i, j;
-
-			for (j = 0; j < 50; j++) {
-				for (i = 0; i < 50; i++) {
-					WriteAPixel(p.x + i, p.y + j, princess[i + 50 * j]);
-				}
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, princess[i + 50 * j]);
+		}
 	}
 }
 
 void drawEnemy(Point p)
 {
-	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
-	//Rectangle(p.x+1, p.x + SQUARE_WIDTH-2, p.y+1, p.y + SQUARE_HEIGHT-2, RED);
 	int i, j;
-
-		for (j = 0; j < 50; j++) {
-			for (i = 0; i < 50; i++) {
-				WriteAPixel(p.x + i, p.y + j, bear[i + 50 * j]);
-			}
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, bear[i + 50 * j]);
+		}
 	}
 }
 
 void drawPlayer(Point p)
 {
-	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
-	//Rectangle(p.x+1, p.x + SQUARE_WIDTH-2, p.y+1, p.y + SQUARE_HEIGHT-2, FOREST_GREEN);
 	int i, j;
-
 	for (j = 0; j < 50; j++) {
 		for (i = 0; i < 50; i++) {
 			WriteAPixel(p.x + i, p.y + j, ness[i + 50 * j]);
@@ -328,8 +328,6 @@ void enemy_moveDirection(int direction, int x, int y, int index)
 	// invalid move
 }
 
-//enemyPos [MAX_AREAS][3][2]
-//enemy_isValidMovement(int direction, int area, int enemyPosX, int enemyPosY)
 void redrawEnemies()
 {
 	int j;
@@ -346,19 +344,9 @@ void redrawEnemies()
 		int direction = enemy_chooseDirection();
 		enemy_moveDirection(direction, curEX, curEY, i);
 	}
-
-
-	/*
-	int curEX = enemyPos[0][1][1];
-	int curEY = enemyPos[0][1][0];
-	printf("%d and %d \n", curEX, curEY);
-	int direction = enemy_chooseDirection();
-	enemy_moveDirection(direction, curEX, curEY, 1);
-	*/
 	printMap();
 }
 
-//
 void resetEnemyLocation()
 {
 	int i,j,k;
