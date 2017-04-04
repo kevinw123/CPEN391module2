@@ -17,6 +17,9 @@
 bool down_flag = false;
 bool up_flag = false;
 
+bool enemy_down_flag = false;
+bool enemy_up_flag = false;
+
 /*
 void movePlayer(Point curPos, Point newPos, int area)
 {
@@ -63,8 +66,11 @@ int movePlayerUp(int x, int y, int area)
 		printf("debug up y: %d\n", player_current_y_pos);
 		return 0;
 	}
-	else
+	else {
+		drawPlayerUp0(playerCoords);
 		return -1;
+	}
+
 }
 
 int movePlayerDown(int x, int y, int area)
@@ -97,8 +103,11 @@ int movePlayerDown(int x, int y, int area)
 		player_current_y_pos++;
 		return 0;
 	}
-	else
+	else {
+		drawPlayerDown0(playerCoords);
 		return -1;
+	}
+
 }
 
 int movePlayerLeft(int x, int y, int area)
@@ -129,8 +138,10 @@ int movePlayerLeft(int x, int y, int area)
 		player_current_x_pos--;
 		return 0;
 	}
-	else
+	else {
+		drawPlayerLeft0(playerCoords);
 		return -1;
+	}
 }
 
 int movePlayerRight(int x, int y, int area)
@@ -160,73 +171,125 @@ int movePlayerRight(int x, int y, int area)
 		player_current_x_pos++;
 		return 0;
 	}
-	else
+	else {
+		drawPlayerRight0(playerCoords);
 		return -1;
+	}
+
 }
 
 int moveEnemyUp(int x, int y, int area)
 {
-	Point oldPoint, newPoint;
+	Point old_enemyCoords, enemyCoords;
+
+	enemyCoords = getCoord(x, y);
+	old_enemyCoords = enemyCoords;
+
+	int i;
+	enemy_up_flag = !enemy_up_flag;
+	for (i = 0; i < 25; i += FRAME_RATE) {
+		enemyCoords.y = old_enemyCoords.y - i;
+		if (enemy_up_flag)
+			drawEnemyUp1(enemyCoords);
+		else
+			drawEnemyUp2(enemyCoords);
+		Rectangle(old_enemyCoords.x, old_enemyCoords.x + SQUARE_WIDTH-1, old_enemyCoords.y + SQUARE_WIDTH - FRAME_RATE - i, old_enemyCoords.y + SQUARE_WIDTH - 1 - i, BLACK);
+	}
+
+	for (i = 25; i < 50; i += FRAME_RATE) {
+		enemyCoords.y = old_enemyCoords.y - i;
+		drawEnemyUp0(enemyCoords);
+		Rectangle(old_enemyCoords.x, old_enemyCoords.x + SQUARE_WIDTH-1, old_enemyCoords.y + SQUARE_WIDTH - FRAME_RATE - i, old_enemyCoords.y + SQUARE_WIDTH - 1 - i, BLACK);
+	}
+	enemyCoords.y = old_enemyCoords.y - 50;
+	drawEnemyUp0(enemyCoords);
 
 	map[0][y][x] = 'O';
 	map[0][y - 1][x] = 'X';
-
-	oldPoint = getCoord(x, y);
-	newPoint = getCoord(x, y - 1);
-
-	drawSpace(oldPoint);
-	drawEnemy(newPoint);
-
 	return 0;
 }
 
 int moveEnemyRight(int x, int y, int area)
 {
-	Point oldPoint, newPoint;
+	Point old_enemyCoords, enemyCoords;
+
+	enemyCoords = getCoord(x, y);
+	old_enemyCoords = enemyCoords;
+
+	int i;
+	for (i = 0; i < 25; i += FRAME_RATE) {
+		enemyCoords.x = old_enemyCoords.x + i;
+		drawEnemyRight1(enemyCoords);
+		VRectangle(old_enemyCoords.x + i, old_enemyCoords.x + FRAME_RATE + i, old_enemyCoords.y, old_enemyCoords.y + SQUARE_WIDTH - 1, BLACK);
+	}
+
+	for (i = 25; i < 50; i += FRAME_RATE) {
+		enemyCoords.x = old_enemyCoords.x + i;
+		drawEnemyRight0(enemyCoords);
+		VRectangle(old_enemyCoords.x + i, old_enemyCoords.x + FRAME_RATE + i, old_enemyCoords.y, old_enemyCoords.y + SQUARE_WIDTH - 1, BLACK);
+	}
+	enemyCoords.x = old_enemyCoords.x + 50;
+	drawEnemyRight0(enemyCoords);
 
 	map[0][y][x] = 'O';
 	map[0][y][x + 1] = 'X';
-
-	oldPoint = getCoord(x, y);
-	newPoint = getCoord(x + 1, y);
-
-	drawSpace(oldPoint);
-	drawEnemy(newPoint);
-
 	return 0;
 }
 
 
 int moveEnemyDown(int x, int y, int area)
 {
-	Point oldPoint, newPoint;
+	Point old_enemyCoords, enemyCoords;
+	enemyCoords = getCoord(x, y);
+	old_enemyCoords = enemyCoords;
+
+	int i;
+	enemy_down_flag = !enemy_down_flag;
+	for (i = 0; i < 25; i += FRAME_RATE) {
+		enemyCoords.y = old_enemyCoords.y + i;
+		if (enemy_down_flag)
+			drawEnemyDown1(enemyCoords);
+		else
+			drawEnemyDown2(enemyCoords);
+		Rectangle(old_enemyCoords.x, old_enemyCoords.x + SQUARE_WIDTH-1, old_enemyCoords.y + i, old_enemyCoords.y + FRAME_RATE + i, BLACK);
+	}
+
+	for (i = 25; i < 50; i += FRAME_RATE) {
+		enemyCoords.y = old_enemyCoords.y + i;
+		drawEnemyDown0(enemyCoords);
+		Rectangle(old_enemyCoords.x, old_enemyCoords.x + SQUARE_WIDTH-1, old_enemyCoords.y + i, old_enemyCoords.y + FRAME_RATE + i, BLACK);
+	}
+	enemyCoords.y = old_enemyCoords.y + 50;
+	drawEnemyDown0(enemyCoords);
 
 	map[0][y][x] = 'O';
 	map[0][y + 1][x] = 'X';
-
-	oldPoint = getCoord(x, y);
-	newPoint = getCoord(x, y + 1);
-
-	drawSpace(oldPoint);
-	drawEnemy(newPoint);
-
 	return 0;
 }
 
 
 int moveEnemyLeft(int x, int y, int area)
 {
-	Point oldPoint, newPoint;
+	Point old_enemyCoords, enemyCoords;
+	enemyCoords = getCoord(x, y);
+	old_enemyCoords = enemyCoords;
+
+	int i;
+	for (i = 0; i < 25; i += FRAME_RATE) {
+		enemyCoords.x = old_enemyCoords.x - i;
+		drawEnemyLeft1(enemyCoords);
+		VRectangle(old_enemyCoords.x + SQUARE_WIDTH - 1 - FRAME_RATE - i, old_enemyCoords.x + SQUARE_WIDTH - 1 - i, old_enemyCoords.y, old_enemyCoords.y + SQUARE_WIDTH - 1, BLACK);
+	}
+
+	for (i = 25; i < 50; i += FRAME_RATE) {
+		enemyCoords.x = old_enemyCoords.x - i;
+		drawEnemyLeft0(enemyCoords);
+		VRectangle(old_enemyCoords.x + SQUARE_WIDTH - 1 - FRAME_RATE - i, old_enemyCoords.x + SQUARE_WIDTH - 1 - i, old_enemyCoords.y, old_enemyCoords.y + SQUARE_WIDTH - 1, BLACK);
+	}
+	enemyCoords.x = old_enemyCoords.x - 50;
+	drawEnemyLeft0(enemyCoords);
 
 	map[0][y][x] = 'O';
 	map[0][y][x - 1] = 'X';
-
-	oldPoint = getCoord(x, y);
-	newPoint = getCoord(x - 1, y);
-
-	drawSpace(oldPoint);
-	drawEnemy(newPoint);
-
 	return 0;
 }
-

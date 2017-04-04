@@ -13,7 +13,7 @@
 #define DIRECTION_DOWN 2
 #define DIRECTION_LEFT 3
 
-#define FRAME_RATE 3
+#define FRAME_RATE 10
 
 //void movePlayer(int curPosX, int curPosY, int newPosX, int newPosY, int area);
 int movePlayerUp(int x, int y, int area);
