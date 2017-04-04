@@ -13,6 +13,8 @@
 #define STATE_RECEIVE_BLUETOOTH_COMMAND 2
 #define STATE_QUESTION 3
 #define STATE_FINISH 4
+#define STATE_STORY_TEXT 5
+#define STATE_LAST_QUESTION 6
 
 
 // Bluetooth Command Definitions
@@ -23,6 +25,7 @@
 #define MOVE_LEFT 4
 #define QUESTION 5
 #define SCROLL_TEXT 6
+#define WIN 7
 
 // Events
 #define EVENT_PRINCESS 1

@@ -24,6 +24,11 @@ void draw_menu() {
 	draw_menu_prompt();
 }
 
+void draw_last_question() {
+	Rectangle(0,800,0,480,BLACK);
+	drawString("LAST QUESTION SCREEN", 250, 200, TEAL, TEAL);
+}
+
 void draw_finish_screen() {
 	Rectangle(0,800,0,480,BLACK);
 	while(1) {

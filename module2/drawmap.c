@@ -14,6 +14,10 @@
 #include "playerSprite.h"
 #include "PlayerSpritesAnimation.h"
 #include "tests/test.h"
+#include <stdlib.h>
+#include "movement.h"
+#include <stdio.h>
+#include <string.h>
 
 #define FRAME_RATE 4
 
@@ -25,6 +29,48 @@ void init_game() {
 	player_current_x_pos = startPos[curArea][0];
 	printf("Player x pos: %d\n", player_current_x_pos);
 	printf("Player y pos: %d\n", player_current_y_pos);
+	Point p;
+	p.x = 375;
+	p.y = 225;
+
+	int count = 0;
+	int line1 = 0;
+	int line2 = 1;
+	int line3 = 2;
+	Rectangle(0, 800, 0, 479, BLACK);
+	Rectangle(0, 800, 400, 479, WHITE);
+	Rectangle(1, 799, 401, 478, BLACK);
+	drawPlayerDown0(p);
+	drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
+	drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
+
+	while(count < NUM_STORY_LINES) {
+		int command;
+		while (1) {
+				char a = getcharBluetooth();
+				if ((a - '0') < 100 && (a - '0') >= 0) {
+					command = a - '0';
+					printf("Receiving : %c %d\n", a, command);
+					break;
+				}
+		}
+		if (command == 6) {
+			if ((count%2) == 1)
+				drawPlayerDown1(p);
+			else
+				drawPlayerDown2(p);
+			Rectangle(1, 799, 401, 478, BLACK);
+			drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
+			drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
+			drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
+			line1++;
+			line2++;
+			line3++;
+			count++;
+		}
+	}
+	curState = STATE_REDRAW;
 }
 
 Point getCoord(int x, int y)
@@ -203,6 +249,106 @@ void drawPlayerUp2(Point p)
 	}
 }
 
+void drawEnemyDown0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_down_0[i + 50 * j]);
+		}
+	}
+}
+
+void drawEnemyDown1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_down_1[i + 50 * j]);
+		}
+	}
+}
+
+void drawEnemyDown2(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_down_2[i + 50 * j]);
+		}
+	}
+}
+
+void drawEnemyLeft0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_left_0[i + 50 * j]);
+		}
+	}
+}
+
+void drawEnemyLeft1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_left_1[i + 50 * j]);
+		}
+	}
+}
+
+void drawEnemyRight0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_right_0[i + 50 * j]);
+		}
+	}
+}
+
+void drawEnemyRight1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_right_1[i + 50 * j]);
+		}
+	}
+}
+
+void drawEnemyUp0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_up_0[i + 50 * j]);
+		}
+	}
+}
+
+void drawEnemyUp1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_up_1[i + 50 * j]);
+		}
+	}
+}
+
+void drawEnemyUp2(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_up_2[i + 50 * j]);
+		}
+	}
+}
+
 void drawSquare(char square, Point point)
 {
 	if (square == WALL)
@@ -212,7 +358,7 @@ void drawSquare(char square, Point point)
 	else if (square == FINISH)
 		drawFinish(point);
 	else if (square == ENEMY)
-		drawEnemy(point);
+		drawEnemyDown0(point);
 	else if (square == PLAYER)
 		drawPlayerUp0(point);
 }
@@ -231,4 +377,102 @@ void drawArea(int map_width, int map_height, int area)
 	Rectangle(1, 799, 401, 478, BLACK);
 	drawStringSmallFont("The dungeon warden is keeping the princess prisoner!", 25, 415, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont("You need to save her!", 25, 430, WHITE, MIDNIGHT_BLUE);
+}
+
+void printMap()
+{
+	int i,j;
+		for (j = 0; j < MAX_VERT_SQUARES; j++) {
+			for (i = 0; i < MAX_HORI_SQUARES; i++) {
+				printf("%c ", map[0][j][i]);
+			}
+			printf("\n");
+		}
+		//usleep(3000000);
+		printf("\n");
+		printf("\n");
+		printf("\n");
+		printf("\n");
+}
+
+int enemy_chooseDirection()
+{
+	return rand() % 4;
+}
+
+void enemy_moveDirection(int direction, int x, int y, int index)
+{
+	if (enemy_isValidMovement(direction, 0, x, y)) {
+		// redraw
+		switch (direction) {
+
+		case(DIRECTION_UP) :
+				moveEnemyUp(x, y, curArea);
+				enemyPos[0][index][0]--;
+				break;
+		case(DIRECTION_RIGHT) :
+				moveEnemyRight(x, y, curArea);
+				enemyPos[0][index][1]++;
+				break;
+		case(DIRECTION_DOWN) :
+				moveEnemyDown(x, y, curArea);
+				enemyPos[0][index][0]++;
+				break;
+		case(DIRECTION_LEFT) :
+				moveEnemyLeft(x, y, curArea);
+				enemyPos[0][index][1]--;
+				break;
+
+		}
+	}
+	// invalid move
+}
+
+//enemyPos [MAX_AREAS][3][2]
+//enemy_isValidMovement(int direction, int area, int enemyPosX, int enemyPosY)
+void redrawEnemies()
+{
+	int j;
+		for (j = 0; j < MAX_ENEMY; j++) {
+			printf("%d and %d and %d\n", enemyPos[0][j][0], enemyPos[0][j][1], enemyPos[0][j][2]);
+		}
+
+	int i, curEX, curEY;
+	for (i = 0; i < MAX_ENEMY; i++) {
+		curEX = enemyPos[0][i][1];
+		curEY = enemyPos[0][i][0];
+		if (map[0][curEY][curEX] == 'O') { enemyPos[0][i][2] = ENEMY_DEAD; }
+		if (enemyPos[0][i][2] == ENEMY_DEAD) {continue;}
+		int direction = enemy_chooseDirection();
+		enemy_moveDirection(direction, curEX, curEY, i);
+	}
+
+
+	/*
+	int curEX = enemyPos[0][1][1];
+	int curEY = enemyPos[0][1][0];
+	printf("%d and %d \n", curEX, curEY);
+	int direction = enemy_chooseDirection();
+	enemy_moveDirection(direction, curEX, curEY, 1);
+	*/
+	printMap();
+}
+
+//
+void resetEnemyLocation()
+{
+	int i,j,k;
+	for (i = 0; i < MAX_AREAS; i++) {
+		for (j = 0; j < MAX_ENEMY; j++) {
+			for (k = 0; k < 3; k++) {
+				enemyPos[i][j][k] = enemyPos_init[i][j][k];
+			}
+			int x = enemyPos[i][j][1];
+			int y = enemyPos[i][j][0];
+			map[i][y][x] = 'X';
+		}
+	}
+
+	int length = sizeof(map) / sizeof(map[0][0][0]) - 1;
+	memcpy(&map, &map_init, length * (sizeof(char)));
 }
