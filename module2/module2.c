@@ -13,14 +13,24 @@
 #include "graphics.h"
 #include "questions.h"
 
+/*
+ * Initialize everything needed for project
+ * Colors, questions, touch screen and bluetooth
+ */
 void init_module2()
 {
 	printf("Initializing module2 stuff...\n");
 	initializeColours();
 	initBluetooth();
-	//Init_Touch();
+	init_questions();
+	printf("test\n");
+	Init_Touch();
+	printf("test\n");
 }
 
+/*
+ * State to draw the menu screen and then switch to reading bluetooth commands
+ */
 void state_menu()
 {
 	draw_menu();
@@ -33,39 +43,42 @@ void state_redraw()
 	curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
 	Point playerCoords;
 	playerCoords = getCoord(player_current_x_pos, player_current_y_pos);
-	drawPlayerDown0(playerCoords);
+	drawPlayerUp0(playerCoords);
 }
 
+/*
+ * Read the character from the bluetooth dongle
+ */
 void state_receive_bluetooth_command()
 {
 	printf("Waiting for bluetooth commands...\n");
 	int command;
 	while (1) {
-		char a = getcharBluetooth();
-		if ((a - '0') < 100 && (a - '0') >= 0) {
-			command = a - '0';
-			printf("Receiving : %c %d\n", a, command);
-			break;
-		}
+		// There's a bluetooth command
+			char a = getcharBluetooth();
+			if ((a - '0') < 100 && (a - '0') >= 0) {
+				command = a - '0';
+				printf("Receiving : %c %d\n", a, command);
+				break;
+			}
 	}
 	int nextState = execCommand(command);
 	curState = nextState;
 }
 
+/*
+ * State to display the question and user needs to select the question
+ */
 void state_question()
 {
 	ask_question();
-	usleep(5000000);
-	int choice = 1;//choose_question();
+	//usleep(5000000);
+	// User selects question
+	int choice = choose_question();
 	printf("Chose: %d\n", choice);
-	// Send qbox index to the android according to the question selection
+
 	printf("Sending: %c\n",qbox_index[choice]);
 	sendStringBluetooth(&qbox_index[choice]);
-	//printf("Sending: 1");
-	//sendStringBluetooth("1");
-	// Redraw map and character (when running drawmap, it redraws the initial starting map, so we need to redraw
-	// the player in the right location
-	// set state to receive bluetooth then break
 	if (1){
 		printf("test!\n");
 		char nextSpaceUp = map[curArea][player_current_y_pos - 1 ][player_current_x_pos];
@@ -74,6 +87,8 @@ void state_question()
 		printf("Right: %c\n", nextSpaceRight);
 		char nextSpaceDown = map[curArea][player_current_y_pos + 1][player_current_x_pos];
 		printf("Down: %c\n", nextSpaceDown);
+
+		// Checks for valid movements
 		if (nextSpaceUp == 'X') {
 			map[curArea][player_current_y_pos - 1][player_current_x_pos] = 'O';
 			printf("testbdasd: %c\n", map[curArea][player_current_y_pos - 1][player_current_x_pos]);
@@ -88,11 +103,27 @@ void state_question()
 	curState = STATE_REDRAW;
 }
 
+/*
+ * State for the last stage where player touches princess
+ */
+void state_last_question()
+{
+	draw_last_question();
+	sendStringBluetooth("L");
+	curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
+}
+
+/*
+ * Draw the finished screen
+ */
 void state_finish()
 {
 	draw_finish_screen();
 }
 
+/*
+ * Set up the state machine for the game
+ */
 void state_machine()
 {
 	printf("Initializing state machine...\n");
@@ -100,22 +131,32 @@ void state_machine()
 		printf("Current State: %d\n", curState);
 		switch (curState)
 		{
+		// State for being in the menu
 		case (STATE_MENU) :
 				state_menu();
 		break;
+		// State for displaying the story
 		case (STATE_STORY_TEXT) :
 				init_game();
 				curState = STATE_REDRAW;
 		break;
+		// State for redrawing the map
 		case (STATE_REDRAW) :
 				state_redraw();
 		break;
+		// State for reading bluetooth commands
 		case (STATE_RECEIVE_BLUETOOTH_COMMAND) :
 				state_receive_bluetooth_command();
 		break;
+		// State for questions
 		case (STATE_QUESTION) :
 				state_question();
 		break;
+		// State for last game where player reaches princess
+		case (STATE_LAST_QUESTION) :
+				state_last_question();
+		break;
+		// State to draw finished state
 		case (STATE_FINISH) :
 				state_finish();
 		break;
@@ -125,8 +166,15 @@ void state_machine()
 
 int main()
 {
+
 	init_module2();
-	curState = STATE_STORY_TEXT;
+	/*
+	curState = STATE_REDRAW;
+	curArea = 0;
+	player_current_y_pos = startPos[curArea][1];
+	player_current_x_pos = startPos[curArea][0];
+	*/
+	curState = STATE_MENU;
 	state_machine();
 	return 0;
 }

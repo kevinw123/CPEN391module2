@@ -16,6 +16,9 @@
 #include "touchscreen.h"
 #include "tests/test.h"
 
+/*
+ * Initialize questions and answers for questions screen
+ */
 void init_questions(){
 
 	int i;
@@ -24,6 +27,7 @@ void init_questions(){
 		questionArray[i] = q;
 	}
 
+	// First question and answer
 	questionArray[0].question = "What is 1 + 1?";
 	questionArray[0].question2 = "";
 	questionArray[0].answerA = "1";
@@ -33,6 +37,7 @@ void init_questions(){
 	questionArray[0].correctChoice = "B";
 	questionArray[0].index = '0';
 
+	// Second question and answer
 	questionArray[1].question = "What is the capital ";
 	questionArray[1].question2 = "";
 	questionArray[1].question2 = "city of Canada?";
@@ -43,6 +48,7 @@ void init_questions(){
 	questionArray[1].correctChoice = "D";
 	questionArray[1].index = '1';
 
+	// Third question and answer
 	questionArray[2].question = "Which object is the largest?";
 	questionArray[2].question2 = "";
 	questionArray[2].answerA = "Elephant";
@@ -52,6 +58,7 @@ void init_questions(){
 	questionArray[2].correctChoice = "C";
 	questionArray[2].index = '2';
 
+	// Fourth question and answer
 	questionArray[3].question = "Where can you find Polar Bears?";
 	questionArray[3].question2 = "";
 	questionArray[3].answerA = "Antartica";
@@ -64,6 +71,9 @@ void init_questions(){
 	questions_asked = 0;
 }
 
+/*
+ * Draw the question screen onto the DE2
+ */
 void drawQuestionsScreen() {
 	// Background
 	Rectangle(0, 800, 0, 399, BLACK);
@@ -86,6 +96,9 @@ void drawQuestionsScreen() {
 	Rectangle(426,774,216,374, BLACK);
 }
 
+/*
+ * Write the text for the questions on the screen,
+ */
 void ask_question(){
 	drawQuestionsScreen();
 
@@ -112,6 +125,9 @@ void ask_question(){
 	drawStringSmallFont(questionArray[r].question2, 460, 265, WHITE, MIDNIGHT_BLUE);
 }
 
+/*
+ * Checks if correct bounds where user can click
+ */
 bool isWithinBounds(p,b1,b2) {
 	if ((p >= b1) && (p <= b2))
 		return true;
@@ -119,6 +135,9 @@ bool isWithinBounds(p,b1,b2) {
 		return false;
 }
 
+/*
+ * Detect where the user touched the screen and return the index touched.
+ */
 int choose_question() {
 	Point p;
 	while(1) {

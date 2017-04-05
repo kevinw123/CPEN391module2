@@ -8,6 +8,9 @@
 #include "graphics.h"
 #include "Colours.h"
 
+/*
+ * Draw the text for the menu screen
+ */
 void draw_menu_prompt() {
 	Rectangle(100, 699, 100, 379, WHITE);
 
@@ -19,11 +22,25 @@ void draw_menu_prompt() {
 	drawString(menu_prompt_line2, x + 40, y + 20, MIDNIGHT_BLUE, BLACK);
 }
 
+/*
+ *  Draw the menu screen to tell player to play game on Android
+ */
 void draw_menu() {
 	Rectangle(0, 800, 0, 480, MIDNIGHT_BLUE);
 	draw_menu_prompt();
 }
 
+/*
+ * Draws the screen for last games when player reaches princess
+ */
+void draw_last_question() {
+	Rectangle(0,800,0,480,BLACK);
+	drawString("LAST QUESTION SCREEN", 250, 200, TEAL, TEAL);
+}
+
+/*
+ * Draws the final win screen
+ */
 void draw_finish_screen() {
 	Rectangle(0,800,0,480,BLACK);
 	while(1) {

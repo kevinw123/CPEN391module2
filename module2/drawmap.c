@@ -14,9 +14,16 @@
 #include "playerSprite.h"
 #include "PlayerSpritesAnimation.h"
 #include "tests/test.h"
+#include <stdlib.h>
+#include "movement.h"
+#include <stdio.h>
+#include <string.h>
 
 #define FRAME_RATE 4
 
+/*
+ * Start the game by loading the character and drawing the story
+ */
 void init_game() {
 	init_questions();
 
@@ -25,6 +32,9 @@ void init_game() {
 	player_current_x_pos = startPos[curArea][0];
 	printf("Player x pos: %d\n", player_current_x_pos);
 	printf("Player y pos: %d\n", player_current_y_pos);
+	Point p;
+	p.x = 375;
+	p.y = 225;
 
 	int count = 0;
 	int line1 = 0;
@@ -33,12 +43,16 @@ void init_game() {
 	Rectangle(0, 800, 0, 479, BLACK);
 	Rectangle(0, 800, 400, 479, WHITE);
 	Rectangle(1, 799, 401, 478, BLACK);
+	drawPlayerDown0(p);
 	drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
+
+	// Load the story
 	while(count < NUM_STORY_LINES) {
 		int command;
 		while (1) {
+			    // Read bluetooth commands to determine if scroll or not
 				char a = getcharBluetooth();
 				if ((a - '0') < 100 && (a - '0') >= 0) {
 					command = a - '0';
@@ -47,6 +61,10 @@ void init_game() {
 				}
 		}
 		if (command == 6) {
+			if ((count%2) == 1)
+				drawPlayerDown1(p);
+			else
+				drawPlayerDown2(p);
 			Rectangle(1, 799, 401, 478, BLACK);
 			drawStringSmallFont(story[line1], 25, 415, WHITE, MIDNIGHT_BLUE);
 			drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
@@ -60,6 +78,9 @@ void init_game() {
 	curState = STATE_REDRAW;
 }
 
+/*
+ * Gets coordinate of the x and y value
+ */
 Point getCoord(int x, int y)
 {
 	Point point;
@@ -68,6 +89,9 @@ Point getCoord(int x, int y)
 	return point;
 }
 
+/*
+ * Draw the walls for the game
+ */
 void drawWall(Point p)
 {
 	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, MIDNIGHT_BLUE);
@@ -92,11 +116,17 @@ void drawWall(Point p)
 	VRectangle(p.x + 37, p.x + 38, p.y + 39, p.y + SQUARE_HEIGHT - 2, BLACK);
 }
 
+/*
+ * Draw empty area for the game
+ */
 void drawSpace(Point p)
 {
 	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
 }
 
+/*
+ * Draw the princess tile for the game
+ */
 void drawFinish(Point p)
 {
 	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, PINK);
@@ -109,6 +139,9 @@ void drawFinish(Point p)
 	}
 }
 
+/*
+ * Draw the enemy tiles for the game
+ */
 void drawEnemy(Point p)
 {
 	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
@@ -122,6 +155,9 @@ void drawEnemy(Point p)
 	}
 }
 
+/*
+ * Draw the player tile
+ */
 void drawPlayer(Point p)
 {
 	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
@@ -135,6 +171,9 @@ void drawPlayer(Point p)
 	}
 }
 
+/*
+ * Draw the player sprite moving down
+ */
 void drawPlayerDown0(Point p)
 {
 	int i, j;
@@ -145,6 +184,9 @@ void drawPlayerDown0(Point p)
 	}
 }
 
+/*
+ * Different sprite for the player moving down
+ */
 void drawPlayerDown1(Point p)
 {
 	int i, j;
@@ -155,6 +197,9 @@ void drawPlayerDown1(Point p)
 	}
 }
 
+/*
+ * Draw a third sprite for the player moving down
+ */
 void drawPlayerDown2(Point p)
 {
 	int i, j;
@@ -165,7 +210,9 @@ void drawPlayerDown2(Point p)
 	}
 }
 
-
+/*
+ * Draw the player sprite moving left
+ */
 void drawPlayerLeft0(Point p)
 {
 	int i, j;
@@ -176,6 +223,9 @@ void drawPlayerLeft0(Point p)
 	}
 }
 
+/*
+ * Draw the player sprite moving left for animation
+ */
 void drawPlayerLeft1(Point p)
 {
 	int i, j;
@@ -186,6 +236,9 @@ void drawPlayerLeft1(Point p)
 	}
 }
 
+/*
+ * Draw the player sprite moving right
+ */
 void drawPlayerRight0(Point p)
 {
 	int i, j;
@@ -196,6 +249,9 @@ void drawPlayerRight0(Point p)
 	}
 }
 
+/*
+ * Draw the player sprite moving right for animation
+ */
 void drawPlayerRight1(Point p)
 {
 	int i, j;
@@ -206,6 +262,9 @@ void drawPlayerRight1(Point p)
 	}
 }
 
+/*
+ * Draw the player sprite moving up for animation
+ */
 void drawPlayerUp0(Point p)
 {
 	int i, j;
@@ -216,6 +275,9 @@ void drawPlayerUp0(Point p)
 	}
 }
 
+/*
+ * Draw second player sprite moving up for animation
+ */
 void drawPlayerUp1(Point p)
 {
 	int i, j;
@@ -226,6 +288,9 @@ void drawPlayerUp1(Point p)
 	}
 }
 
+/*
+ * Draw third player sprite moving up for animation
+ */
 void drawPlayerUp2(Point p)
 {
 	int i, j;
@@ -236,6 +301,139 @@ void drawPlayerUp2(Point p)
 	}
 }
 
+/*
+ * Draw the player sprite moving down for animation
+ */
+void drawEnemyDown0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_down_0[i + 50 * j]);
+		}
+	}
+}
+
+/*
+ * Draw the second player sprite moving down for animation
+ */
+void drawEnemyDown1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_down_1[i + 50 * j]);
+		}
+	}
+}
+
+/*
+ * Draw the third player sprite moving down for animation
+ */
+void drawEnemyDown2(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_down_2[i + 50 * j]);
+		}
+	}
+}
+
+/*
+ * Draw the enemy sprite moving left for animation
+ */
+void drawEnemyLeft0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_left_0[i + 50 * j]);
+		}
+	}
+}
+
+/*
+ * Draw the second enemy sprite moving left for animation
+ */
+void drawEnemyLeft1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_left_1[i + 50 * j]);
+		}
+	}
+}
+
+/*
+ * Draw the enemy sprite moving right for animation
+ */
+void drawEnemyRight0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_right_0[i + 50 * j]);
+		}
+	}
+}
+
+/*
+ * Draw the second enemy sprite moving right for animation
+ */
+void drawEnemyRight1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_right_1[i + 50 * j]);
+		}
+	}
+}
+
+/*
+ * Draw the enemy sprite moving up for animation
+ */
+void drawEnemyUp0(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_up_0[i + 50 * j]);
+		}
+	}
+}
+
+/*
+ * Draw the second enemy sprite moving up for animation
+ */
+void drawEnemyUp1(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_up_1[i + 50 * j]);
+		}
+	}
+}
+
+/*
+ * Draw the third enemy sprite moving up for animation
+ */
+void drawEnemyUp2(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, rocket_up_2[i + 50 * j]);
+		}
+	}
+}
+
+/*
+ * Detects the type of the square and draws points accordingly
+ */
 void drawSquare(char square, Point point)
 {
 	if (square == WALL)
@@ -245,11 +443,14 @@ void drawSquare(char square, Point point)
 	else if (square == FINISH)
 		drawFinish(point);
 	else if (square == ENEMY)
-		drawEnemy(point);
+		drawEnemyDown0(point);
 	else if (square == PLAYER)
 		drawPlayerUp0(point);
 }
 
+/*
+ * Draw the squares on the screen based on type of the tile
+ */
 void drawArea(int map_width, int map_height, int area)
 {
 	int i, j;
@@ -264,4 +465,117 @@ void drawArea(int map_width, int map_height, int area)
 	Rectangle(1, 799, 401, 478, BLACK);
 	drawStringSmallFont("The dungeon warden is keeping the princess prisoner!", 25, 415, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont("You need to save her!", 25, 430, WHITE, MIDNIGHT_BLUE);
+}
+
+/*
+ * Print out the map array
+ */
+void printMap()
+{
+	int i,j;
+		for (j = 0; j < MAX_VERT_SQUARES; j++) {
+			for (i = 0; i < MAX_HORI_SQUARES; i++) {
+				printf("%c ", map[0][j][i]);
+			}
+			printf("\n");
+		}
+		//usleep(3000000);
+		printf("\n");
+		printf("\n");
+		printf("\n");
+		printf("\n");
+}
+
+/*
+ * Enemy's random number to move in which direction
+ */
+int enemy_chooseDirection()
+{
+	return rand() % 4;
+}
+
+/*
+ * Function that moves the enemy object
+ */
+void enemy_moveDirection(int direction, int x, int y, int index)
+{
+	if (enemy_isValidMovement(direction, 0, x, y)) {
+		// redraw
+		switch (direction) {
+
+		case(DIRECTION_UP) :
+				moveEnemyUp(x, y, curArea);
+				enemyPos[0][index][0]--;
+				break;
+		case(DIRECTION_RIGHT) :
+				moveEnemyRight(x, y, curArea);
+				enemyPos[0][index][1]++;
+				break;
+		case(DIRECTION_DOWN) :
+				moveEnemyDown(x, y, curArea);
+				enemyPos[0][index][0]++;
+				break;
+		case(DIRECTION_LEFT) :
+				moveEnemyLeft(x, y, curArea);
+				enemyPos[0][index][1]--;
+				break;
+
+		}
+	}
+	// invalid move
+}
+
+//enemyPos [MAX_AREAS][3][2]
+//enemy_isValidMovement(int direction, int area, int enemyPosX, int enemyPosY)
+
+/*
+ * Redraw enemies on game replay
+ */
+void redrawEnemies()
+{
+	int j;
+		for (j = 0; j < MAX_ENEMY; j++) {
+			printf("%d and %d and %d\n", enemyPos[0][j][0], enemyPos[0][j][1], enemyPos[0][j][2]);
+		}
+
+	int i, curEX, curEY;
+	for (i = 0; i < MAX_ENEMY; i++) {
+		curEX = enemyPos[0][i][1];
+		curEY = enemyPos[0][i][0];
+		if (map[0][curEY][curEX] == 'O') { enemyPos[0][i][2] = ENEMY_DEAD; }
+		if (enemyPos[0][i][2] == ENEMY_DEAD) {continue;}
+		int direction = enemy_chooseDirection();
+		enemy_moveDirection(direction, curEX, curEY, i);
+	}
+
+
+	/*
+	int curEX = enemyPos[0][1][1];
+	int curEY = enemyPos[0][1][0];
+	printf("%d and %d \n", curEX, curEY);
+	int direction = enemy_chooseDirection();
+	enemy_moveDirection(direction, curEX, curEY, 1);
+	*/
+	printMap();
+}
+
+/*
+ * Redraw enemies back to original position
+ */
+void resetEnemyLocation()
+{
+	int i,j,k;
+	for (i = 0; i < MAX_AREAS; i++) {
+		for (j = 0; j < MAX_ENEMY; j++) {
+			for (k = 0; k < 3; k++) {
+				enemyPos[i][j][k] = enemyPos_init[i][j][k];
+			}
+			int x = enemyPos[i][j][1];
+			int y = enemyPos[i][j][0];
+			map[i][y][x] = 'X';
+		}
+	}
+
+	int length = sizeof(map) / sizeof(map[0][0][0]) - 1;
+	memcpy(&map, &map_init, length * (sizeof(char)));
 }

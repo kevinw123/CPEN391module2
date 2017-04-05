@@ -17,15 +17,15 @@
 #include "../questions.h"
 #include "../bluetooth.h"
 
-bool isValidMovementUp(int area)
+bool isValidMovementUp(int area, int playerX, int playerY)
 {
 	// Player is already at the top of the map
-	if (player_current_y_pos == 0){
+	if (playerY == 0){
 		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 
-	char nextSpace = map[area][player_current_y_pos - 1 ][player_current_x_pos];
+	char nextSpace = map[area][playerY - 1 ][playerX];
 	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
@@ -48,15 +48,15 @@ bool isValidMovementUp(int area)
 	return false;
 }
 
-bool isValidMovementRight(int area)
+bool isValidMovementRight(int area, int playerX, int playerY)
 {
 	// Player is already at rightmost of map.
-	if (player_current_x_pos == 15){
+	if (playerX == 15){
 		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 
-	char nextSpace = map[area][player_current_y_pos][player_current_x_pos + 1];
+	char nextSpace = map[area][playerY][playerX + 1];
 	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
@@ -79,15 +79,15 @@ bool isValidMovementRight(int area)
 	return false;
 }
 
-bool isValidMovementDown(int area)
+bool isValidMovementDown(int area, int playerX, int playerY)
 {
 	// Player is already at bottom
-	if (player_current_y_pos == 7){
+	if (playerY == 7){
 		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 
-	char nextSpace = map[area][player_current_y_pos + 1][player_current_x_pos];
+	char nextSpace = map[area][playerY + 1][playerX];
 	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
@@ -110,15 +110,15 @@ bool isValidMovementDown(int area)
 	return false;
 }
 
-bool isValidMovementLeft(int area)
+bool isValidMovementLeft(int area, int playerX, int playerY)
 {
 	// Player is already at rightmost of map.
-	if (player_current_x_pos == 0){
+	if (playerX == 0){
 		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
 
-	char nextSpace = map[area][player_current_y_pos][player_current_x_pos - 1];
+	char nextSpace = map[area][playerY][playerX - 1];
 	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
@@ -144,13 +144,27 @@ bool isValidMovementLeft(int area)
 bool isValidMovement(int direction, int area)
 {
 	if (direction == DIRECTION_UP)
-		return isValidMovementUp(area);
+		return isValidMovementUp(area, player_current_x_pos, player_current_y_pos);
 	else if (direction == DIRECTION_RIGHT)
-		return isValidMovementRight(area);
+		return isValidMovementRight(area, player_current_x_pos, player_current_y_pos);
 	else if (direction == DIRECTION_DOWN)
-		return isValidMovementDown(area);
+		return isValidMovementDown(area, player_current_x_pos, player_current_y_pos);
 	else if (direction == DIRECTION_LEFT)
-		return isValidMovementLeft(area);
+		return isValidMovementLeft(area, player_current_x_pos, player_current_y_pos);
+
+	return false;
+}
+
+bool enemy_isValidMovement(int direction, int area, int enemyPosX, int enemyPosY)
+{
+	if (direction == DIRECTION_UP)
+		return isValidMovementUp(area, enemyPosX, enemyPosY);
+	else if (direction == DIRECTION_RIGHT)
+		return isValidMovementRight(area, enemyPosX, enemyPosY);
+	else if (direction == DIRECTION_DOWN)
+		return isValidMovementDown(area, enemyPosX, enemyPosY);
+	else if (direction == DIRECTION_LEFT)
+		return isValidMovementLeft(area, enemyPosX, enemyPosY);
 
 	return false;
 }
