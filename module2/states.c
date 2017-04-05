@@ -12,6 +12,9 @@
 #include "drawmap.h"
 #include "movement.h"
 
+/*
+ * Function to check if player is next to enemy object or princess object
+ */
 int checkEvents(void) {
 	char nextSpaceUp = map[curArea][player_current_y_pos - 1 ][player_current_x_pos];
 	char nextSpaceRight = map[curArea][player_current_y_pos][player_current_x_pos + 1];
@@ -20,14 +23,17 @@ int checkEvents(void) {
 
 	int event = 0;
 
+	// If princess, then trigger the princess state
 	if ( (nextSpaceUp == '$') ||  (nextSpaceRight == '$') || (nextSpaceDown == '$') || (nextSpaceLeft == '$')){
 		event = EVENT_PRINCESS;
 	}
 
+	// If next to an enemy trigger question screen
 	else if ( (nextSpaceUp == 'X') ||  (nextSpaceRight == 'X') || (nextSpaceDown == 'X') || (nextSpaceLeft == 'X')){
 		event = EVENT_QUESTION;
 	}
 
+	// Trigger event based on which event was detected
 	switch (event)
 	{
 	case(0) :
@@ -56,26 +62,35 @@ int execCommand(int command)
 		resetEnemyLocation();
 		ret = STATE_STORY_TEXT;
 		break;
+	// move character up
 	case (MOVE_UP) :
 		redrawEnemies();
 		printf("Moving up: %d\n", movePlayerUp(player_current_x_pos, player_current_y_pos, curArea));
+		// check if there is a question
 		ret = checkEvents();
 		break;
+	// move character to the right
 	case (MOVE_RIGHT) :
 		redrawEnemies();
 		printf("Moving right: %d\n", movePlayerRight(player_current_x_pos, player_current_y_pos, curArea));
+		// check if there is a question
 		ret = checkEvents();
 		break;
+	// move character down
 	case (MOVE_DOWN) :
 		redrawEnemies();
 		printf("Moving down: %d\n", movePlayerDown(player_current_x_pos, player_current_y_pos, curArea));
+		// check if there is a question
 		ret = checkEvents();
 		break;
+	// move character to the left
 	case (MOVE_LEFT) :
 		redrawEnemies();
 		printf("Moving left: %d\n", movePlayerLeft(player_current_x_pos, player_current_y_pos, curArea));
+		// check if there is a question
 		ret = checkEvents();
 		break;
+	// If we win go to finished state
 	case (WIN) :
 			ret = STATE_FINISH;
 		break;
