@@ -29,7 +29,7 @@ bool isValidMovementUp(int area, int playerX, int playerY)
 	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
-	if (nextSpace == '#'){
+	if (nextSpace == '#' || nextSpace == 'D'){
 		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
@@ -60,7 +60,7 @@ bool isValidMovementRight(int area, int playerX, int playerY)
 	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
-	if (nextSpace == '#'){
+	if (nextSpace == '#' || nextSpace == 'D'){
 		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
@@ -91,7 +91,7 @@ bool isValidMovementDown(int area, int playerX, int playerY)
 	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
-	if (nextSpace == '#'){
+	if (nextSpace == '#' || nextSpace == 'D'){
 		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}
@@ -122,7 +122,7 @@ bool isValidMovementLeft(int area, int playerX, int playerY)
 	printf("Next space: %c\n", nextSpace);
 
 	// Direction is headed towards a wall.
-	if (nextSpace == '#'){
+	if (nextSpace == '#' || nextSpace == 'D'){
 		//sendStringBluetooth(MOVE_COMMAND);
 		return false;
 	}

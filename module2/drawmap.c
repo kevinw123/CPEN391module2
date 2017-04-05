@@ -21,9 +21,6 @@
 
 #define FRAME_RATE 4
 
-/*
- * Start the game by loading the character and drawing the story
- */
 void init_game() {
 	init_questions();
 
@@ -48,11 +45,9 @@ void init_game() {
 	drawStringSmallFont(story[line2], 25, 430, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont(story[line3], 25, 445, WHITE, MIDNIGHT_BLUE);
 
-	// Load the story
 	while(count < NUM_STORY_LINES) {
 		int command;
 		while (1) {
-			    // Read bluetooth commands to determine if scroll or not
 				char a = getcharBluetooth();
 				if ((a - '0') < 100 && (a - '0') >= 0) {
 					command = a - '0';
@@ -75,12 +70,20 @@ void init_game() {
 			count++;
 		}
 	}
+
+	int enemy_with_key = rand() % (MAX_ENEMY - 1);
+	printf("enemy: %d has key\n", enemy_with_key);
+	printf("Init game check enemy pos\n");
+	printf(" %d and %d and %d and %d\n", enemyPos[0][0][0],enemyPos[0][0][1],enemyPos[0][0][2],enemyPos[0][0][3]);
+	printf(" %d and %d and %d and %d\n", enemyPos[0][1][0],enemyPos[0][1][1],enemyPos[0][1][2],enemyPos[0][1][3]);
+	printf(" %d and %d and %d and %d\n", enemyPos[0][2][0],enemyPos[0][2][1],enemyPos[0][2][2],enemyPos[0][2][3]);
+	printf(" %d and %d and %d and %d\n", enemyPos[0][3][0],enemyPos[0][3][1],enemyPos[0][3][2],enemyPos[0][3][3]);
+	enemyPos[0][enemy_with_key][3] = 1;
+
+
 	curState = STATE_REDRAW;
 }
 
-/*
- * Gets coordinate of the x and y value
- */
 Point getCoord(int x, int y)
 {
 	Point point;
@@ -89,9 +92,6 @@ Point getCoord(int x, int y)
 	return point;
 }
 
-/*
- * Draw the walls for the game
- */
 void drawWall(Point p)
 {
 	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, MIDNIGHT_BLUE);
@@ -116,17 +116,11 @@ void drawWall(Point p)
 	VRectangle(p.x + 37, p.x + 38, p.y + 39, p.y + SQUARE_HEIGHT - 2, BLACK);
 }
 
-/*
- * Draw empty area for the game
- */
 void drawSpace(Point p)
 {
 	Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
 }
 
-/*
- * Draw the princess tile for the game
- */
 void drawFinish(Point p)
 {
 	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, PINK);
@@ -139,9 +133,6 @@ void drawFinish(Point p)
 	}
 }
 
-/*
- * Draw the enemy tiles for the game
- */
 void drawEnemy(Point p)
 {
 	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
@@ -155,9 +146,6 @@ void drawEnemy(Point p)
 	}
 }
 
-/*
- * Draw the player tile
- */
 void drawPlayer(Point p)
 {
 	//Rectangle(p.x, p.x + SQUARE_WIDTH-1, p.y, p.y + SQUARE_HEIGHT-1, BLACK);
@@ -171,9 +159,6 @@ void drawPlayer(Point p)
 	}
 }
 
-/*
- * Draw the player sprite moving down
- */
 void drawPlayerDown0(Point p)
 {
 	int i, j;
@@ -184,9 +169,6 @@ void drawPlayerDown0(Point p)
 	}
 }
 
-/*
- * Different sprite for the player moving down
- */
 void drawPlayerDown1(Point p)
 {
 	int i, j;
@@ -197,9 +179,6 @@ void drawPlayerDown1(Point p)
 	}
 }
 
-/*
- * Draw a third sprite for the player moving down
- */
 void drawPlayerDown2(Point p)
 {
 	int i, j;
@@ -210,9 +189,7 @@ void drawPlayerDown2(Point p)
 	}
 }
 
-/*
- * Draw the player sprite moving left
- */
+
 void drawPlayerLeft0(Point p)
 {
 	int i, j;
@@ -223,9 +200,6 @@ void drawPlayerLeft0(Point p)
 	}
 }
 
-/*
- * Draw the player sprite moving left for animation
- */
 void drawPlayerLeft1(Point p)
 {
 	int i, j;
@@ -236,9 +210,6 @@ void drawPlayerLeft1(Point p)
 	}
 }
 
-/*
- * Draw the player sprite moving right
- */
 void drawPlayerRight0(Point p)
 {
 	int i, j;
@@ -249,9 +220,6 @@ void drawPlayerRight0(Point p)
 	}
 }
 
-/*
- * Draw the player sprite moving right for animation
- */
 void drawPlayerRight1(Point p)
 {
 	int i, j;
@@ -262,9 +230,6 @@ void drawPlayerRight1(Point p)
 	}
 }
 
-/*
- * Draw the player sprite moving up for animation
- */
 void drawPlayerUp0(Point p)
 {
 	int i, j;
@@ -275,9 +240,6 @@ void drawPlayerUp0(Point p)
 	}
 }
 
-/*
- * Draw second player sprite moving up for animation
- */
 void drawPlayerUp1(Point p)
 {
 	int i, j;
@@ -288,9 +250,6 @@ void drawPlayerUp1(Point p)
 	}
 }
 
-/*
- * Draw third player sprite moving up for animation
- */
 void drawPlayerUp2(Point p)
 {
 	int i, j;
@@ -301,9 +260,6 @@ void drawPlayerUp2(Point p)
 	}
 }
 
-/*
- * Draw the player sprite moving down for animation
- */
 void drawEnemyDown0(Point p)
 {
 	int i, j;
@@ -314,9 +270,6 @@ void drawEnemyDown0(Point p)
 	}
 }
 
-/*
- * Draw the second player sprite moving down for animation
- */
 void drawEnemyDown1(Point p)
 {
 	int i, j;
@@ -327,9 +280,6 @@ void drawEnemyDown1(Point p)
 	}
 }
 
-/*
- * Draw the third player sprite moving down for animation
- */
 void drawEnemyDown2(Point p)
 {
 	int i, j;
@@ -340,9 +290,6 @@ void drawEnemyDown2(Point p)
 	}
 }
 
-/*
- * Draw the enemy sprite moving left for animation
- */
 void drawEnemyLeft0(Point p)
 {
 	int i, j;
@@ -353,9 +300,6 @@ void drawEnemyLeft0(Point p)
 	}
 }
 
-/*
- * Draw the second enemy sprite moving left for animation
- */
 void drawEnemyLeft1(Point p)
 {
 	int i, j;
@@ -366,9 +310,6 @@ void drawEnemyLeft1(Point p)
 	}
 }
 
-/*
- * Draw the enemy sprite moving right for animation
- */
 void drawEnemyRight0(Point p)
 {
 	int i, j;
@@ -379,9 +320,6 @@ void drawEnemyRight0(Point p)
 	}
 }
 
-/*
- * Draw the second enemy sprite moving right for animation
- */
 void drawEnemyRight1(Point p)
 {
 	int i, j;
@@ -392,9 +330,6 @@ void drawEnemyRight1(Point p)
 	}
 }
 
-/*
- * Draw the enemy sprite moving up for animation
- */
 void drawEnemyUp0(Point p)
 {
 	int i, j;
@@ -405,9 +340,6 @@ void drawEnemyUp0(Point p)
 	}
 }
 
-/*
- * Draw the second enemy sprite moving up for animation
- */
 void drawEnemyUp1(Point p)
 {
 	int i, j;
@@ -418,9 +350,6 @@ void drawEnemyUp1(Point p)
 	}
 }
 
-/*
- * Draw the third enemy sprite moving up for animation
- */
 void drawEnemyUp2(Point p)
 {
 	int i, j;
@@ -431,9 +360,26 @@ void drawEnemyUp2(Point p)
 	}
 }
 
-/*
- * Detects the type of the square and draws points accordingly
- */
+void drawDoor(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, door[i + 50 * j]);
+		}
+	}
+}
+
+void drawKey(Point p)
+{
+	int i, j;
+	for (j = 0; j < 50; j++) {
+		for (i = 0; i < 50; i++) {
+			WriteAPixel(p.x + i, p.y + j, key[i + 50 * j]);
+		}
+	}
+}
+
 void drawSquare(char square, Point point)
 {
 	if (square == WALL)
@@ -446,11 +392,10 @@ void drawSquare(char square, Point point)
 		drawEnemyDown0(point);
 	else if (square == PLAYER)
 		drawPlayerUp0(point);
+	else if (square == DOOR)
+		drawDoor(point);
 }
 
-/*
- * Draw the squares on the screen based on type of the tile
- */
 void drawArea(int map_width, int map_height, int area)
 {
 	int i, j;
@@ -465,11 +410,20 @@ void drawArea(int map_width, int map_height, int area)
 	Rectangle(1, 799, 401, 478, BLACK);
 	drawStringSmallFont("The dungeon warden is keeping the princess prisoner!", 25, 415, WHITE, MIDNIGHT_BLUE);
 	drawStringSmallFont("You need to save her!", 25, 430, WHITE, MIDNIGHT_BLUE);
+	if (key_flag) {
+				Point p;
+				p.x = 720;
+				p.y = 420;
+				drawKey(p);
+	}
+}
+void check_door()
+{
+	if (key_flag){
+		map[0][1][12] = 'O';
+	}
 }
 
-/*
- * Print out the map array
- */
 void printMap()
 {
 	int i,j;
@@ -486,17 +440,11 @@ void printMap()
 		printf("\n");
 }
 
-/*
- * Enemy's random number to move in which direction
- */
 int enemy_chooseDirection()
 {
 	return rand() % 4;
 }
 
-/*
- * Function that moves the enemy object
- */
 void enemy_moveDirection(int direction, int x, int y, int index)
 {
 	if (enemy_isValidMovement(direction, 0, x, y)) {
@@ -527,47 +475,50 @@ void enemy_moveDirection(int direction, int x, int y, int index)
 
 //enemyPos [MAX_AREAS][3][2]
 //enemy_isValidMovement(int direction, int area, int enemyPosX, int enemyPosY)
-
-/*
- * Redraw enemies on game replay
- */
 void redrawEnemies()
 {
+	printf("redraw enemies\n");
 	int j;
-		for (j = 0; j < MAX_ENEMY; j++) {
-			printf("%d and %d and %d\n", enemyPos[0][j][0], enemyPos[0][j][1], enemyPos[0][j][2]);
-		}
+	for (j = 0; j < MAX_ENEMY; j++) {
+		printf("%d and %d and %d and %d\n", enemyPos[0][j][0], enemyPos[0][j][1], enemyPos[0][j][2], enemyPos[0][j][3]);
+	}
 
 	int i, curEX, curEY;
 	for (i = 0; i < MAX_ENEMY; i++) {
 		curEX = enemyPos[0][i][1];
 		curEY = enemyPos[0][i][0];
-		if (map[0][curEY][curEX] == 'O') { enemyPos[0][i][2] = ENEMY_DEAD; }
-		if (enemyPos[0][i][2] == ENEMY_DEAD) {continue;}
+		if (map[0][curEY][curEX] == 'O'){
+			enemyPos[0][i][2] = ENEMY_DEAD;
+			if (enemyPos[0][i][3] == 1)
+				key_flag = 1;
+			continue;
+		}
 		int direction = enemy_chooseDirection();
 		enemy_moveDirection(direction, curEX, curEY, i);
 	}
-
-
-	/*
-	int curEX = enemyPos[0][1][1];
-	int curEY = enemyPos[0][1][0];
-	printf("%d and %d \n", curEX, curEY);
-	int direction = enemy_chooseDirection();
-	enemy_moveDirection(direction, curEX, curEY, 1);
-	*/
+	printf("Do i have key: %d\n", key_flag);
+	if (key_flag) {
+			Point p;
+			p.x = 720;
+			p.y = 420;
+			drawKey(p);
+	}
 	printMap();
 }
 
-/*
- * Redraw enemies back to original position
- */
+//
 void resetEnemyLocation()
 {
+	int enemy_with_key = rand() % (MAX_ENEMY - 1);
+	printf("enemy: %d has key\n", enemy_with_key);
+	enemyPos[0][enemy_with_key][3] = 1;
+	printf("keynumber: %d\n", enemy_with_key);
 	int i,j,k;
 	for (i = 0; i < MAX_AREAS; i++) {
-		for (j = 0; j < MAX_ENEMY; j++) {
-			for (k = 0; k < 3; k++) {
+		printf("reset enemy location check enemy pos\n");
+		for (j = 0; j < MAX_ENEMY - 1; j++) {
+			printf(" %d and %d and %d and %d\n", enemyPos[i][j][0],enemyPos[i][j][1],enemyPos[i][j][2],enemyPos[i][j][3]);
+			for (k = 0; k < 4; k++) {
 				enemyPos[i][j][k] = enemyPos_init[i][j][k];
 			}
 			int x = enemyPos[i][j][1];

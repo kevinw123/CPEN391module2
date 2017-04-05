@@ -33,6 +33,11 @@ int checkEvents(void) {
 		event = EVENT_QUESTION;
 	}
 
+	// If next to a door check if you have key...
+	else if ( (nextSpaceUp == 'D') ||  (nextSpaceRight == 'D') || (nextSpaceDown == 'D') || (nextSpaceLeft == 'D')){
+		event = EVENT_DOOR;
+	}
+
 	// Trigger event based on which event was detected
 	switch (event)
 	{
@@ -44,6 +49,8 @@ int checkEvents(void) {
 			return STATE_LAST_QUESTION;
 	case(EVENT_QUESTION) :
 			return STATE_QUESTION;
+	case(EVENT_DOOR) :
+			return STATE_DOOR;
 	default :
 		return STATE_RECEIVE_BLUETOOTH_COMMAND;
 	}
@@ -60,6 +67,7 @@ int execCommand(int command)
 		printf("Starting game\n");
 		//reset enemy locations
 		resetEnemyLocation();
+		key_flag = 0;
 		ret = STATE_STORY_TEXT;
 		break;
 	// move character up

@@ -9,6 +9,8 @@
  * Each character represents a 50px by 50px square in the screen.
  */
 
+
+
 // Map Dimensions
 #define MAX_AREAS 3
 #define MAX_HORI_SQUARES 16
@@ -25,6 +27,7 @@
 #define FINISH 36				// 36 = $
 #define ENEMY 88				// 88 = X
 #define PLAYER 80				// 80 = P
+#define DOOR 68                 // 68 = D
 
 // Player's current position in terms of the character map below. For example, these two values would initialize to
 // 1 and 7 respectively (according to the position of 'P' in map[0].
@@ -38,25 +41,32 @@ static int startPos [MAX_AREAS][2] =
 		{ 1, 7 }
 };
 
-static int enemyPos_init [MAX_AREAS][MAX_ENEMY][3] =
+static int doorPos [MAX_AREAS][2] =
+{
+		{ 12, 1 },
+		{ 12, 1 },
+		{ 12, 1 }
+};
+
+static int enemyPos_init [MAX_AREAS][MAX_ENEMY][4] =
 {
 		{
-				{ 6, 4, 0},
-				{ 3, 6, 0},
-				{ 4, 9, 0},
-				{ 1, 13, 0}
+				{ 6, 4, 0, 0},
+				{ 3, 6, 0, 0},
+				{ 4, 9, 0, 0},
+				{ 1, 13, 0, 0}
 		},
 		{
-				{ 6, 4, 0},
-				{ 3, 6, 0},
-				{ 4, 9, 0},
-				{ 13, 1, 0}
+				{ 6, 4, 0, 0},
+				{ 3, 6, 0, 0},
+				{ 4, 9, 0, 0},
+				{ 1, 13, 0, 0}
 		},
 		{
-				{ 6, 4, 0},
-				{ 3, 6, 0},
-				{ 9, 4, 0},
-				{ 13, 1, 0}
+				{ 6, 4, 0, 0},
+				{ 3, 6, 0, 0},
+				{ 4, 9, 0, 0},
+				{ 1, 13, 0, 0}
 		}
 };
 
@@ -64,7 +74,7 @@ static char map_init [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES] =
 {
 		{
 				{'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
-				{'#','#','#','#','#','#','#','O','O','O','#','#','O','X','O','$'},
+				{'#','#','#','#','#','#','#','O','O','O','#','#','D','X','O','$'},
 				{'#','O','#','#','O','O','#','O','#','O','#','#','O','#','O','O'},
 				{'#','O','#','#','O','O','X','O','#','O','#','#','O','#','#','#'},
 				{'#','O','#','#','O','#','#','#','#','X','O','O','O','#','#','#'},
@@ -74,7 +84,7 @@ static char map_init [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES] =
 		},
 		{
 				{'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
-				{'#','#','#','#','#','#','#','O','O','O','#','#','O','X','O','$'},
+				{'#','#','#','#','#','#','#','O','O','O','#','#','D','X','O','$'},
 				{'#','O','#','#','O','O','#','O','#','O','#','#','O','#','O','O'},
 				{'#','O','#','#','O','O','X','O','#','O','#','#','O','#','#','#'},
 				{'#','O','#','#','O','#','#','#','#','X','O','O','O','#','#','#'},
@@ -95,11 +105,14 @@ static char map_init [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES] =
 };
 
 #ifdef  MAIN_FILE
+
+int key_flag = 0;
+
 char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES] =
 {
 		{
 				{'#','#','#','#','#','#','#','#','#','#','#','#','#','#','#','#'},
-				{'#','#','#','#','#','#','#','O','O','O','#','#','O','X','O','$'},
+				{'#','#','#','#','#','#','#','O','O','O','#','#','D','X','O','$'},
 				{'#','O','#','#','O','O','#','O','#','O','#','#','O','#','O','O'},
 				{'#','O','#','#','O','O','X','O','#','O','#','#','O','#','#','#'},
 				{'#','O','#','#','O','#','#','#','#','X','O','O','O','#','#','#'},
@@ -110,7 +123,7 @@ char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES] =
 		{
 				{'#','#','#','#','#','#','#','#','#','#','#','O','O','O','O','$'},
 				{'#','#','#','#','#','#','#','O','O','X','#','O','O','O','O','O'},
-				{'#','O','#','#','O','O','#','O','#','O','#','O','#','#','#','#'},
+				{'#','O','#','#','O','O','#','O','#','O','#','D','#','#','#','#'},
 				{'#','O','#','#','O','O','O','O','#','O','#','O','O','O','#','#'},
 				{'#','O','#','#','O','#','#','#','#','O','O','O','O','O','#','X'},
 				{'#','O','#','#','O','#','#','#','#','O','#','#','#','O','#','$'},
@@ -160,25 +173,25 @@ char *story [NUM_STORY_LINES] =
 		"Good luck!"
 };
 
-int enemyPos [MAX_AREAS][MAX_ENEMY][3] =
+int enemyPos [MAX_AREAS][MAX_ENEMY][4] =
 {
 		{
-				{ 6, 4, 0},
-				{ 3, 6, 0},
-				{ 4, 9, 0},
-				{ 1, 13, 0}
+				{ 6, 4, 0, 0},
+				{ 3, 6, 0, 0},
+				{ 4, 9, 0, 0},
+				{ 1, 13, 0, 0}
 		},
 		{
-				{ 6, 4, 0},
-				{ 3, 6, 0},
-				{ 4, 9, 0},
-				{ 13, 1, 0}
+				{ 6, 4, 0, 0},
+				{ 3, 6, 0, 0},
+				{ 4, 9, 0, 0},
+				{ 1, 13, 0, 0}
 		},
 		{
-				{ 6, 4, 0},
-				{ 3, 6, 0},
-				{ 9, 4, 0},
-				{ 13, 1, 0}
+				{ 6, 4, 0, 0},
+				{ 3, 6, 0, 0},
+				{ 4, 9, 0, 0},
+				{ 1, 13, 0, 0}
 		}
 };
 
@@ -186,7 +199,8 @@ int enemyPos [MAX_AREAS][MAX_ENEMY][3] =
 extern char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES];
 extern char map [MAX_AREAS][MAX_VERT_SQUARES][MAX_HORI_SQUARES];
 extern char *story [NUM_STORY_LINES];
-extern int enemyPos [MAX_AREAS][MAX_ENEMY][3];
+extern int enemyPos [MAX_AREAS][MAX_ENEMY][4];
+extern int key_flag;
 #endif
 
 

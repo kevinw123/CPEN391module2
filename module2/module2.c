@@ -104,6 +104,21 @@ void state_question()
 }
 
 /*
+ * State for the door check
+ */
+void state_door()
+{
+	if (!key_flag)
+		map[curArea][doorPos[curArea][1]][doorPos[curArea][0]] = 'D';
+	else
+		map[curArea][doorPos[curArea][1]][doorPos[curArea][0]] = 'O';
+	curState = STATE_REDRAW;
+
+	sendStringBluetooth("M");
+	return;
+}
+
+/*
  * State for the last stage where player touches princess
  */
 void state_last_question()
@@ -139,7 +154,7 @@ void state_machine()
 		// State for displaying the story
 		case (STATE_STORY_TEXT) :
 				init_game();
-				curState = STATE_REDRAW;
+				curState = STATE_DOOR;
 		break;
 		// State for redrawing the map
 		case (STATE_REDRAW) :
@@ -152,6 +167,10 @@ void state_machine()
 		// State for questions
 		case (STATE_QUESTION) :
 				state_question();
+		break;
+		// State for door
+		case (STATE_DOOR) :
+				state_door();
 		break;
 		// State for last game where player reaches princess
 		case (STATE_LAST_QUESTION) :
@@ -167,7 +186,6 @@ void state_machine()
 
 int main()
 {
-
 	init_module2();
 	curState = STATE_MENU;
 	state_machine();

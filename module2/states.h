@@ -15,7 +15,7 @@
 #define STATE_FINISH 4
 #define STATE_STORY_TEXT 5
 #define STATE_LAST_QUESTION 6
-
+#define STATE_DOOR 7
 
 // Bluetooth Command Definitions
 #define PLAY 0
@@ -31,6 +31,7 @@
 #define EVENT_PRINCESS 1
 #define EVENT_QUESTION 2
 #define EVENT_KEY 3
+#define EVENT_DOOR 4
 
 
 // Global ints
