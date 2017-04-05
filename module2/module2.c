@@ -119,6 +119,7 @@ void state_last_question()
 void state_finish()
 {
 	draw_finish_screen();
+	curState = STATE_RECEIVE_BLUETOOTH_COMMAND;
 }
 
 /*
@@ -168,12 +169,6 @@ int main()
 {
 
 	init_module2();
-	/*
-	curState = STATE_REDRAW;
-	curArea = 0;
-	player_current_y_pos = startPos[curArea][1];
-	player_current_x_pos = startPos[curArea][0];
-	*/
 	curState = STATE_MENU;
 	state_machine();
 	return 0;
