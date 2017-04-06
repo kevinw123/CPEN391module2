@@ -43,7 +43,7 @@ void draw_last_question() {
  */
 void draw_finish_screen() {
 	Rectangle(0,800,0,480,WHITE);
-	while(1) {
+	//while(1) {
 		drawString("A WINNER IS YOU!", 250, 200, DARK_SEA_GREEN, MIDNIGHT_BLUE);
 		drawString("A WINNER IS YOU!", 250, 200, MIDNIGHT_BLUE, MIDNIGHT_BLUE);
 		drawString("A WINNER IS YOU!", 250, 200, TEAL, MIDNIGHT_BLUE);
@@ -53,8 +53,7 @@ void draw_finish_screen() {
 		drawString("A WINNER IS YOU!", 250, 200, MEDIUM_VIOLET_RED, MIDNIGHT_BLUE);
 		drawString("A WINNER IS YOU!", 250, 200, RED, MIDNIGHT_BLUE);
 		drawString("A WINNER IS YOU!", 250, 200, PINK, MIDNIGHT_BLUE);
-		drawString("A WINNER IS YOU!", 250, 200, WHITE, MIDNIGHT_BLUE);
-	}
+	//}
 }
 
 
