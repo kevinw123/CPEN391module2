@@ -21,20 +21,9 @@ bool enemy_down_flag = false;
 bool enemy_up_flag = false;
 
 /*
-void movePlayer(Point curPos, Point newPos, int area)
-{
-	printf("curposx: %d\n", curPos.x);
-	printf("curposy: %d\n", curPos.y);
-	printf("newposx: %d\n", newPos.x);
-	printf("newposy: %d\n", newPos.y);
-	//map[area][curPos.x][curPos.y] = SPACE;
-	//map[area][newPos.x][newPos.y] = PLAYER;
-	//drawArea(MAX_HORI_SQUARES, MAX_VERT_SQUARES, area);
-	drawSpace(curPos);
-	drawPlayer(newPos);
-}
-*/
-
+ * Moves the player one tile up
+ * Ensure to do animation and valid checks
+ */
 int movePlayerUp(int x, int y, int area)
 {
 	Point playerCoords;
@@ -73,6 +62,10 @@ int movePlayerUp(int x, int y, int area)
 
 }
 
+/*
+ * Moves the player one tile down
+ * Ensure to do animation and valid checks
+ */
 int movePlayerDown(int x, int y, int area)
 {
 	Point playerCoords;
@@ -110,6 +103,10 @@ int movePlayerDown(int x, int y, int area)
 
 }
 
+/*
+ * Moves the player one tile left
+ * Ensure to do animation and valid checks
+ */
 int movePlayerLeft(int x, int y, int area)
 {
 	Point playerCoords;
@@ -144,6 +141,10 @@ int movePlayerLeft(int x, int y, int area)
 	}
 }
 
+/*
+ * Moves the player one tile right
+ * Ensure to do animation and valid checks
+ */
 int movePlayerRight(int x, int y, int area)
 {
 	Point playerCoords;
@@ -178,6 +179,10 @@ int movePlayerRight(int x, int y, int area)
 
 }
 
+/*
+ * Moves the enemy one tile up
+ * Ensure to do animation and valid checks
+ */
 int moveEnemyUp(int x, int y, int area)
 {
 	Point old_enemyCoords, enemyCoords;
@@ -209,6 +214,10 @@ int moveEnemyUp(int x, int y, int area)
 	return 0;
 }
 
+/*
+ * Moves the enemy one tile right
+ * Ensure to do animation and valid checks
+ */
 int moveEnemyRight(int x, int y, int area)
 {
 	Point old_enemyCoords, enemyCoords;
@@ -236,7 +245,10 @@ int moveEnemyRight(int x, int y, int area)
 	return 0;
 }
 
-
+/*
+ * Moves the enemy one tile down
+ * Ensure to do animation and valid checks
+ */
 int moveEnemyDown(int x, int y, int area)
 {
 	Point old_enemyCoords, enemyCoords;
@@ -267,7 +279,10 @@ int moveEnemyDown(int x, int y, int area)
 	return 0;
 }
 
-
+/*
+ * Moves the enemy one tile left
+ * Ensure to do animation and valid checks
+ */
 int moveEnemyLeft(int x, int y, int area)
 {
 	Point old_enemyCoords, enemyCoords;
